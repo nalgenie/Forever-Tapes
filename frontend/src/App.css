@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=VT323:wght@400&family=Orbitron:wght@400;700;900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -22,7 +22,23 @@ body {
   line-height: 1.6;
 }
 
-/* Vintage font for headings */
+/* Lo-fi 90s font for main heading */
+.lofi-heading {
+  font-family: 'VT323', monospace;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Alternative chunky font option */
+.chunky-heading {
+  font-family: 'Orbitron', monospace;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+/* Vintage font for other headings */
 .vintage-font {
   font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
   letter-spacing: -0.02em;
@@ -31,6 +47,35 @@ body {
 
 .vintage-font.bold {
   font-weight: 500;
+}
+
+/* Gradient text for main heading */
+.gradient-heading {
+  background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 50%, #F97316 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% 200%;
+  animation: gradient-shift 4s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Simple logo styles */
+.simple-logo {
+  max-width: 300px;
+  margin: 0 auto;
+  opacity: 0.9;
+  transition: all 0.3s ease;
+}
+
+.simple-logo:hover {
+  opacity: 1;
+  transform: scale(1.02);
 }
 
 /* Smooth scrolling */
@@ -265,12 +310,6 @@ html {
   background: linear-gradient(90deg, #3B82F6 0%, #8B5CF6 50%, #F97316 100%);
   background-size: 200% 100%;
   animation: gradient-shift 3s ease infinite;
-}
-
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
 }
 
 /* Typography improvements */
