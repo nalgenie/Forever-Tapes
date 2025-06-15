@@ -1,6 +1,6 @@
 <file>
       <absolute_file_name>/app/frontend/src/hooks/use-toast.js</absolute_file_name>
-      <content"use client";
+      <content>"use client";
 // Inspired by react-hot-toast library
 import * as React from "react"
 
