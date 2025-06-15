@@ -284,7 +284,7 @@ const CreatePodCard = () => {
           {/* Step 3: Audio Settings */}
           <div className="space-y-8">
             <div className="text-center">
-              <span className="text-sm font-mono text-gray-400 mb-4 block">{ 03 }</span>
+              <span className="text-sm font-mono text-gray-400 mb-4 block">{'{ 03 }'}</span>
               <h2 className="text-3xl font-bold mb-4 tracking-tight">AUDIO CONFIGURATION</h2>
               <p className="text-gray-600 max-w-xl mx-auto">
                 Fine-tune the parameters for your audio celebration to match your vision.
