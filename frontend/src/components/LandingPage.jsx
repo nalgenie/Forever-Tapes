@@ -15,13 +15,13 @@ const LandingPage = () => {
 
   useEffect(() => {
     // Initialize animated dots for audio wave visualization
-    const dots = Array.from({ length: 20 }, (_, i) => ({
+    const dots = Array.from({ length: 15 }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
-      size: Math.random() * 8 + 4,
+      size: Math.random() * 6 + 3,
       color: `hsl(${Math.random() * 60 + 200}, ${Math.random() * 30 + 70}%, ${Math.random() * 20 + 60}%)`,
-      speed: Math.random() * 2 + 0.5,
+      speed: Math.random() * 1.5 + 0.3,
       direction: Math.random() * Math.PI * 2
     }));
     setWaveDots(dots);
@@ -33,10 +33,10 @@ const LandingPage = () => {
           ...dot,
           x: (dot.x + Math.cos(dot.direction) * dot.speed + 100) % 100,
           y: (dot.y + Math.sin(dot.direction) * dot.speed + 100) % 100,
-          direction: dot.direction + (Math.random() - 0.5) * 0.1
+          direction: dot.direction + (Math.random() - 0.5) * 0.08
         }))
       );
-    }, 100);
+    }, 120);
 
     return () => clearInterval(interval);
   }, []);
@@ -80,38 +80,72 @@ const LandingPage = () => {
       title: 'Choose Your Voice Color',
       subtitle: 'Every voice is a color here. Which one will you pick?',
       description: 'Sign up and select your unique voice identity. Each contributor gets a distinct color representing their voice in your audio memory.',
-      animation: 'partner',
-      buttonText: 'Sign Up',
-      buttonAction: () => navigate('/create')
+      animation: 'partner'
     },
     {
-      step: '❷',
+      step: '❂',
       title: 'Create Your Audio Memory',
       subtitle: 'Set up your collaborative recording with custom settings',
       description: 'Configure who can contribute, set message lengths, choose background music, and customize your audio memory collection.',
-      animation: 'settings',
-      buttonText: 'Start Creating',
-      buttonAction: () => navigate('/create')
+      animation: 'settings'
     },
     {
       step: '❸',
       title: 'Collect Voice Messages',
       subtitle: 'Contributors add their voices, memories, and emotions',
       description: 'Share your link and watch as friends and family contribute their heartfelt messages. Each voice adds a unique layer to your memory.',
-      animation: 'turns',
-      buttonText: null,
-      buttonAction: null
+      animation: 'turns'
     },
     {
       step: '❹',
       title: 'Share Your Memory',
       subtitle: 'Create your final audio memory for sharing and celebrating',
       description: 'We blend all voices together with your chosen background music into a beautiful, shareable audio memory that lasts forever.',
-      animation: 'final',
-      buttonText: null,
-      buttonAction: null
+      animation: 'final'
     }
   ];
+
+  // Simple logo SVG component
+  const SimpleLogo = () => (
+    <div className="simple-logo">
+      <svg 
+        viewBox="0 0 200 120" 
+        className="w-full h-auto"
+        style={{ maxHeight: '200px' }}
+      >
+        {/* Cassette tape base */}
+        <rect x="40" y="50" width="120" height="40" rx="4" fill="none" stroke="#3B82F6" strokeWidth="2"/>
+        
+        {/* Cassette holes */}
+        <circle cx="65" cy="70" r="8" fill="none" stroke="#8B5CF6" strokeWidth="2"/>
+        <circle cx="135" cy="70" r="8" fill="none" stroke="#8B5CF6" strokeWidth="2"/>
+        
+        {/* Tape reels inside */}
+        <circle cx="65" cy="70" r="4" fill="none" stroke="#F97316" strokeWidth="1"/>
+        <circle cx="135" cy="70" r="4" fill="none" stroke="#F97316" strokeWidth="1"/>
+        
+        {/* Headphones */}
+        <path d="M80 20 Q100 10 120 20" fill="none" stroke="#3B82F6" strokeWidth="2"/>
+        <circle cx="80" cy="25" r="8" fill="none" stroke="#3B82F6" strokeWidth="2"/>
+        <circle cx="120" cy="25" r="8" fill="none" stroke="#3B82F6" strokeWidth="2"/>
+        
+        {/* Little person (simple stick figure) */}
+        <circle cx="100" cy="35" r="3" fill="#8B5CF6"/>
+        <line x1="100" y1="38" x2="100" y2="48" stroke="#8B5CF6" strokeWidth="2"/>
+        <line x1="95" y1="42" x2="105" y2="42" stroke="#8B5CF6" strokeWidth="2"/>
+        
+        {/* Sound waves */}
+        <path d="M25 60 Q30 55 35 60 Q40 65 45 60" fill="none" stroke="#F97316" strokeWidth="1" opacity="0.7"/>
+        <path d="M155 60 Q160 55 165 60 Q170 65 175 60" fill="none" stroke="#F97316" strokeWidth="1" opacity="0.7"/>
+        
+        {/* Musical notes */}
+        <circle cx="20" cy="40" r="2" fill="#8B5CF6" opacity="0.6"/>
+        <line x1="22" y1="40" x2="22" y2="30" stroke="#8B5CF6" strokeWidth="1" opacity="0.6"/>
+        <circle cx="180" cy="45" r="2" fill="#F97316" opacity="0.6"/>
+        <line x1="182" y1="45" x2="182" y2="35" stroke="#F97316" strokeWidth="1" opacity="0.6"/>
+      </svg>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-white font-light">
@@ -182,7 +216,7 @@ const LandingPage = () => {
       {/* Hero Section */}
       <section className="pt-32 pb-24 px-6 relative overflow-hidden">
         {/* Animated Audio Wave Background */}
-        <div className="absolute inset-0 opacity-30">
+        <div className="absolute inset-0 opacity-20">
           <div className="relative w-full h-full">
             {waveDots.map(dot => (
               <div
@@ -208,49 +242,17 @@ const LandingPage = () => {
               Collective Audio Archives
             </Badge>
             
-            <h1 className="text-6xl md:text-8xl font-light mb-8 tracking-tight leading-none text-gray-900 vintage-font">
-              <div className="relative inline-block">
-                <span className="relative z-10">Forever</span>
-                <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-blue-400 via-purple-400 to-orange-400 rounded-full"></div>
-              </div>
-              <br />
-              <span className="font-normal italic text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-orange-600">
-                Tapes
-              </span>
+            <h1 className="text-7xl md:text-9xl mb-8 tracking-tight leading-none lofi-heading gradient-heading">
+              Forever Tapes
             </h1>
             
             <p className="text-xl md:text-2xl text-gray-600 mb-16 max-w-3xl mx-auto leading-relaxed font-light">
-              Collective Audio Archives for the Shared Memory
+              Collective Audio Archives for Shared Memories
             </p>
 
-            {/* Hero Illustration - More playful and vintage */}
+            {/* Simple Logo Illustration */}
             <div className="mb-16 relative">
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
-                <div className="relative">
-                  <img 
-                    src="https://images.pexels.com/photos/1762578/pexels-photo-1762578.jpeg"
-                    alt="Hands with vintage cassette tape"
-                    className="w-full h-32 md:h-40 object-cover rounded-2xl shadow-lg"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl"></div>
-                </div>
-                <div className="relative">
-                  <img 
-                    src="https://images.pexels.com/photos/3756766/pexels-photo-3756766.jpeg"
-                    alt="Person with vintage audio equipment"
-                    className="w-full h-32 md:h-40 object-cover rounded-2xl shadow-lg"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-orange-500/20 rounded-2xl"></div>
-                </div>
-                <div className="relative col-span-2 md:col-span-1">
-                  <img 
-                    src="https://images.unsplash.com/photo-1653319440475-49014169d76c"
-                    alt="Wall of vintage cassette tapes"
-                    className="w-full h-32 md:h-40 object-cover rounded-2xl shadow-lg"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-blue-500/20 rounded-2xl"></div>
-                </div>
-              </div>
+              <SimpleLogo />
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -277,7 +279,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Process Section - Merged and Revised */}
+      {/* Process Section - No buttons */}
       <section className="py-20 px-6 bg-gray-50" id="how-it-works">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
@@ -369,7 +371,7 @@ const LandingPage = () => {
                   </div>
                 </div>
 
-                {/* Content */}
+                {/* Content - No buttons */}
                 <div className="w-full md:w-1/2 text-center md:text-left">
                   <h3 className="text-2xl md:text-3xl font-light mb-4 text-gray-900 vintage-font">
                     <span className="text-3xl mr-3">{step.step}</span>
@@ -378,15 +380,6 @@ const LandingPage = () => {
                   <p className="text-gray-600 mb-4 font-light">
                     {step.description}
                   </p>
-                  
-                  {step.buttonText && (
-                    <Button
-                      onClick={step.buttonAction}
-                      className="bg-gray-900 text-white hover:bg-gray-800 font-normal px-6 py-3 rounded-full"
-                    >
-                      {step.buttonText}
-                    </Button>
-                  )}
                 </div>
               </li>
             ))}
@@ -487,7 +480,7 @@ const LandingPage = () => {
               <span className="text-base font-medium text-gray-900">Forever Tapes</span>
             </div>
             <p className="text-gray-600 max-w-xl mx-auto font-light">
-              Collective Audio Archives for the Shared Memory
+              Collective Audio Archives for Shared Memories
             </p>
           </div>
           
