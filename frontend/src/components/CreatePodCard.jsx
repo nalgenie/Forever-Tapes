@@ -279,22 +279,18 @@ const CreatePodCard = () => {
             <CardContent className="space-y-6">
               <div>
                 <Label>Choose from Music Library</Label>
-                <Select 
+                <select 
                   value={formData.backgroundMusic} 
-                  onValueChange={(value) => handleInputChange('backgroundMusic', value)}
+                  onChange={(e) => handleInputChange('backgroundMusic', e.target.value)}
+                  className="flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm mt-2"
                 >
-                  <SelectTrigger className="mt-2">
-                    <SelectValue placeholder="Select background music" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="">No background music</SelectItem>
-                    {mockMusicLibrary.map((music) => (
-                      <SelectItem key={music.id} value={music.title}>
-                        {music.title} - {music.artist} ({Math.floor(music.duration/60)}:{(music.duration%60).toString().padStart(2, '0')})
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  <option value="">No background music</option>
+                  {mockMusicLibrary.map((music) => (
+                    <option key={music.id} value={music.title}>
+                      {music.title} - {music.artist} ({Math.floor(music.duration/60)}:{(music.duration%60).toString().padStart(2, '0')})
+                    </option>
+                  ))}
+                </select>
               </div>
               
               <div className="border-t pt-4">
