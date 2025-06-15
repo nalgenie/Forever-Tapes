@@ -77,58 +77,39 @@ const LandingPage = () => {
   const processSteps = [
     {
       step: '❶',
-      title: 'Every voice is a color here. Which one will you pick?',
-      subtitle: 'Choose Your Voice Color',
+      title: 'Choose Your Voice Color',
+      subtitle: 'Every voice is a color here. Which one will you pick?',
+      description: 'Sign up and select your unique voice identity. Each contributor gets a distinct color representing their voice in your audio memory.',
       animation: 'partner',
       buttonText: 'Sign Up',
       buttonAction: () => navigate('/create')
     },
     {
       step: '❷',
-      title: 'Create with someone you know via custom audio settings:',
-      subtitle: 'Collaborative Audio Settings',
+      title: 'Create Your Audio Memory',
+      subtitle: 'Set up your collaborative recording with custom settings',
+      description: 'Configure who can contribute, set message lengths, choose background music, and customize your audio memory collection.',
       animation: 'settings',
-      buttonText: 'Start Recording',
+      buttonText: 'Start Creating',
       buttonAction: () => navigate('/create')
     },
     {
       step: '❸',
-      title: 'Take turns adding voices, memories, and emotions...',
-      subtitle: 'Collect Voice Messages',
+      title: 'Collect Voice Messages',
+      subtitle: 'Contributors add their voices, memories, and emotions',
+      description: 'Share your link and watch as friends and family contribute their heartfelt messages. Each voice adds a unique layer to your memory.',
       animation: 'turns',
       buttonText: null,
       buttonAction: null
     },
     {
       step: '❹',
-      title: 'Create your final audio experience for sharing (and celebrating).',
-      subtitle: 'Share Your Audio Memory',
+      title: 'Share Your Memory',
+      subtitle: 'Create your final audio memory for sharing and celebrating',
+      description: 'We blend all voices together with your chosen background music into a beautiful, shareable audio memory that lasts forever.',
       animation: 'final',
       buttonText: null,
       buttonAction: null
-    }
-  ];
-
-  const features = [
-    {
-      icon: <Mic className="w-6 h-6" />,
-      title: "Voice Collection",
-      description: "Send a link. Contributors record directly from their device with guided prompts."
-    },
-    {
-      icon: <AudioWaveform className="w-6 h-6" />,
-      title: "Audio Mixing", 
-      description: "Custom background tracks, advanced editing tools, and audio enhancement for perfect quality."
-    },
-    {
-      icon: <Users className="w-6 h-6" />,
-      title: "Collaborative Creation",
-      description: "Invite contributors to add their voice to your audio experience."
-    },
-    {
-      icon: <Share2 className="w-6 h-6" />,
-      title: "Seamless Sharing",
-      description: "Share your finished audio experience via email, text, or custom listening page."
     }
   ];
 
@@ -224,10 +205,10 @@ const LandingPage = () => {
         <div className="container mx-auto max-w-6xl relative z-10">
           <div className="text-center mb-20">
             <Badge className="mb-8 bg-blue-50 text-blue-700 border-blue-200 px-4 py-2 text-sm font-normal">
-              Collaborative Audio Experiences
+              Collective Audio Archives
             </Badge>
             
-            <h1 className="text-6xl md:text-8xl font-light mb-8 tracking-tight leading-none text-gray-900">
+            <h1 className="text-6xl md:text-8xl font-light mb-8 tracking-tight leading-none text-gray-900 vintage-font">
               <div className="relative inline-block">
                 <span className="relative z-10">Forever</span>
                 <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-blue-400 via-purple-400 to-orange-400 rounded-full"></div>
@@ -239,29 +220,37 @@ const LandingPage = () => {
             </h1>
             
             <p className="text-xl md:text-2xl text-gray-600 mb-16 max-w-3xl mx-auto leading-relaxed font-light">
-              Collaborative Audio Experiences for the Collective Memory
+              Collective Audio Archives for the Shared Memory
             </p>
 
-            {/* Hero Illustration */}
+            {/* Hero Illustration - More playful and vintage */}
             <div className="mb-16 relative">
-              <div className="w-full max-w-2xl mx-auto h-64 relative">
-                <img 
-                  src="https://images.unsplash.com/photo-1617994452722-4145e196248b"
-                  alt="Audio waves visualization"
-                  className="w-full h-full object-cover rounded-2xl shadow-2xl"
-                />
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-orange-500/20 rounded-2xl"></div>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
+                <div className="relative">
+                  <img 
+                    src="https://images.pexels.com/photos/1762578/pexels-photo-1762578.jpeg"
+                    alt="Hands with vintage cassette tape"
+                    className="w-full h-32 md:h-40 object-cover rounded-2xl shadow-lg"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl"></div>
+                </div>
+                <div className="relative">
+                  <img 
+                    src="https://images.pexels.com/photos/3756766/pexels-photo-3756766.jpeg"
+                    alt="Person with vintage audio equipment"
+                    className="w-full h-32 md:h-40 object-cover rounded-2xl shadow-lg"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-orange-500/20 rounded-2xl"></div>
+                </div>
+                <div className="relative col-span-2 md:col-span-1">
+                  <img 
+                    src="https://images.unsplash.com/photo-1653319440475-49014169d76c"
+                    alt="Wall of vintage cassette tapes"
+                    className="w-full h-32 md:h-40 object-cover rounded-2xl shadow-lg"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-blue-500/20 rounded-2xl"></div>
+                </div>
               </div>
-            </div>
-
-            {/* Hero Description */}
-            <div className="mb-16 max-w-4xl mx-auto">
-              <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-                <span className="font-semibold text-gray-900">Forever Tapes</span> is an audio platform for collaborative memory-making. 
-                <span className="block mt-4 text-gray-600">
-                  Here, multiple voices take turns contributing to a single audio experience and connect as <em className="font-medium">equals in memory</em> across their own parallel world of shared moments. What happens when one of the voices is yours?
-                </span>
-              </p>
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -271,7 +260,7 @@ const LandingPage = () => {
                 className="bg-gray-900 text-white hover:bg-gray-800 px-8 py-4 font-normal text-lg rounded-full"
               >
                 <Mic className="mr-2 w-5 h-5" />
-                Start your own experience
+                Start your own memory
               </Button>
               
               <Button 
@@ -288,15 +277,15 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Process Section */}
+      {/* Process Section - Merged and Revised */}
       <section className="py-20 px-6 bg-gray-50" id="how-it-works">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-light mb-4 tracking-tight text-gray-900">
+            <h2 className="text-4xl md:text-5xl font-light mb-4 tracking-tight text-gray-900 vintage-font">
               The process is simple
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto font-light">
-              Creating meaningful audio experiences has never been more intuitive.
+              Creating meaningful audio memories has never been more intuitive.
             </p>
           </div>
           
@@ -372,7 +361,7 @@ const LandingPage = () => {
                           <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-blue-500 to-orange-500 rounded-full flex items-center justify-center">
                             <Heart className="w-8 h-8 text-white" />
                           </div>
-                          <div className="text-sm text-gray-600">Audio Experience</div>
+                          <div className="text-sm text-gray-600">Audio Memory</div>
                           <div className="text-lg font-semibold text-gray-800">Complete</div>
                         </div>
                       </div>
@@ -382,10 +371,13 @@ const LandingPage = () => {
 
                 {/* Content */}
                 <div className="w-full md:w-1/2 text-center md:text-left">
-                  <h3 className="text-2xl md:text-3xl font-light mb-4 text-gray-900">
+                  <h3 className="text-2xl md:text-3xl font-light mb-4 text-gray-900 vintage-font">
                     <span className="text-3xl mr-3">{step.step}</span>
                     {step.title}
                   </h3>
+                  <p className="text-gray-600 mb-4 font-light">
+                    {step.description}
+                  </p>
                   
                   {step.buttonText && (
                     <Button
@@ -406,13 +398,13 @@ const LandingPage = () => {
       <section className="py-20 px-6 bg-white">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-light mb-4 tracking-tight text-gray-900">
+            <h2 className="text-4xl md:text-5xl font-light mb-4 tracking-tight text-gray-900 vintage-font">
               Designed for life's
               <br />
               <span className="italic">meaningful sounds</span>
             </h2>
             <p className="text-lg text-gray-600 max-w-xl mx-auto font-light">
-              Each audio experience is thoughtfully crafted to capture the essence of your occasion.
+              Each audio memory is thoughtfully crafted to capture the essence of your occasion.
             </p>
           </div>
           
@@ -448,50 +440,20 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 px-6 bg-gray-50">
-        <div className="container mx-auto max-w-5xl">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-light mb-4 tracking-tight text-gray-900">
-              How it works
-            </h2>
-            <p className="text-lg text-gray-600 max-w-xl mx-auto font-light">
-              Creating meaningful audio experiences has never been more intuitive.
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
-            {features.map((feature, index) => (
-              <div key={index} className="text-center group">
-                <div className="w-16 h-16 mx-auto mb-6 bg-white group-hover:bg-gray-50 rounded-2xl flex items-center justify-center text-gray-700 transition-colors duration-300 shadow-lg">
-                  {feature.icon}
-                </div>
-                <h3 className="text-base font-medium mb-3 text-gray-900">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-600 leading-relaxed text-sm font-light">
-                  {feature.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* CTA Section */}
       <section className="py-20 px-6 bg-gradient-to-br from-blue-600 via-purple-600 to-orange-600 text-white">
         <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-4xl md:text-5xl font-light mb-6 tracking-tight">
+          <h2 className="text-4xl md:text-5xl font-light mb-6 tracking-tight vintage-font">
             Start for free
           </h2>
           <p className="text-xl text-white/90 mb-8 font-light max-w-2xl mx-auto">
-            Create your first audio experience at no cost. Upgrade for extended features and unlimited possibilities.
+            Create your first audio memory at no cost. Upgrade for extended features and unlimited possibilities.
           </p>
           
           <div className="flex justify-center gap-8 text-sm text-white/80 mb-12 font-light">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-white/60 rounded-full"></div>
-              First experience is free
+              First memory is free
             </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-white/60 rounded-full"></div>
@@ -509,7 +471,7 @@ const LandingPage = () => {
             className="bg-white text-gray-900 hover:bg-gray-100 px-8 py-4 font-normal text-lg rounded-full"
           >
             <Mic className="w-5 h-5 mr-2" />
-            Create your first experience
+            Create your first memory
           </Button>
         </div>
       </section>
@@ -525,7 +487,7 @@ const LandingPage = () => {
               <span className="text-base font-medium text-gray-900">Forever Tapes</span>
             </div>
             <p className="text-gray-600 max-w-xl mx-auto font-light">
-              Collaborative Audio Experiences for the Collective Memory
+              Collective Audio Archives for the Shared Memory
             </p>
           </div>
           
