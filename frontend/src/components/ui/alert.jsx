@@ -1,48 +1,47 @@
 import * as React from "react"
-import { cva } from "class-variance-authority"
-import { cn } from "../../lib/utils"
 
-const alertVariants = cva(
-  "relative w-full rounded-lg border px-4 py-3 text-sm [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground [&>svg~*]:pl-7",
-  {
-    variants: {
-      variant: {
-        default: "bg-background text-foreground",
-        destructive:
-          "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-    },
+const Alert = React.forwardRef(({ className = "", variant = "default", children, ...props }, ref) => {
+  const baseStyles = "relative w-full rounded-lg border px-4 py-3 text-sm"
+  
+  const variants = {
+    default: "bg-white text-gray-900 border-gray-200",
+    destructive: "border-red-200 text-red-900 bg-red-50",
   }
-)
 
-const Alert = React.forwardRef(({ className, variant, ...props }, ref) => (
-  <div
-    ref={ref}
-    role="alert"
-    className={cn(alertVariants({ variant }), className)}
-    {...props}
-  />
-))
+  const combinedClassName = `${baseStyles} ${variants[variant]} ${className}`
+
+  return (
+    <div
+      ref={ref}
+      role="alert"
+      className={combinedClassName}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+})
 Alert.displayName = "Alert"
 
-const AlertTitle = React.forwardRef(({ className, ...props }, ref) => (
+const AlertTitle = React.forwardRef(({ className = "", children, ...props }, ref) => (
   <h5
     ref={ref}
-    className={cn("mb-1 font-medium leading-none tracking-tight", className)}
+    className={`mb-1 font-medium leading-none tracking-tight ${className}`}
     {...props}
-  />
+  >
+    {children}
+  </h5>
 ))
 AlertTitle.displayName = "AlertTitle"
 
-const AlertDescription = React.forwardRef(({ className, ...props }, ref) => (
+const AlertDescription = React.forwardRef(({ className = "", children, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("text-sm [&_p]:leading-relaxed", className)}
+    className={`text-sm [&_p]:leading-relaxed ${className}`}
     {...props}
-  />
+  >
+    {children}
+  </div>
 ))
 AlertDescription.displayName = "AlertDescription"
 
