@@ -1,17 +1,17 @@
-// Mock data for pod-card application
+// Mock data for Forever Tapes - vintage hifi meets digital lo-fi
 
 export const mockPodCards = [
   {
     id: '1',
-    title: 'Birthday Surprise for Sarah',
+    title: 'Birthday Mix for Sarah',
     createdBy: 'Mike Johnson',
     totalDuration: 4.5,
     maxMessageDuration: 0.5,
     maxMessages: 10,
     currentMessages: 7,
     status: 'collecting',
-    shareLink: 'https://podcard.app/contribute/abc123',
-    backgroundMusic: 'Happy Birthday Jazz',
+    shareLink: 'https://forevertapes.com/contribute/abc123',
+    backgroundMusic: 'Birthday Jazz Loop',
     createdAt: '2025-01-15T10:30:00Z',
     messages: [
       {
@@ -43,43 +43,43 @@ export const mockPodCards = [
 export const mockMusicLibrary = [
   {
     id: 'music1',
-    title: 'Happy Birthday Jazz',
-    artist: 'Pod-Card Studio',
+    title: 'Birthday Jazz Loop',
+    artist: 'Tape Studio',
     duration: 60,
     category: 'Birthday',
     audioUrl: '/mock-audio/birthday-jazz.mp3'
   },
   {
     id: 'music2',
-    title: 'Celebration Vibes',
-    artist: 'Pod-Card Studio',
+    title: 'Celebration Breaks',
+    artist: 'Tape Studio',
     duration: 45,
     category: 'General',
     audioUrl: '/mock-audio/celebration.mp3'
   },
   {
     id: 'music3',
-    title: 'Gentle Acoustic',
-    artist: 'Pod-Card Studio',
+    title: 'Warm Analog',
+    artist: 'Tape Studio',
     duration: 90,
     category: 'Calm',
-    audioUrl: '/mock-audio/acoustic.mp3'
+    audioUrl: '/mock-audio/analog.mp3'
   },
   {
     id: 'music4',
-    title: 'Upbeat Pop',
-    artist: 'Pod-Card Studio',
+    title: 'Upbeat Synth',
+    artist: 'Tape Studio',
     duration: 75,
     category: 'Energetic',
     audioUrl: '/mock-audio/upbeat.mp3'
   },
   {
     id: 'music5',
-    title: 'Romantic Melody',
-    artist: 'Pod-Card Studio',
+    title: 'Lo-Fi Romance',
+    artist: 'Tape Studio',
     duration: 120,
     category: 'Love',
-    audioUrl: '/mock-audio/romantic.mp3'
+    audioUrl: '/mock-audio/lofi-romance.mp3'
   }
 ];
 
@@ -88,7 +88,7 @@ export const mockUser = {
   name: 'Mike Johnson',
   email: 'mike@email.com',
   phone: '+1234567890',
-  freePodCardsUsed: 0,
+  freeTapesUsed: 0,
   paidPlans: []
 };
 
@@ -101,7 +101,7 @@ export const mockAPI = {
           id: Math.random().toString(36).substr(2, 9),
           ...podCardData,
           status: 'collecting',
-          shareLink: `https://podcard.app/contribute/${Math.random().toString(36).substr(2, 6)}`,
+          shareLink: `https://forevertapes.com/contribute/${Math.random().toString(36).substr(2, 6)}`,
           createdAt: new Date().toISOString(),
           messages: []
         };
@@ -134,8 +134,8 @@ export const mockAPI = {
       setTimeout(() => {
         resolve({
           id: podCardId,
-          finalAudioUrl: '/mock-audio/final-podcard.mp3',
-          shareUrl: `https://podcard.app/listen/${podCardId}`,
+          finalAudioUrl: '/mock-audio/final-mixtape.mp3',
+          shareUrl: `https://forevertapes.com/listen/${podCardId}`,
           status: 'completed'
         });
       }, 3000);
@@ -146,38 +146,42 @@ export const mockAPI = {
 export const pricingTiers = [
   {
     id: 'free',
-    name: 'Free Trial',
+    name: 'First Tape',
     price: 0,
     maxDuration: 5,
     maxMessageDuration: 0.5,
     maxMessages: 10,
-    features: ['Basic editing', 'Email delivery', '5 music tracks']
+    features: ['Basic mixing', 'Email delivery', 'Standard quality'],
+    description: 'perfect for trying the vibe'
   },
   {
     id: 'basic',
-    name: 'Basic Pod-Card',
-    price: 5,
+    name: 'Essential Mix',
+    price: 8,
     maxDuration: 10,
     maxMessageDuration: 1,
     maxMessages: 15,
-    features: ['Advanced editing', 'Email + SMS delivery', 'Full music library', 'Noise reduction']
+    features: ['Advanced mixing', 'Email + SMS delivery', 'Hi-fi quality', 'Noise reduction'],
+    description: 'great for small gatherings'
   },
   {
     id: 'premium',
-    name: 'Premium Pod-Card',
-    price: 15,
+    name: 'Pro Mix',
+    price: 18,
     maxDuration: 20,
     maxMessageDuration: 2,
     maxMessages: 25,
-    features: ['Pro editing tools', 'Custom branding', 'Priority support', 'Advanced analytics']
+    features: ['Pro mixing suite', 'Custom branding', 'Priority support', 'Analytics'],
+    description: 'perfect for special occasions'
   },
   {
     id: 'unlimited',
-    name: 'Unlimited Pod-Card',
-    price: 25,
+    name: 'Master Tape',
+    price: 28,
     maxDuration: 60,
     maxMessageDuration: 5,
     maxMessages: 50,
-    features: ['Unlimited everything', 'White-label option', 'API access', 'Dedicated support']
+    features: ['Unlimited everything', 'White-label option', 'Dedicated support', 'Custom features'],
+    description: 'for the most special moments'
   }
 ];
