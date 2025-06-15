@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-import { Mic, Music, Share2, PlayCircle, Users, Volume2, Radio, Heart, Clock, Zap, Headphones } from 'lucide-react';
-import Waveform from './icons/Waveform';
+import { Mic, Music, Share2, PlayCircle, Users, Volume2, Radio, Heart, Clock, Zap, Headphones, AudioWaveform } from 'lucide-react';
 
 const LandingPage = () => {
   const navigate = useNavigate();
