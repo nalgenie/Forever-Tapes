@@ -105,7 +105,7 @@ const LandingPage = () => {
     }
   ];
 
-  // Cute illustration inspired by the book pile image but with audio equipment
+  // Cute illustration with gender-neutral character and speaker/boombox variations
   const CuteAudioIllustration = () => (
     <div className="simple-logo">
       <svg 
@@ -113,37 +113,79 @@ const LandingPage = () => {
         className="w-full h-auto"
         style={{ maxHeight: '300px' }}
       >
-        {/* Background pile of cassette tapes and audio equipment */}
+        {/* Background pile of audio equipment with speaker/boombox designs */}
         
-        {/* Back row - large items */}
+        {/* Back row - large speakers and boomboxes */}
+        {/* Large speaker (looks like a face) */}
         <rect x="50" y="120" width="80" height="50" rx="4" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2"/>
+        <circle cx="70" cy="135" r="8" fill="#6B7280" stroke="#4B5563" strokeWidth="1"/>
+        <circle cx="110" cy="135" r="8" fill="#6B7280" stroke="#4B5563" strokeWidth="1"/>
+        <rect x="60" y="150" width="60" height="6" rx="3" fill="#9CA3AF"/>
+        
+        {/* Vintage radio */}
         <rect x="300" y="100" width="70" height="60" rx="6" fill="#FCA5A5" stroke="#F87171" strokeWidth="2"/>
+        <circle cx="320" cy="120" r="12" fill="#DC2626" stroke="#B91C1C" strokeWidth="1"/>
+        <circle cx="350" cy="120" r="12" fill="#DC2626" stroke="#B91C1C" strokeWidth="1"/>
+        <rect x="310" y="140" width="50" height="8" rx="2" fill="#F87171"/>
+        <circle cx="315" cy="150" r="2" fill="#DC2626"/>
+        <circle cx="325" cy="150" r="2" fill="#DC2626"/>
+        
+        {/* Modern speaker */}
         <rect x="200" y="90" width="90" height="45" rx="4" fill="#A7F3D0" stroke="#6EE7B7" strokeWidth="2"/>
+        <circle cx="230" cy="110" r="15" fill="#059669" stroke="#047857" strokeWidth="1"/>
+        <circle cx="260" cy="110" r="8" fill="#10B981" stroke="#059669" strokeWidth="1"/>
+        <rect x="210" y="125" width="70" height="4" rx="2" fill="#6EE7B7"/>
         
-        {/* Middle row - cassette tapes */}
+        {/* Middle row - cassette players and smaller speakers */}
+        {/* Cassette player (boombox style) */}
         <rect x="80" y="140" width="60" height="40" rx="3" fill="#FBBF24" stroke="#F59E0B" strokeWidth="2"/>
+        <circle cx="95" cy="155" r="6" fill="#92400E" stroke="#78350F" strokeWidth="1"/>
+        <circle cx="125" cy="155" r="6" fill="#92400E" stroke="#78350F" strokeWidth="1"/>
+        <rect x="85" y="168" width="50" height="4" rx="2" fill="#F59E0B"/>
+        <rect x="100" y="145" width="20" height="8" rx="1" fill="#78350F"/>
+        
+        {/* Portable speaker (face-like) */}
         <rect x="150" y="135" width="65" height="42" rx="3" fill="#A78BFA" stroke="#8B5CF6" strokeWidth="2"/>
+        <circle cx="170" cy="150" r="8" fill="#5B21B6" stroke="#4C1D95" strokeWidth="1"/>
+        <circle cx="195" cy="150" r="8" fill="#5B21B6" stroke="#4C1D95" strokeWidth="1"/>
+        <path d="M175 165 Q182.5 170 190 165" fill="none" stroke="#7C3AED" strokeWidth="2"/>
+        
+        {/* Retro radio */}
         <rect x="260" y="130" width="70" height="45" rx="3" fill="#34D399" stroke="#10B981" strokeWidth="2"/>
+        <circle cx="280" cy="145" r="10" fill="#047857" stroke="#065F46" strokeWidth="1"/>
+        <circle cx="310" cy="145" r="10" fill="#047857" stroke="#065F46" strokeWidth="1"/>
+        <rect x="270" y="160" width="50" height="6" rx="3" fill="#10B981"/>
+        <circle cx="275" cy="168" r="1.5" fill="#047857"/>
+        <circle cx="285" cy="168" r="1.5" fill="#047857"/>
+        
+        {/* Compact speaker */}
         <rect x="340" y="125" width="55" height="38" rx="3" fill="#60A5FA" stroke="#3B82F6" strokeWidth="2"/>
+        <circle cx="367" cy="140" r="12" fill="#1E40AF" stroke="#1E3A8A" strokeWidth="1"/>
+        <circle cx="367" cy="140" r="6" fill="#3B82F6"/>
+        <rect x="345" y="155" width="45" height="3" rx="1.5" fill="#3B82F6"/>
         
-        {/* Cassette holes on visible tapes */}
-        <circle cx="95" cy="155" r="6" fill="none" stroke="#D97706" strokeWidth="1.5"/>
-        <circle cx="125" cy="155" r="6" fill="none" stroke="#D97706" strokeWidth="1.5"/>
-        <circle cx="165" cy="150" r="6" fill="none" stroke="#7C3AED" strokeWidth="1.5"/>
-        <circle cx="195" cy="150" r="6" fill="none" stroke="#7C3AED" strokeWidth="1.5"/>
-        <circle cx="275" cy="145" r="6" fill="none" stroke="#059669" strokeWidth="1.5"/>
-        <circle cx="305" cy="145" r="6" fill="none" stroke="#059669" strokeWidth="1.5"/>
-        
-        {/* Front row - more tapes */}
+        {/* Front row - more varied audio equipment */}
+        {/* Walkman/cassette player */}
         <rect x="40" y="170" width="70" height="35" rx="3" fill="#F472B6" stroke="#EC4899" strokeWidth="2"/>
-        <rect x="120" y="175" width="75" height="40" rx="3" fill="#FB7185" stroke="#F43F5E" strokeWidth="2"/>
-        <rect x="280" y="165" width="80" height="38" rx="3" fill="#38BDF8" stroke="#0EA5E9" strokeWidth="2"/>
+        <rect x="50" y="180" width="25" height="15" rx="2" fill="#BE185D" stroke="#9D174D" strokeWidth="1"/>
+        <circle cx="85" cy="187" r="4" fill="#9D174D"/>
+        <circle cx="100" cy="187" r="4" fill="#9D174D"/>
+        <rect x="45" y="195" width="60" height="3" rx="1.5" fill="#EC4899"/>
         
-        {/* Old radio/boombox on the side */}
-        <rect x="20" y="80" width="60" height="45" rx="4" fill="#6B7280" stroke="#4B5563" strokeWidth="2"/>
-        <circle cx="35" cy="95" r="8" fill="#374151" stroke="#1F2937" strokeWidth="1"/>
-        <circle cx="55" cy="95" r="8" fill="#374151" stroke="#1F2937" strokeWidth="1"/>
-        <rect x="25" y="110" width="50" height="8" rx="2" fill="#9CA3AF"/>
+        {/* Boom box */}
+        <rect x="120" y="175" width="75" height="40" rx="3" fill="#FB7185" stroke="#F43F5E" strokeWidth="2"/>
+        <circle cx="140" cy="190" r="8" fill="#BE123C" stroke="#9F1239" strokeWidth="1"/>
+        <circle cx="175" cy="190" r="8" fill="#BE123C" stroke="#9F1239" strokeWidth="1"/>
+        <rect x="130" y="205" width="55" height="5" rx="2.5" fill="#F43F5E"/>
+        <rect x="150" y="180" width="15" height="6" rx="1" fill="#9F1239"/>
+        
+        {/* Sound system */}
+        <rect x="280" y="165" width="80" height="38" rx="3" fill="#38BDF8" stroke="#0EA5E9" strokeWidth="2"/>
+        <circle cx="305" cy="180" r="10" fill="#0369A1" stroke="#075985" strokeWidth="1"/>
+        <circle cx="335" cy="180" r="10" fill="#0369A1" stroke="#075985" strokeWidth="1"/>
+        <circle cx="305" cy="180" r="4" fill="#0EA5E9"/>
+        <circle cx="335" cy="180" r="4" fill="#0EA5E9"/>
+        <rect x="290" y="195" width="60" height="4" rx="2" fill="#0EA5E9"/>
         
         {/* Headphones draped over equipment */}
         <path d="M150 60 Q200 40 250 60" fill="none" stroke="#3B82F6" strokeWidth="3"/>
@@ -152,24 +194,27 @@ const LandingPage = () => {
         <path d="M150 82 Q155 90 150 95" fill="none" stroke="#3B82F6" strokeWidth="2"/>
         <path d="M250 82 Q245 90 250 95" fill="none" stroke="#3B82F6" strokeWidth="2"/>
         
-        {/* Cute character (sleepy cat) resting on the pile */}
-        <ellipse cx="200" cy="125" rx="25" ry="18" fill="#D2B48C" stroke="#CD853F" strokeWidth="2"/>
-        <circle cx="195" cy="115" r="8" fill="#DEB887"/>
-        <circle cx="205" cy="115" r="8" fill="#DEB887"/>
-        <ellipse cx="200" cy="110" rx="12" ry="8" fill="#D2B48C" stroke="#CD853F" strokeWidth="1"/>
+        {/* Gender-neutral humanoid character resting on the pile */}
+        <ellipse cx="200" cy="125" rx="20" ry="15" fill="#FBBF24" stroke="#F59E0B" strokeWidth="2"/>
         
-        {/* Cat ears */}
-        <polygon points="190,108 195,98 200,108" fill="#D2B48C" stroke="#CD853F" strokeWidth="1"/>
-        <polygon points="200,108 205,98 210,108" fill="#D2B48C" stroke="#CD853F" strokeWidth="1"/>
+        {/* Head */}
+        <circle cx="200" cy="105" r="12" fill="#FCD34D" stroke="#F59E0B" strokeWidth="2"/>
         
-        {/* Cat face details */}
-        <circle cx="196" cy="108" r="1.5" fill="#8B4513"/>
-        <circle cx="204" cy="108" r="1.5" fill="#8B4513"/>
-        <path d="M198 112 Q200 114 202 112" fill="none" stroke="#8B4513" strokeWidth="1"/>
-        <path d="M200 114 L200 116" stroke="#8B4513" strokeWidth="1"/>
+        {/* Simple hair/head covering */}
+        <path d="M188 98 Q200 90 212 98 Q208 102 200 100 Q192 102 188 98" fill="#D97706" stroke="#B45309" strokeWidth="1"/>
         
-        {/* Cat tail curled */}
-        <path d="M220 125 Q230 115 225 105 Q220 100 215 105" fill="none" stroke="#CD853F" strokeWidth="3"/>
+        {/* Face - simple and peaceful */}
+        <circle cx="196" cy="102" r="1.5" fill="#8B4513"/>
+        <circle cx="204" cy="102" r="1.5" fill="#8B4513"/>
+        <path d="M198 108 Q200 110 202 108" fill="none" stroke="#8B4513" strokeWidth="1"/>
+        
+        {/* Arms resting */}
+        <ellipse cx="185" cy="120" rx="8" ry="4" fill="#FBBF24" stroke="#F59E0B" strokeWidth="1"/>
+        <ellipse cx="215" cy="120" rx="8" ry="4" fill="#FBBF24" stroke="#F59E0B" strokeWidth="1"/>
+        
+        {/* Legs tucked */}
+        <ellipse cx="195" cy="135" rx="6" ry="10" fill="#FBBF24" stroke="#F59E0B" strokeWidth="1"/>
+        <ellipse cx="205" cy="135" rx="6" ry="10" fill="#FBBF24" stroke="#F59E0B" strokeWidth="1"/>
         
         {/* Musical notes floating around */}
         <circle cx="100" cy="50" r="3" fill="#8B5CF6" opacity="0.7"/>
@@ -183,18 +228,22 @@ const LandingPage = () => {
         <circle cx="280" cy="60" r="2.5" fill="#10B981" opacity="0.6"/>
         <line x1="282" y1="60" x2="282" y2="48" stroke="#10B981" strokeWidth="1.5" opacity="0.6"/>
         
+        <circle cx="80" cy="45" r="2.5" fill="#EC4899" opacity="0.6"/>
+        <line x1="82" y1="45" x2="82" y2="33" stroke="#EC4899" strokeWidth="1.5" opacity="0.6"/>
+        
         {/* Sound waves */}
         <path d="M30 150 Q35 145 40 150 Q45 155 50 150" fill="none" stroke="#60A5FA" strokeWidth="1.5" opacity="0.6"/>
         <path d="M350 140 Q355 135 360 140 Q365 145 370 140" fill="none" stroke="#34D399" strokeWidth="1.5" opacity="0.6"/>
-        
-        {/* Small details - tape reels visible */}
-        <circle cx="95" cy="155" r="3" fill="#92400E"/>
-        <circle cx="125" cy="155" r="3" fill="#92400E"/>
-        <circle cx="165" cy="150" r="3" fill="#581C87"/>
-        <circle cx="195" cy="150" r="3" fill="#581C87"/>
+        <path d="M60 200 Q65 195 70 200 Q75 205 80 200" fill="none" stroke="#F472B6" strokeWidth="1.5" opacity="0.5"/>
         
         {/* Cord/wire from headphones */}
         <path d="M175 75 Q170 85 165 95 Q160 105 165 115" fill="none" stroke="#3B82F6" strokeWidth="2" opacity="0.8"/>
+        
+        {/* Small details on speakers */}
+        <circle cx="70" cy="135" r="3" fill="#374151"/>
+        <circle cx="110" cy="135" r="3" fill="#374151"/>
+        <circle cx="230" cy="110" r="8" fill="#047857"/>
+        <circle cx="367" cy="140" r="4" fill="#1E3A8A"/>
       </svg>
     </div>
   );
