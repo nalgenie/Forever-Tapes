@@ -116,7 +116,7 @@ const LandingPage = () => {
       description: "Send a link. Contributors record directly from their device with guided prompts."
     },
     {
-      icon: <Waveform className="w-6 h-6" />,
+      icon: <AudioWaveform className="w-6 h-6" />,
       title: "Audio Mixing", 
       description: "Custom background tracks, advanced editing tools, and audio enhancement for perfect quality."
     },
