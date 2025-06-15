@@ -242,8 +242,8 @@ const LandingPage = () => {
               Collective Audio Archives
             </Badge>
             
-            <h1 className="text-7xl md:text-9xl mb-8 tracking-tight leading-none lofi-heading gradient-heading">
-              Forever Tapes
+            <h1 className="text-7xl md:text-9xl mb-8 tracking-tight leading-none lofi-heading gradient-heading lowercase">
+              forever tapes
             </h1>
             
             <p className="text-xl md:text-2xl text-gray-600 mb-16 max-w-3xl mx-auto leading-relaxed font-light">
