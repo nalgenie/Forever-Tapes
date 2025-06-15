@@ -1,72 +1,82 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-import { Mic, Music, Share2, Sparkles, PlayCircle, Heart, Gift, Clock } from 'lucide-react';
+import { Mic, Music, Share2, Sparkles, PlayCircle, Heart, Gift, Clock, Users, Volume2 } from 'lucide-react';
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const [hoveredCard, setHoveredCard] = useState(null);
 
-  const features = [
+  const experiences = [
     {
-      icon: <Mic className="w-8 h-8" />,
-      title: "Easy Audio Collection",
-      description: "Send a simple link to friends and family. They record their message directly from their phone."
+      id: '01',
+      title: 'CELEBRATIONS',
+      subtitle: 'Birthday wishes, anniversaries & life milestones',
+      description: 'Collect heartfelt messages from loved ones to create unforgettable audio celebrations.',
+      illustration: '🎉',
+      hoverColor: 'from-pink-400 to-rose-500'
     },
     {
-      icon: <Music className="w-8 h-8" />,
-      title: "Custom Background Music",
-      description: "Choose from our curated library or upload your own music to set the perfect mood."
+      id: '02', 
+      title: 'MOMENTS',
+      subtitle: 'Graduations, achievements & special occasions',
+      description: 'Preserve the emotions and excitement of life\'s most important moments.',
+      illustration: '✨',
+      hoverColor: 'from-purple-400 to-indigo-500'
     },
     {
-      icon: <Sparkles className="w-8 h-8" />,
-      title: "Professional Editing",
-      description: "Trim, reorder, and adjust volume levels. Add noise reduction with one-click presets."
-    },
-    {
-      icon: <Share2 className="w-8 h-8" />,
-      title: "Beautiful Delivery",
-      description: "Share your finished pod-card via email or text with a gorgeous listening experience."
+      id: '03',
+      title: 'MEMORIES',
+      subtitle: 'Family stories, tributes & legacy preservation',
+      description: 'Create lasting audio memories that connect generations and preserve stories.',
+      illustration: '💫',
+      hoverColor: 'from-blue-400 to-cyan-500'
     }
   ];
 
-  const useCases = [
+  const features = [
     {
-      icon: <Gift className="w-6 h-6" />,
-      title: "Birthday Surprises",
-      description: "Collect birthday wishes from friends around the world"
+      icon: <Mic className="w-6 h-6" />,
+      title: "Professional Audio Collection",
+      description: "Send a simple link. Contributors record directly from their device with guided prompts."
     },
     {
-      icon: <Heart className="w-6 h-6" />,
-      title: "Wedding Messages",
-      description: "Preserve heartfelt wedding toasts and well-wishes"
+      icon: <Music className="w-6 h-6" />,
+      title: "Bespoke Sound Design", 
+      description: "Custom background music, professional editing, and noise reduction for perfect audio."
     },
     {
-      icon: <Clock className="w-6 h-6" />,
-      title: "Memory Keeping",
-      description: "Create time capsules for graduations, anniversaries, and milestones"
+      icon: <Users className="w-6 h-6" />,
+      title: "Collaborative Creation",
+      description: "Invite unlimited contributors to share their voice in your audio celebration."
+    },
+    {
+      icon: <Share2 className="w-6 h-6" />,
+      title: "Beautiful Delivery",
+      description: "Share your finished audio experience via email, text, or custom landing page."
     }
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-white/20 sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
+      <header className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-gray-100 z-50">
+        <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl flex items-center justify-center">
-                <PlayCircle className="w-6 h-6 text-white" />
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center">
+                <Volume2 className="w-5 h-5 text-white" />
               </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                Pod-Card
+              <span className="text-2xl font-bold tracking-tight">
+                FOREVER TAPES
               </span>
             </div>
             <Button 
               onClick={() => navigate('/dashboard')}
-              variant="outline"
-              className="hidden sm:flex"
+              variant="ghost"
+              className="hidden sm:flex font-medium"
             >
               Dashboard
             </Button>
@@ -75,158 +85,186 @@ const LandingPage = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto text-center max-w-4xl">
-          <Badge className="mb-6 bg-gradient-to-r from-purple-100 to-pink-100 text-purple-800 border-purple-200">
-            ✨ The Future of Audio Greeting Cards
-          </Badge>
-          
-          <h1 className="text-5xl md:text-7xl font-black mb-6 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent leading-tight">
-            Create Magical
-            <br />
-            Audio Pod-Cards
-          </h1>
-          
-          <p className="text-xl md:text-2xl text-gray-600 mb-10 leading-relaxed">
-            Collect heartfelt voice messages from loved ones and create a beautiful, 
-            shareable audio experience that lasts forever.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button 
-              size="lg" 
-              onClick={() => navigate('/create')}
-              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-6 text-lg font-semibold rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
-            >
-              Create Your First Pod-Card
-              <Sparkles className="ml-2 w-5 h-5" />
-            </Button>
+      <section className="pt-32 pb-20 px-6">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-16">
+            <Badge className="mb-8 bg-gray-100 text-gray-800 border-0 px-4 py-2 text-sm font-medium">
+              ✨ Bespoke Audio Experiences
+            </Badge>
             
-            <Button 
-              size="lg" 
-              variant="outline"
-              className="px-8 py-6 text-lg rounded-2xl border-2 hover:bg-white/50 transition-all duration-300"
-              onClick={() => navigate('/listen/demo')}
-            >
-              <PlayCircle className="mr-2 w-5 h-5" />
-              Listen to Demo
-            </Button>
-          </div>
-          
-          <div className="mt-12 flex flex-wrap justify-center items-center gap-8 text-sm text-gray-500">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              First pod-card is FREE
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-              Mobile-friendly
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-              No app download required
+            <h1 className="text-6xl md:text-8xl font-black mb-8 tracking-tight leading-none">
+              CREATE BEAUTIFUL
+              <br />
+              <span className="block">AUDIO</span>
+              <span className="block italic font-light">CELEBRATIONS</span>
+            </h1>
+            
+            <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
+              Craft bespoke audio experiences that capture voices, emotions, and moments. 
+              Turn heartfelt messages into lasting celebrations and memories.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+              <Button 
+                size="lg" 
+                onClick={() => navigate('/create')}
+                className="bg-black text-white hover:bg-gray-800 px-12 py-6 text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
+              >
+                Start Creating
+                <Sparkles className="ml-2 w-5 h-5" />
+              </Button>
+              
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="px-12 py-6 text-lg rounded-full border-2 border-gray-300 hover:bg-gray-50 transition-all duration-300"
+                onClick={() => navigate('/listen/demo')}
+              >
+                <PlayCircle className="mr-2 w-5 h-5" />
+                Listen to Demo
+              </Button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 px-4 bg-white/30 backdrop-blur-sm">
-        <div className="container mx-auto max-w-6xl">
+      {/* Experience Grid */}
+      <section className="py-20 px-6 bg-gray-50">
+        <div className="container mx-auto max-w-7xl">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-800">
-              How It Works
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
+              CRAFTED FOR
+              <br />
+              <span className="italic font-light">Life's Moments</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Creating memorable audio experiences has never been easier
+              Every audio experience is uniquely tailored to capture the essence of your special occasion.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            {experiences.map((experience, index) => (
+              <Card 
+                key={experience.id}
+                className={`border-0 bg-white hover:shadow-xl transition-all duration-500 cursor-pointer transform hover:scale-105 overflow-hidden ${
+                  hoveredCard === experience.id ? 'shadow-2xl' : 'shadow-lg'
+                }`}
+                onMouseEnter={() => setHoveredCard(experience.id)}
+                onMouseLeave={() => setHoveredCard(null)}
+                onClick={() => navigate('/create')}
+              >
+                <div className="relative">
+                  <div className={`absolute inset-0 bg-gradient-to-br ${experience.hoverColor} opacity-0 hover:opacity-10 transition-opacity duration-300`} />
+                  <CardHeader className="relative p-8 pb-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-sm font-mono text-gray-400">
+                        {`{ ${experience.id} }`}
+                      </span>
+                      <span className="text-4xl">{experience.illustration}</span>
+                    </div>
+                    <CardTitle className="text-2xl font-bold mb-2 tracking-tight">
+                      {experience.title}
+                    </CardTitle>
+                    <p className="text-sm font-medium text-gray-600 uppercase tracking-wide">
+                      {experience.subtitle}
+                    </p>
+                  </CardHeader>
+                  <CardContent className="relative p-8 pt-0">
+                    <p className="text-gray-600 leading-relaxed">
+                      {experience.description}
+                    </p>
+                  </CardContent>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="py-20 px-6 bg-white">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
+              HOW IT WORKS
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Creating beautiful audio experiences has never been simpler or more meaningful.
             </p>
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, index) => (
-              <Card key={index} className="border-0 bg-white/50 backdrop-blur-sm hover:bg-white/70 transition-all duration-300 hover:scale-105 hover:shadow-xl">
-                <CardHeader className="text-center pb-4">
-                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl flex items-center justify-center text-purple-600">
-                    {feature.icon}
-                  </div>
-                  <CardTitle className="text-xl font-bold text-gray-800">
-                    {feature.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <p className="text-gray-600 leading-relaxed">
-                    {feature.description}
-                  </p>
-                </CardContent>
-              </Card>
+              <div key={index} className="text-center group">
+                <div className="w-16 h-16 mx-auto mb-6 bg-gray-100 rounded-2xl flex items-center justify-center text-gray-700 group-hover:bg-black group-hover:text-white transition-all duration-300">
+                  {feature.icon}
+                </div>
+                <h3 className="text-lg font-bold mb-3 text-gray-800">
+                  {feature.title}
+                </h3>
+                <p className="text-gray-600 leading-relaxed text-sm">
+                  {feature.description}
+                </p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Use Cases Section */}
-      <section className="py-20 px-4">
+      {/* Pricing Teaser */}
+      <section className="py-20 px-6 bg-gray-50">
         <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-800">
-            Perfect For Every Occasion
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
+            START FOR FREE
           </h2>
-          <p className="text-xl text-gray-600 mb-12">
-            Create lasting memories for life's most important moments
+          <p className="text-xl text-gray-600 mb-8">
+            Create your first audio celebration at no cost. Upgrade for extended features and unlimited possibilities.
           </p>
           
-          <div className="grid md:grid-cols-3 gap-8">
-            {useCases.map((useCase, index) => (
-              <Card key={index} className="border-0 bg-gradient-to-br from-white/60 to-white/30 backdrop-blur-sm hover:from-white/80 hover:to-white/50 transition-all duration-300 hover:scale-105">
-                <CardContent className="p-8 text-center">
-                  <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl flex items-center justify-center text-white">
-                    {useCase.icon}
-                  </div>
-                  <h3 className="text-xl font-bold mb-3 text-gray-800">
-                    {useCase.title}
-                  </h3>
-                  <p className="text-gray-600">
-                    {useCase.description}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="flex justify-center gap-8 text-sm text-gray-500 mb-12">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              First celebration is free
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              Professional audio quality
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+              No technical skills required
+            </div>
           </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600">
-        <div className="container mx-auto text-center max-w-3xl">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-            Ready to Create Magic?
-          </h2>
-          <p className="text-xl text-white/90 mb-10">
-            Start your first pod-card for free and see how easy it is to collect and share beautiful audio memories.
-          </p>
           
           <Button 
             size="lg" 
             onClick={() => navigate('/create')}
-            className="bg-white text-purple-600 hover:bg-gray-50 px-8 py-6 text-lg font-semibold rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
+            className="bg-black text-white hover:bg-gray-800 px-12 py-6 text-lg font-semibold rounded-full shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
           >
-            Get Started Now
+            Create Your First Audio Celebration
             <Sparkles className="ml-2 w-5 h-5" />
           </Button>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-white/20 backdrop-blur-sm py-12 px-4">
-        <div className="container mx-auto text-center">
-          <div className="flex items-center justify-center space-x-2 mb-6">
-            <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg flex items-center justify-center">
-              <PlayCircle className="w-5 h-5 text-white" />
+      <footer className="bg-black text-white py-16 px-6">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-12">
+            <div className="flex items-center justify-center space-x-3 mb-6">
+              <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                <Volume2 className="w-4 h-4 text-black" />
+              </div>
+              <span className="text-2xl font-bold tracking-tight">FOREVER TAPES</span>
             </div>
-            <span className="text-xl font-bold text-gray-800">Pod-Card</span>
+            <p className="text-gray-400 max-w-2xl mx-auto">
+              Creating bespoke audio celebrations, moments and memories that last forever.
+            </p>
           </div>
-          <p className="text-gray-600">
-            Creating beautiful audio memories, one pod-card at a time.
-          </p>
+          
+          <div className="text-center text-gray-500 text-sm">
+            <p>&copy; 2025 Forever Tapes. Crafting beautiful audio experiences.</p>
+          </div>
         </div>
       </footer>
     </div>
