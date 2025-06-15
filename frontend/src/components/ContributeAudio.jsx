@@ -7,7 +7,7 @@ import { Label } from './ui/label';
 import { Progress } from './ui/progress';
 import { Badge } from './ui/badge';
 import { Alert, AlertDescription } from './ui/alert';
-import { Mic, MicOff, Play, Pause, Upload, Check, Clock, User, Mail, Phone, Volume2, Heart } from 'lucide-react';
+import { Mic, MicOff, Play, Pause, Upload, Check, Clock, User, Mail, Phone, Volume2, Radio } from 'lucide-react';
 import { mockAPI } from '../mock';
 import { useToast } from '../hooks/use-toast';
 
@@ -36,15 +36,15 @@ const ContributeAudio = () => {
   const timerRef = useRef(null);
   const chunksRef = useRef([]);
   
-  // Mock celebration data with new branding
+  // Mock celebration data with vintage audio vibes
   const celebrationData = {
-    title: 'Birthday Celebration for Sarah',
-    description: 'Help us create a beautiful birthday celebration for Sarah! Record a heartfelt message sharing your favorite memory or wishing her all the best.',
+    title: 'Birthday Tapes for Sarah',
+    description: 'Help us create an audio mixtape for Sarah\'s birthday. Record a personal message sharing your favorite memory or sending good vibes.',
     maxMessageDuration: 30, // 30 seconds
     createdBy: 'Mike Johnson',
     remainingSlots: 3,
     totalSlots: 10,
-    celebrationType: 'Birthday'
+    celebrationType: 'Birthday Mix'
   };
 
   useEffect(() => {
@@ -101,8 +101,8 @@ const ContributeAudio = () => {
     } catch (error) {
       console.error('Error accessing microphone:', error);
       toast({
-        title: "Microphone Access Required",
-        description: "Please allow microphone access to record your heartfelt message.",
+        title: "mic access required",
+        description: "please allow microphone access to record your message.",
         variant: "destructive"
       });
     }
@@ -147,8 +147,8 @@ const ContributeAudio = () => {
     
     if (!contributorData.name.trim()) {
       toast({
-        title: "Name Required",
-        description: "Please share your name so we know who this beautiful message is from.",
+        title: "name required",
+        description: "let us know who this message is from.",
         variant: "destructive"
       });
       return;
@@ -156,8 +156,8 @@ const ContributeAudio = () => {
     
     if (!contributorData.email.trim()) {
       toast({
-        title: "Email Required",
-        description: "We need your email to send you updates about this celebration.",
+        title: "email required", 
+        description: "we need your email for updates about this tape.",
         variant: "destructive"
       });
       return;
@@ -186,15 +186,15 @@ const ContributeAudio = () => {
       setIsUploaded(true);
       
       toast({
-        title: "Message Added Successfully! 🎉",
-        description: "Thank you for contributing to this beautiful celebration!",
+        title: "message added to tape ●",
+        description: "thanks for contributing to this mixtape.",
       });
       
     } catch (error) {
       clearInterval(progressInterval);
       toast({
-        title: "Upload Failed",
-        description: "Something went wrong. Please try again.",
+        title: "upload failed",
+        description: "something went wrong. please try again.",
         variant: "destructive"
       });
     } finally {
@@ -211,23 +211,23 @@ const ContributeAudio = () => {
   if (isUploaded) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center py-8 px-6">
-        <Card className="w-full max-w-lg border-0 bg-gray-50 text-center">
-          <CardContent className="p-12">
-            <div className="w-20 h-20 mx-auto mb-8 bg-green-100 rounded-full flex items-center justify-center">
-              <Check className="w-10 h-10 text-green-600" />
+        <Card className="w-full max-w-lg border-0 shadow-2xl">
+          <CardContent className="p-12 text-center">
+            <div className="w-24 h-24 mx-auto mb-8 bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl flex items-center justify-center">
+              <Check className="w-12 h-12 text-white" />
             </div>
-            <h2 className="text-3xl font-bold mb-4 text-gray-800 tracking-tight">
-              Thank You!
+            <h2 className="text-3xl font-black mb-4 text-gray-900 tracking-tight">
+              TAPE RECORDED
             </h2>
             <p className="text-gray-600 mb-8 leading-relaxed">
-              Your heartfelt message has been added to <strong>{celebrationData.title}</strong>. 
-              {celebrationData.createdBy} will be delighted when they experience the final celebration.
+              your message has been added to <span className="font-semibold">{celebrationData.title}</span>. 
+              {celebrationData.createdBy} will receive the final mixtape when complete.
             </p>
             <Button 
               onClick={() => navigate('/')}
-              className="bg-black text-white hover:bg-gray-800 rounded-full px-8"
+              className="bg-black text-white hover:bg-gray-800 px-8 py-3 font-medium"
             >
-              Create Your Own Celebration
+              create your own tape
             </Button>
           </CardContent>
         </Card>
@@ -236,226 +236,239 @@ const ContributeAudio = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white border-b border-gray-100">
+      <header className="bg-white border-b border-gray-200">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
-              <Volume2 className="w-4 h-4 text-white" />
+            <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+              <Radio className="w-4 h-4 text-white" />
             </div>
-            <span className="text-xl font-bold tracking-tight">FOREVER TAPES</span>
+            <span className="text-xl font-black tracking-wider">FOREVER TAPES</span>
           </div>
         </div>
       </header>
 
-      <div className="container mx-auto max-w-3xl px-6 py-12">
-        {/* Hero */}
-        <div className="text-center mb-12">
-          <Badge className="mb-6 bg-purple-100 text-purple-800 border-0 px-4 py-2">
-            ✨ {celebrationData.celebrationType} Celebration
-          </Badge>
-          
-          <h1 className="text-4xl md:text-5xl font-black mb-6 tracking-tight leading-tight">
-            {celebrationData.title}
-          </h1>
-          
-          <p className="text-xl text-gray-600 mb-8 leading-relaxed max-w-2xl mx-auto">
-            {celebrationData.description}
-          </p>
-          
-          <div className="flex justify-center gap-6 text-sm text-gray-500">
-            <Badge variant="outline" className="border-gray-300">
-              <Clock className="w-3 h-3 mr-1" />
-              Max {celebrationData.maxMessageDuration}s
+      <div className="container mx-auto max-w-4xl px-6 py-12">
+        {/* Hero Card */}
+        <Card className="mb-12 border-0 shadow-xl bg-gradient-to-br from-orange-400 via-red-400 to-pink-500 text-white overflow-hidden relative">
+          <div className="absolute inset-0 bg-black/10"></div>
+          <CardContent className="p-12 relative z-10 text-center">
+            <Badge className="mb-6 bg-white/20 text-white border-0 px-4 py-2 backdrop-blur-sm">
+              {celebrationData.celebrationType}
             </Badge>
-            <Badge variant="outline" className="border-gray-300">
-              <User className="w-3 h-3 mr-1" />
-              {celebrationData.remainingSlots} slots remaining
-            </Badge>
-          </div>
-        </div>
-
-        {/* Contributor Information */}
-        <Card className="mb-8 border-0 bg-gray-50">
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold tracking-tight">Your Information</CardTitle>
-            <p className="text-gray-600">Let us know who this beautiful message is from</p>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div>
-              <Label htmlFor="name" className="text-lg font-semibold">Your Name *</Label>
-              <Input
-                id="name"
-                placeholder="Enter your name"
-                value={contributorData.name}
-                onChange={(e) => setContributorData(prev => ({ ...prev, name: e.target.value }))}
-                className="mt-2 h-12 text-lg"
-              />
-            </div>
-            <div>
-              <Label htmlFor="email" className="text-lg font-semibold">Email Address *</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="Enter your email"
-                value={contributorData.email}
-                onChange={(e) => setContributorData(prev => ({ ...prev, email: e.target.value }))}
-                className="mt-2 h-12 text-lg"
-              />
-            </div>
-            <div>
-              <Label htmlFor="phone" className="text-lg font-semibold">Phone Number (Optional)</Label>
-              <Input
-                id="phone"
-                type="tel"
-                placeholder="Enter your phone number"
-                value={contributorData.phone}
-                onChange={(e) => setContributorData(prev => ({ ...prev, phone: e.target.value }))}
-                className="mt-2 h-12 text-lg"
-              />
+            
+            <h1 className="text-4xl md:text-5xl font-black mb-6 tracking-tight leading-tight">
+              {celebrationData.title}
+            </h1>
+            
+            <p className="text-xl text-white/90 mb-8 leading-relaxed max-w-2xl mx-auto">
+              {celebrationData.description}
+            </p>
+            
+            <div className="flex justify-center gap-6 text-sm text-white/80">
+              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-3 py-2 rounded-full">
+                <Clock className="w-3 h-3" />
+                max {celebrationData.maxMessageDuration}s
+              </div>
+              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-3 py-2 rounded-full">
+                <User className="w-3 h-3" />
+                {celebrationData.remainingSlots} slots left
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Recording Interface */}
-        <Card className="border-0 bg-gray-50">
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold tracking-tight">Record Your Message</CardTitle>
-            <p className="text-gray-600">Share your heartfelt thoughts and make this celebration special</p>
-          </CardHeader>
-          <CardContent className="space-y-8">
-            {/* Recording Timer */}
-            <div className="text-center">
-              <div className="text-6xl font-mono font-black text-gray-800 mb-4">
-                {formatTime(recordingTime)}
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* Contributor Info Card */}
+          <Card className="border-0 shadow-lg bg-gradient-to-br from-blue-400 to-cyan-500 text-white">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-2xl font-black tracking-tight text-white">
+                CONTRIBUTOR INFO
+              </CardTitle>
+              <p className="text-blue-100">who's adding to this tape?</p>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div>
+                <Label htmlFor="name" className="text-white font-semibold">name *</Label>
+                <Input
+                  id="name"
+                  placeholder="your name"
+                  value={contributorData.name}
+                  onChange={(e) => setContributorData(prev => ({ ...prev, name: e.target.value }))}
+                  className="mt-2 bg-white/10 border-white/20 text-white placeholder-white/60 backdrop-blur-sm"
+                />
               </div>
-              <div className="text-lg text-gray-600 mb-4">
-                {formatTime(celebrationData.maxMessageDuration)} maximum
+              <div>
+                <Label htmlFor="email" className="text-white font-semibold">email *</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="your email"
+                  value={contributorData.email}
+                  onChange={(e) => setContributorData(prev => ({ ...prev, email: e.target.value }))}
+                  className="mt-2 bg-white/10 border-white/20 text-white placeholder-white/60 backdrop-blur-sm"
+                />
               </div>
-              <Progress 
-                value={(recordingTime / celebrationData.maxMessageDuration) * 100} 
-                className="h-3"
-              />
-            </div>
+              <div>
+                <Label htmlFor="phone" className="text-white font-semibold">phone (optional)</Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  placeholder="your phone"
+                  value={contributorData.phone}
+                  onChange={(e) => setContributorData(prev => ({ ...prev, phone: e.target.value }))}
+                  className="mt-2 bg-white/10 border-white/20 text-white placeholder-white/60 backdrop-blur-sm"
+                />
+              </div>
+            </CardContent>
+          </Card>
 
-            {/* Recording Controls */}
-            <div className="flex justify-center gap-6">
-              {!recordedBlob ? (
-                <Button
-                  onClick={isRecording ? stopRecording : startRecording}
-                  size="lg"
-                  className={`px-12 py-6 rounded-full text-lg font-semibold ${
-                    isRecording 
-                      ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse' 
-                      : 'bg-black text-white hover:bg-gray-800'
-                  }`}
-                >
-                  {isRecording ? (
-                    <>
-                      <MicOff className="w-6 h-6 mr-3" />
-                      Stop Recording
-                    </>
-                  ) : (
-                    <>
-                      <Mic className="w-6 h-6 mr-3" />
-                      Start Recording
-                    </>
-                  )}
-                </Button>
-              ) : (
-                <div className="flex gap-4">
+          {/* Recording Interface Card */}
+          <Card className="border-0 shadow-lg bg-gradient-to-br from-purple-400 to-indigo-500 text-white">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-2xl font-black tracking-tight text-white">
+                RECORD MESSAGE
+              </CardTitle>
+              <p className="text-purple-100">lay down your track</p>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Analog-style Timer Display */}
+              <div className="text-center bg-black/20 backdrop-blur-sm rounded-2xl p-6">
+                <div className="text-5xl font-mono font-black text-white mb-2 tracking-wider">
+                  {formatTime(recordingTime)}
+                </div>
+                <div className="text-sm text-purple-200 mb-3">
+                  / {formatTime(celebrationData.maxMessageDuration)}
+                </div>
+                <Progress 
+                  value={(recordingTime / celebrationData.maxMessageDuration) * 100} 
+                  className="h-2 bg-white/10"
+                />
+              </div>
+
+              {/* Recording Controls */}
+              <div className="flex justify-center">
+                {!recordedBlob ? (
                   <Button
-                    onClick={isPlaying ? pauseRecording : playRecording}
-                    variant="outline"
+                    onClick={isRecording ? stopRecording : startRecording}
                     size="lg"
-                    className="px-8 py-4 rounded-full border-2"
+                    className={`px-12 py-6 rounded-full text-lg font-black tracking-wide ${
+                      isRecording 
+                        ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse shadow-lg shadow-red-500/50' 
+                        : 'bg-white text-purple-600 hover:bg-gray-100 shadow-lg'
+                    }`}
                   >
-                    {isPlaying ? (
+                    {isRecording ? (
                       <>
-                        <Pause className="w-5 h-5 mr-2" />
-                        Pause
+                        <MicOff className="w-6 h-6 mr-3" />
+                        STOP REC
                       </>
                     ) : (
                       <>
-                        <Play className="w-5 h-5 mr-2" />
-                        Play
+                        <Mic className="w-6 h-6 mr-3" />
+                        START REC
                       </>
                     )}
                   </Button>
-                  <Button
-                    onClick={resetRecording}
-                    variant="outline"
-                    size="lg"
-                    className="px-8 py-4 rounded-full border-2"
-                  >
-                    Re-record
-                  </Button>
-                </div>
-              )}
-            </div>
-
-            {/* Audio Element */}
-            {audioURL && (
-              <audio
-                ref={audioRef}
-                src={audioURL}
-                onEnded={() => setIsPlaying(false)}
-                style={{ display: 'none' }}
-              />
-            )}
-
-            {/* Upload Section */}
-            {recordedBlob && (
-              <div className="border-t border-gray-200 pt-8">
-                <Alert className="mb-6 bg-green-50 border-green-200">
-                  <Heart className="w-4 h-4 text-green-600" />
-                  <AlertDescription className="text-green-800">
-                    Your message sounds wonderful! Click upload to add it to the celebration.
-                  </AlertDescription>
-                </Alert>
-                
-                {isUploading && (
-                  <div className="mb-6">
-                    <div className="flex justify-between text-sm font-medium mb-2">
-                      <span>Uploading your message...</span>
-                      <span>{uploadProgress}%</span>
-                    </div>
-                    <Progress value={uploadProgress} className="h-2" />
+                ) : (
+                  <div className="flex gap-4">
+                    <Button
+                      onClick={isPlaying ? pauseRecording : playRecording}
+                      className="bg-white text-purple-600 hover:bg-gray-100 px-6 py-3 font-semibold"
+                    >
+                      {isPlaying ? (
+                        <>
+                          <Pause className="w-4 h-4 mr-2" />
+                          pause
+                        </>
+                      ) : (
+                        <>
+                          <Play className="w-4 h-4 mr-2" />
+                          play
+                        </>
+                      )}
+                    </Button>
+                    <Button
+                      onClick={resetRecording}
+                      className="bg-white/20 text-white border-white/30 hover:bg-white/30 px-6 py-3 font-semibold"
+                      variant="outline"
+                    >
+                      re-record
+                    </Button>
                   </div>
                 )}
-                
-                <Button
-                  onClick={handleUpload}
-                  disabled={isUploading}
-                  size="lg"
-                  className="w-full bg-black text-white hover:bg-gray-800 py-4 text-lg font-semibold rounded-full"
-                >
-                  {isUploading ? (
-                    'Adding Your Message...'
-                  ) : (
-                    <>
-                      <Upload className="w-5 h-5 mr-2" />
-                      Add Message to Celebration
-                    </>
-                  )}
-                </Button>
               </div>
-            )}
-          </CardContent>
-        </Card>
 
-        {/* Recording Tips */}
-        <Card className="mt-8 border-0 bg-blue-50">
+              {/* Audio Element */}
+              {audioURL && (
+                <audio
+                  ref={audioRef}
+                  src={audioURL}
+                  onEnded={() => setIsPlaying(false)}
+                  style={{ display: 'none' }}
+                />
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Upload Section */}
+        {recordedBlob && (
+          <Card className="mt-8 border-0 shadow-lg bg-gradient-to-br from-green-400 to-emerald-500 text-white">
+            <CardContent className="p-8">
+              <Alert className="mb-6 bg-white/20 border-white/30 backdrop-blur-sm">
+                <Radio className="w-4 h-4 text-white" />
+                <AlertDescription className="text-white">
+                  your track is ready for the mixtape. click to add it to the collection.
+                </AlertDescription>
+              </Alert>
+              
+              {isUploading && (
+                <div className="mb-6">
+                  <div className="flex justify-between text-sm font-medium mb-2 text-green-100">
+                    <span>adding to tape...</span>
+                    <span>{uploadProgress}%</span>
+                  </div>
+                  <Progress value={uploadProgress} className="h-2 bg-white/20" />
+                </div>
+              )}
+              
+              <Button
+                onClick={handleUpload}
+                disabled={isUploading}
+                size="lg"
+                className="w-full bg-white text-green-600 hover:bg-gray-100 py-4 text-lg font-black tracking-wide shadow-lg"
+              >
+                {isUploading ? (
+                  'ADDING TO TAPE...'
+                ) : (
+                  <>
+                    <Upload className="w-5 h-5 mr-2" />
+                    ADD TO MIXTAPE
+                  </>
+                )}
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Recording Tips - Vintage Style */}
+        <Card className="mt-8 border-0 shadow-lg bg-yellow-50 border-l-4 border-yellow-400">
           <CardContent className="p-8">
-            <h3 className="font-bold text-lg mb-4 text-blue-800">Recording Tips for the Best Experience:</h3>
-            <ul className="space-y-2 text-blue-700">
-              <li>• Find a quiet space to minimize background noise</li>
-              <li>• Hold your device about 6 inches from your mouth</li>
-              <li>• Speak clearly and from the heart</li>
-              <li>• Keep your message under {celebrationData.maxMessageDuration} seconds</li>
-              <li>• Share a specific memory or heartfelt wish</li>
-            </ul>
+            <h3 className="font-black text-lg mb-4 text-yellow-800 tracking-wide">RECORDING TIPS:</h3>
+            <div className="grid md:grid-cols-2 gap-4 text-sm text-yellow-700">
+              <div>
+                <p>• find a quiet spot</p>
+                <p>• keep phone 6 inches away</p>
+                <p>• speak clearly and naturally</p>
+              </div>
+              <div>
+                <p>• stay under {celebrationData.maxMessageDuration} seconds</p>
+                <p>• share a specific memory</p>
+                <p>• keep it genuine</p>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>

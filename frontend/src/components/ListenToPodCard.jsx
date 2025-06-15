@@ -13,11 +13,12 @@ import {
   Volume2, 
   Download,
   Share2,
-  Heart,
+  Radio,
   MessageSquare,
   Clock,
   Users,
-  Music
+  Music,
+  Disc
 } from 'lucide-react';
 import { mockPodCards } from '../mock';
 import { useToast } from '../hooks/use-toast';
@@ -59,13 +60,13 @@ const ListenToPodCard = () => {
 
     const handleEnded = () => {
       if (currentTrack === 0) {
-        // Finished playing the full pod-card
+        // Finished playing the full tape
         setHasPlayedOnce(true);
         setShowIndividualMessages(true);
         setIsPlaying(false);
         toast({
-          title: "Pod-Card Complete! 🎉",
-          description: "You can now listen to individual messages below.",
+          title: "mixtape complete ●",
+          description: "you can now listen to individual tracks below.",
         });
       } else {
         // Move to next individual message
@@ -138,15 +139,15 @@ const ListenToPodCard = () => {
     const shareUrl = `${window.location.origin}/listen/${podCardId}`;
     navigator.clipboard.writeText(shareUrl);
     toast({
-      title: "Link Copied!",
-      description: "Share this beautiful pod-card with others!",
+      title: "mixtape link copied ●",
+      description: "share this tape with others.",
     });
   };
 
   const handleDownload = () => {
     toast({
-      title: "Download Started",
-      description: "Your pod-card is being prepared for download.",
+      title: "download started",
+      description: "your mixtape is being prepared.",
     });
   };
 
@@ -158,7 +159,7 @@ const ListenToPodCard = () => {
 
   const getCurrentAudioSource = () => {
     if (currentTrack === 0) {
-      return '/mock-audio/final-podcard.mp3'; // Full pod-card
+      return '/mock-audio/final-podcard.mp3'; // Full tape
     } else {
       return podCard.messages[currentTrack - 1]?.audioUrl || '';
     }
@@ -166,7 +167,7 @@ const ListenToPodCard = () => {
 
   const getCurrentTrackName = () => {
     if (currentTrack === 0) {
-      return 'Complete Pod-Card';
+      return 'Complete Mixtape';
     } else {
       return podCard.messages[currentTrack - 1]?.contributorName || 'Unknown';
     }
@@ -174,11 +175,11 @@ const ListenToPodCard = () => {
 
   if (!podCard) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="text-2xl font-bold text-gray-800 mb-2">Pod-Card Not Found</div>
-          <Button onClick={() => navigate('/')}>
-            Back to Home
+          <div className="text-2xl font-black text-gray-800 mb-4 tracking-tight">TAPE NOT FOUND</div>
+          <Button onClick={() => navigate('/')} className="font-medium">
+            back to home
           </Button>
         </div>
       </div>
@@ -186,108 +187,127 @@ const ListenToPodCard = () => {
   }
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-br from-purple-600 via-pink-600 to-blue-600 text-white py-20 px-4">
-        <div className="container mx-auto max-w-4xl text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            {podCard.title}
-          </h1>
-          <p className="text-xl md:text-2xl mb-8 text-white/90">
-            A special audio greeting card created by {podCard.createdBy}
-          </p>
-          <div className="flex justify-center gap-6 text-white/80">
-            <div className="flex items-center gap-2">
-              <Users className="w-5 h-5" />
-              {podCard.currentMessages} messages
-            </div>
-            <div className="flex items-center gap-2">
-              <Clock className="w-5 h-5" />
-              {podCard.totalDuration} min total
-            </div>
-            <div className="flex items-center gap-2">
-              <Music className="w-5 h-5" />
-              {podCard.backgroundMusic}
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section - Vintage Tape Style */}
+      <div className="bg-gradient-to-br from-orange-400 via-red-500 to-pink-600 text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="container mx-auto max-w-6xl px-6 py-20 relative z-10">
+          <div className="text-center">
+            <Badge className="mb-6 bg-white/20 text-white border-0 px-4 py-2 backdrop-blur-sm">
+              MIXTAPE
+            </Badge>
+            
+            <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tight leading-none">
+              {podCard.title}
+            </h1>
+            
+            <p className="text-xl md:text-2xl mb-8 text-white/90 max-w-3xl mx-auto">
+              curated by {podCard.createdBy}
+            </p>
+            
+            <div className="flex justify-center gap-8 text-white/80">
+              <div className="flex items-center gap-2">
+                <Users className="w-5 h-5" />
+                {podCard.currentMessages} tracks
+              </div>
+              <div className="flex items-center gap-2">
+                <Clock className="w-5 h-5" />
+                {podCard.totalDuration} min
+              </div>
+              <div className="flex items-center gap-2">
+                <Music className="w-5 h-5" />
+                {podCard.backgroundMusic}
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Audio Player */}
-      <div className="bg-white/80 backdrop-blur-sm border-b sticky top-0 z-50">
-        <div className="container mx-auto max-w-4xl py-6 px-4">
-          <Card className="border-0 bg-white/50 backdrop-blur-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-4">
+      {/* Tape Deck Player */}
+      <div className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-lg">
+        <div className="container mx-auto max-w-6xl px-6 py-6">
+          <Card className="border-0 shadow-xl bg-gradient-to-r from-gray-900 to-black text-white rounded-2xl overflow-hidden">
+            <CardContent className="p-8">
+              <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h3 className="font-semibold text-lg">{getCurrentTrackName()}</h3>
-                  <p className="text-sm text-gray-600">
-                    {currentTrack === 0 ? 'Full Experience' : `Message ${currentTrack} of ${podCard.messages.length}`}
+                  <h3 className="font-black text-xl tracking-wider text-white mb-1">
+                    {getCurrentTrackName()}
+                  </h3>
+                  <p className="text-gray-300 text-sm font-mono">
+                    {currentTrack === 0 ? 'FULL EXPERIENCE' : `TRACK ${currentTrack.toString().padStart(2, '0')}`}
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" onClick={handleShare}>
+                <div className="flex items-center gap-3">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={handleShare}
+                    className="border-gray-600 text-gray-300 hover:bg-gray-800"
+                  >
                     <Share2 className="w-4 h-4" />
                   </Button>
-                  <Button variant="outline" size="sm" onClick={handleDownload}>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={handleDownload}
+                    className="border-gray-600 text-gray-300 hover:bg-gray-800"
+                  >
                     <Download className="w-4 h-4" />
                   </Button>
                 </div>
               </div>
 
-              {/* Progress Bar */}
+              {/* Analog Progress Bar */}
               <div 
                 ref={progressRef}
-                className="w-full bg-gray-200 rounded-full h-2 mb-4 cursor-pointer"
+                className="w-full bg-gray-700 rounded-full h-3 mb-4 cursor-pointer overflow-hidden"
                 onClick={handleProgressClick}
               >
                 <div 
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 h-2 rounded-full transition-all duration-100"
+                  className="bg-gradient-to-r from-orange-500 to-red-500 h-3 rounded-full transition-all duration-100 shadow-lg"
                   style={{ width: `${duration ? (playbackTime / duration) * 100 : 0}%` }}
                 />
               </div>
 
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-sm text-gray-600">{formatTime(playbackTime)}</span>
-                <span className="text-sm text-gray-600">{formatTime(duration)}</span>
+              <div className="flex items-center justify-between mb-6">
+                <span className="text-sm font-mono text-gray-400">{formatTime(playbackTime)}</span>
+                <span className="text-sm font-mono text-gray-400">{formatTime(duration)}</span>
               </div>
 
-              {/* Controls */}
-              <div className="flex items-center justify-center gap-4 mb-4">
+              {/* Tape Deck Controls */}
+              <div className="flex items-center justify-center gap-6 mb-6">
                 <Button
-                  variant="outline"
-                  size="sm"
                   onClick={handleSkipBack}
                   disabled={currentTrack === 0}
+                  className="bg-gray-700 hover:bg-gray-600 text-white p-3 rounded-full"
                 >
-                  <SkipBack className="w-4 h-4" />
+                  <SkipBack className="w-5 h-5" />
                 </Button>
                 
                 <Button
                   onClick={handlePlayPause}
                   size="lg"
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-full px-8"
+                  className="bg-red-500 hover:bg-red-600 text-white rounded-full px-12 py-4 shadow-lg shadow-red-500/30"
                 >
                   {isPlaying ? (
-                    <Pause className="w-6 h-6" />
+                    <Pause className="w-8 h-8" />
                   ) : (
-                    <Play className="w-6 h-6" />
+                    <Play className="w-8 h-8" />
                   )}
                 </Button>
                 
                 <Button
-                  variant="outline"
-                  size="sm"
                   onClick={handleSkipForward}
                   disabled={currentTrack >= podCard.messages.length}
+                  className="bg-gray-700 hover:bg-gray-600 text-white p-3 rounded-full"
                 >
-                  <SkipForward className="w-4 h-4" />
+                  <SkipForward className="w-5 h-5" />
                 </Button>
               </div>
 
               {/* Volume Control */}
               <div className="flex items-center gap-4">
-                <Volume2 className="w-4 h-4 text-gray-600" />
+                <Volume2 className="w-5 h-5 text-gray-400" />
                 <div className="flex-1">
                   <input
                     type="range"
@@ -295,10 +315,10 @@ const ListenToPodCard = () => {
                     max="100"
                     value={volume}
                     onChange={(e) => handleVolumeChange(Number(e.target.value))}
-                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                    className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer slider"
                   />
                 </div>
-                <span className="text-sm text-gray-600 min-w-[40px]">{volume}%</span>
+                <span className="text-sm font-mono text-gray-400 min-w-[40px]">{volume}%</span>
               </div>
 
               {/* Hidden Audio Element */}
@@ -314,74 +334,88 @@ const ListenToPodCard = () => {
       </div>
 
       {/* Content */}
-      <div className="py-12 px-4">
-        <div className="container mx-auto max-w-4xl">
+      <div className="py-12 px-6">
+        <div className="container mx-auto max-w-6xl">
           {!hasPlayedOnce && !showIndividualMessages ? (
-            <Card className="border-0 bg-white/50 backdrop-blur-sm text-center">
-              <CardContent className="p-12">
-                <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center">
-                  <Play className="w-10 h-10 text-purple-600" />
+            <Card className="border-0 shadow-xl text-center bg-gradient-to-br from-purple-400 to-indigo-500 text-white">
+              <CardContent className="p-16">
+                <div className="w-24 h-24 mx-auto mb-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                  <Disc className="w-12 h-12 text-white animate-spin" style={{ animationDuration: '3s' }} />
                 </div>
-                <h2 className="text-2xl font-bold mb-4 text-gray-800">
-                  Ready to Listen?
+                <h2 className="text-3xl font-black mb-6 text-white tracking-tight">
+                  READY TO LISTEN?
                 </h2>
-                <p className="text-gray-600 mb-6">
-                  Press play above to experience the complete pod-card. 
-                  After listening, you'll be able to hear individual messages.
+                <p className="text-purple-100 mb-8 text-lg">
+                  press play above to experience the complete mixtape. 
+                  after listening, you'll be able to hear individual tracks.
                 </p>
-                <div className="flex justify-center gap-4">
+                <div className="flex justify-center gap-6">
                   <Button 
                     onClick={handlePlayPause}
-                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
+                    className="bg-white text-purple-600 hover:bg-gray-100 px-8 py-3 font-black tracking-wide"
                   >
-                    <Play className="w-4 h-4 mr-2" />
-                    Start Listening
+                    <Play className="w-5 h-5 mr-2" />
+                    START TAPE
                   </Button>
                   <Button 
-                    variant="outline"
                     onClick={() => setShowIndividualMessages(true)}
+                    className="bg-white/20 text-white border-white/30 hover:bg-white/30 px-8 py-3 font-semibold"
+                    variant="outline"
                   >
-                    Skip to Messages
+                    skip to tracks
                   </Button>
                 </div>
               </CardContent>
             </Card>
           ) : (
-            <Tabs defaultValue="messages" className="space-y-6">
-              <TabsList className="bg-white/50 backdrop-blur-sm">
-                <TabsTrigger value="messages">Individual Messages</TabsTrigger>
-                <TabsTrigger value="about">About This Pod-Card</TabsTrigger>
-              </TabsList>
+            <Tabs defaultValue="tracks" className="space-y-8">
+              <div className="flex justify-center">
+                <TabsList className="bg-white shadow-lg p-1 rounded-full border">
+                  <TabsTrigger value="tracks" className="rounded-full px-6 py-2 font-semibold">
+                    INDIVIDUAL TRACKS
+                  </TabsTrigger>
+                  <TabsTrigger value="about" className="rounded-full px-6 py-2 font-semibold">
+                    TAPE INFO
+                  </TabsTrigger>
+                </TabsList>
+              </div>
 
-              <TabsContent value="messages" className="space-y-4">
+              <TabsContent value="tracks" className="space-y-4">
                 <div className="grid gap-4">
                   {podCard.messages.map((message, index) => (
-                    <Card key={message.id} className="border-0 bg-white/50 backdrop-blur-sm hover:bg-white/70 transition-all duration-300">
+                    <Card 
+                      key={message.id} 
+                      className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer bg-gradient-to-r from-cyan-400 to-blue-500 text-white"
+                      onClick={() => {
+                        setCurrentTrack(index + 1);
+                        setIsPlaying(true);
+                      }}
+                    >
                       <CardContent className="p-6">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center">
-                              <MessageSquare className="w-6 h-6 text-purple-600" />
+                            <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                              <span className="font-mono font-black text-white">
+                                {String(index + 1).padStart(2, '0')}
+                              </span>
                             </div>
                             <div>
-                              <h4 className="font-semibold text-lg">{message.contributorName}</h4>
-                              <p className="text-sm text-gray-600">
+                              <h4 className="font-black text-lg text-white">{message.contributorName}</h4>
+                              <p className="text-blue-100 text-sm font-mono">
                                 {formatTime(message.duration)} • {new Date(message.uploadedAt).toLocaleDateString()}
                               </p>
                             </div>
                           </div>
                           <Button
+                            className={`bg-white/20 hover:bg-white/30 text-white border-white/30 rounded-full p-3 ${
+                              currentTrack === index + 1 ? 'bg-white/40' : ''
+                            }`}
                             variant="outline"
-                            onClick={() => {
-                              setCurrentTrack(index + 1);
-                              setIsPlaying(true);
-                            }}
-                            className={currentTrack === index + 1 ? 'bg-purple-50 border-purple-200' : ''}
                           >
                             {currentTrack === index + 1 && isPlaying ? (
-                              <Pause className="w-4 h-4" />
+                              <Pause className="w-5 h-5" />
                             ) : (
-                              <Play className="w-4 h-4" />
+                              <Play className="w-5 h-5" />
                             )}
                           </Button>
                         </div>
@@ -392,55 +426,59 @@ const ListenToPodCard = () => {
               </TabsContent>
 
               <TabsContent value="about">
-                <Card className="border-0 bg-white/50 backdrop-blur-sm">
-                  <CardContent className="p-8">
-                    <div className="text-center mb-8">
-                      <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center">
-                        <Heart className="w-8 h-8 text-purple-600" />
+                <Card className="border-0 shadow-xl bg-gradient-to-br from-yellow-400 to-orange-500 text-white">
+                  <CardContent className="p-12">
+                    <div className="text-center mb-12">
+                      <div className="w-20 h-20 mx-auto mb-6 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                        <Radio className="w-10 h-10 text-white" />
                       </div>
-                      <h3 className="text-2xl font-bold mb-2 text-gray-800">
-                        About This Pod-Card
+                      <h3 className="text-3xl font-black mb-4 text-white tracking-tight">
+                        ABOUT THIS TAPE
                       </h3>
                     </div>
                     
-                    <div className="grid md:grid-cols-2 gap-8">
+                    <div className="grid md:grid-cols-2 gap-12">
                       <div>
-                        <h4 className="font-semibold mb-3">Pod-Card Details</h4>
-                        <div className="space-y-2 text-sm">
-                          <div className="flex justify-between">
-                            <span className="text-gray-600">Created by:</span>
-                            <span className="font-medium">{podCard.createdBy}</span>
+                        <h4 className="font-black mb-6 text-yellow-100 tracking-wide">TAPE DETAILS</h4>
+                        <div className="space-y-3 text-sm font-mono">
+                          <div className="flex justify-between text-yellow-100">
+                            <span>CURATED BY:</span>
+                            <span className="font-bold text-white">{podCard.createdBy}</span>
                           </div>
-                          <div className="flex justify-between">
-                            <span className="text-gray-600">Messages:</span>
-                            <span className="font-medium">{podCard.currentMessages}</span>
+                          <div className="flex justify-between text-yellow-100">
+                            <span>TRACKS:</span>
+                            <span className="font-bold text-white">{podCard.currentMessages}</span>
                           </div>
-                          <div className="flex justify-between">
-                            <span className="text-gray-600">Total Duration:</span>
-                            <span className="font-medium">{podCard.totalDuration} min</span>
+                          <div className="flex justify-between text-yellow-100">
+                            <span>TOTAL RUNTIME:</span>
+                            <span className="font-bold text-white">{podCard.totalDuration} min</span>
                           </div>
-                          <div className="flex justify-between">
-                            <span className="text-gray-600">Background Music:</span>
-                            <span className="font-medium">{podCard.backgroundMusic}</span>
+                          <div className="flex justify-between text-yellow-100">
+                            <span>BACKGROUND:</span>
+                            <span className="font-bold text-white">{podCard.backgroundMusic}</span>
                           </div>
                         </div>
                       </div>
                       
                       <div>
-                        <h4 className="font-semibold mb-3">Share This Pod-Card</h4>
-                        <p className="text-sm text-gray-600 mb-4">
-                          Loved this pod-card? Share it with others or create your own!
+                        <h4 className="font-black mb-6 text-yellow-100 tracking-wide">SHARE THIS TAPE</h4>
+                        <p className="text-yellow-100 mb-6 text-sm">
+                          love this mixtape? share it with others or create your own.
                         </p>
-                        <div className="flex gap-2">
-                          <Button onClick={handleShare} variant="outline" className="flex-1">
+                        <div className="flex gap-3">
+                          <Button 
+                            onClick={handleShare} 
+                            className="bg-white text-orange-600 hover:bg-gray-100 flex-1 font-semibold"
+                          >
                             <Share2 className="w-4 h-4 mr-2" />
-                            Share
+                            share
                           </Button>
                           <Button 
                             onClick={() => navigate('/create')}
-                            className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
+                            className="bg-white/20 text-white border-white/30 hover:bg-white/30 flex-1 font-semibold"
+                            variant="outline"
                           >
-                            Create Your Own
+                            create yours
                           </Button>
                         </div>
                       </div>
