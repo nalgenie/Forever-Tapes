@@ -22,7 +22,8 @@ import {
   MessageSquare,
   Wand2,
   Users,
-  Clock
+  Clock,
+  Sparkles
 } from 'lucide-react';
 import { mockPodCards, mockAPI } from '../mock';
 import { useToast } from '../hooks/use-toast';
@@ -38,7 +39,7 @@ const EditPodCard = () => {
   const audioRefs = useRef({});
 
   useEffect(() => {
-    // Find the pod card from mock data
+    // Find the celebration from mock data
     const foundPodCard = mockPodCards.find(card => card.id === podCardId);
     if (foundPodCard) {
       setPodCard(foundPodCard);
@@ -62,8 +63,8 @@ const EditPodCard = () => {
     }));
     
     toast({
-      title: "Message Deleted",
-      description: "The message has been removed from your pod-card.",
+      title: "Message Removed",
+      description: "The message has been removed from your celebration.",
     });
   };
 
@@ -108,7 +109,7 @@ const EditPodCard = () => {
 
   const handleApplyNoiseReduction = (messageId) => {
     toast({
-      title: "Noise Reduction Applied",
+      title: "Noise Reduction Applied ✨",
       description: "Background noise has been reduced for this message.",
     });
   };
@@ -116,14 +117,14 @@ const EditPodCard = () => {
   const handleCopyShareLink = () => {
     navigator.clipboard.writeText(podCard.shareLink);
     toast({
-      title: "Link Copied!",
-      description: "Share this link to collect more messages.",
+      title: "Share Link Copied! 📋",
+      description: "Share this link to collect more heartfelt messages.",
     });
   };
 
   const handleSendInvites = () => {
     toast({
-      title: "Invitations Sent",
+      title: "Invitations Sent 📧",
       description: "Email invitations have been sent to collect more messages.",
     });
   };
@@ -133,8 +134,8 @@ const EditPodCard = () => {
     try {
       await mockAPI.generateFinalPodCard(podCard.id);
       toast({
-        title: "Pod-Card Generated! 🎉",
-        description: "Your final pod-card is ready to share!",
+        title: "Celebration Complete! 🎉",
+        description: "Your beautiful audio celebration is ready to share!",
       });
       navigate(`/listen/${podCard.id}`);
     } catch (error) {
@@ -156,10 +157,10 @@ const EditPodCard = () => {
 
   if (!podCard) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <div className="text-2xl font-bold text-gray-800 mb-2">Pod-Card Not Found</div>
-          <Button onClick={() => navigate('/dashboard')}>
+          <div className="text-2xl font-bold text-gray-800 mb-4">Celebration Not Found</div>
+          <Button onClick={() => navigate('/dashboard')} className="rounded-full px-8">
             Back to Dashboard
           </Button>
         </div>
@@ -168,70 +169,88 @@ const EditPodCard = () => {
   }
 
   return (
-    <div className="min-h-screen py-8 px-4">
-      <div className="container mx-auto max-w-6xl">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={() => navigate('/dashboard')}
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back
-            </Button>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-800">{podCard.title}</h1>
-              <div className="flex items-center gap-4 mt-2">
-                <Badge variant="outline">
-                  <Users className="w-3 h-3 mr-1" />
-                  {podCard.currentMessages} / {podCard.maxMessages} messages
-                </Badge>
-                <Badge variant="outline">
-                  <Clock className="w-3 h-3 mr-1" />
-                  {podCard.maxMessageDuration} min max
-                </Badge>
+    <div className="min-h-screen bg-white">
+      {/* Header */}
+      <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => navigate('/dashboard')}
+                className="hover:bg-gray-50"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back
+              </Button>
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
+                  <Volume2 className="w-4 h-4 text-white" />
+                </div>
+                <span className="text-xl font-bold tracking-tight">FOREVER TAPES</span>
               </div>
             </div>
+            
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                onClick={handleCopyShareLink}
+                className="rounded-full"
+              >
+                <Link className="w-4 h-4 mr-2" />
+                Copy Link
+              </Button>
+              <Button
+                variant="outline"
+                onClick={handleSendInvites}
+                className="rounded-full"
+              >
+                <Mail className="w-4 h-4 mr-2" />
+                Send Invites
+              </Button>
+              <Button
+                onClick={handleGenerateFinal}
+                disabled={isGenerating || podCard.messages.length === 0}
+                className="bg-black text-white hover:bg-gray-800 rounded-full px-6"
+              >
+                {isGenerating ? 'Generating...' : 'Complete Celebration'}
+                <Sparkles className="ml-2 w-4 h-4" />
+              </Button>
+            </div>
           </div>
-          
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={handleCopyShareLink}
-            >
-              <Link className="w-4 h-4 mr-2" />
-              Copy Link
-            </Button>
-            <Button
-              variant="outline"
-              onClick={handleSendInvites}
-            >
-              <Mail className="w-4 h-4 mr-2" />
-              Send Invites
-            </Button>
-            <Button
-              onClick={handleGenerateFinal}
-              disabled={isGenerating || podCard.messages.length === 0}
-              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
-            >
-              {isGenerating ? 'Generating...' : 'Generate Final Pod-Card'}
-            </Button>
+        </div>
+      </header>
+
+      <div className="container mx-auto max-w-6xl px-6 py-12">
+        {/* Hero */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-black mb-4 tracking-tight leading-tight">
+            {podCard.title}
+          </h1>
+          <div className="flex justify-center gap-6 text-gray-600">
+            <Badge variant="outline" className="border-gray-300">
+              <Users className="w-3 h-3 mr-1" />
+              {podCard.currentMessages} / {podCard.maxMessages} messages
+            </Badge>
+            <Badge variant="outline" className="border-gray-300">
+              <Clock className="w-3 h-3 mr-1" />
+              {podCard.maxMessageDuration} min max per message
+            </Badge>
           </div>
         </div>
 
         {/* Collection Progress */}
-        <Card className="mb-8 border-0 bg-white/50 backdrop-blur-sm">
-          <CardContent className="p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold">Collection Progress</h3>
-              <span className="text-sm text-gray-600">
+        <Card className="mb-12 border-0 bg-gray-50">
+          <CardContent className="p-8">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-2xl font-bold tracking-tight">Collection Progress</h3>
+              <span className="text-lg font-semibold text-gray-600">
                 {Math.round((podCard.currentMessages / podCard.maxMessages) * 100)}% Complete
               </span>
             </div>
-            <Progress value={(podCard.currentMessages / podCard.maxMessages) * 100} className="mb-4" />
-            <div className="flex justify-between text-sm text-gray-600">
+            <Progress value={(podCard.currentMessages / podCard.maxMessages) * 100} className="h-3 mb-4" />
+            <div className="flex justify-between text-gray-600">
               <span>{podCard.currentMessages} messages collected</span>
               <span>{podCard.maxMessages - podCard.currentMessages} slots remaining</span>
             </div>
@@ -239,44 +258,52 @@ const EditPodCard = () => {
         </Card>
 
         {/* Tabs */}
-        <Tabs defaultValue="messages" className="space-y-6">
-          <TabsList className="bg-white/50 backdrop-blur-sm">
-            <TabsTrigger value="messages">Messages ({podCard.messages.length})</TabsTrigger>
-            <TabsTrigger value="settings">Settings</TabsTrigger>
-          </TabsList>
+        <Tabs defaultValue="messages" className="space-y-8">
+          <div className="flex justify-center">
+            <TabsList className="bg-gray-100 p-1 rounded-full">
+              <TabsTrigger value="messages" className="rounded-full px-6 py-2 font-medium">
+                Messages ({podCard.messages.length})
+              </TabsTrigger>
+              <TabsTrigger value="settings" className="rounded-full px-6 py-2 font-medium">
+                Settings
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
-          <TabsContent value="messages" className="space-y-4">
+          <TabsContent value="messages" className="space-y-6">
             {podCard.messages.length === 0 ? (
-              <Card className="border-0 bg-white/50 backdrop-blur-sm">
-                <CardContent className="p-12 text-center">
-                  <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-                    <MessageSquare className="w-8 h-8 text-gray-400" />
+              <Card className="border-0 bg-gray-50">
+                <CardContent className="p-16 text-center">
+                  <div className="w-20 h-20 mx-auto mb-6 bg-gray-200 rounded-full flex items-center justify-center">
+                    <MessageSquare className="w-10 h-10 text-gray-400" />
                   </div>
-                  <h3 className="text-lg font-semibold mb-2 text-gray-800">No Messages Yet</h3>
-                  <p className="text-gray-600 mb-4">
-                    Share your collection link to start receiving messages from contributors.
+                  <h3 className="text-2xl font-bold mb-4 text-gray-800">No Messages Yet</h3>
+                  <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                    Share your collection link to start receiving heartfelt messages from contributors.
                   </p>
-                  <Button onClick={handleCopyShareLink} variant="outline">
+                  <Button onClick={handleCopyShareLink} className="rounded-full px-8">
                     <Link className="w-4 h-4 mr-2" />
                     Copy Share Link
                   </Button>
                 </CardContent>
               </Card>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-6">
                 {podCard.messages.map((message, index) => (
-                  <Card key={message.id} className="border-0 bg-white/50 backdrop-blur-sm">
-                    <CardContent className="p-6">
-                      <div className="flex justify-between items-start mb-4">
+                  <Card key={message.id} className="border-0 bg-gray-50 hover:bg-white hover:shadow-lg transition-all duration-300">
+                    <CardContent className="p-8">
+                      <div className="flex justify-between items-start mb-6">
                         <div>
-                          <h4 className="font-semibold text-lg">{message.contributorName}</h4>
-                          <p className="text-sm text-gray-600">{message.contributorEmail}</p>
+                          <h4 className="text-xl font-bold text-gray-800 mb-1">{message.contributorName}</h4>
+                          <p className="text-gray-600 mb-2">{message.contributorEmail}</p>
                           <p className="text-sm text-gray-500">
-                            Duration: {formatDuration(message.duration)}
+                            Duration: {formatDuration(message.duration)} • Added {new Date(message.uploadedAt).toLocaleDateString()}
                           </p>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <Badge variant="outline">#{index + 1}</Badge>
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm font-mono text-gray-400">
+                            {`{ ${String(index + 1).padStart(2, '0')} }`}
+                          </span>
                           <Button
                             variant="ghost"
                             size="sm"
@@ -289,12 +316,13 @@ const EditPodCard = () => {
                       </div>
 
                       {/* Audio Controls */}
-                      <div className="space-y-4">
+                      <div className="space-y-6">
                         <div className="flex items-center gap-4">
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => handlePlayPause(message.id)}
+                            className="rounded-full"
                           >
                             {currentlyPlaying === message.id ? (
                               <Pause className="w-4 h-4" />
@@ -310,7 +338,7 @@ const EditPodCard = () => {
                             />
                           </div>
                           
-                          <div className="text-sm text-gray-600 min-w-[60px]">
+                          <div className="text-sm text-gray-600 font-mono min-w-[60px]">
                             {formatDuration(message.duration)}
                           </div>
                         </div>
@@ -327,17 +355,18 @@ const EditPodCard = () => {
                               step={5}
                             />
                           </div>
-                          <span className="text-sm text-gray-600 min-w-[40px]">
+                          <span className="text-sm text-gray-600 font-mono min-w-[50px]">
                             {message.volume}%
                           </span>
                         </div>
 
                         {/* Advanced Controls */}
-                        <div className="flex gap-2 pt-2 border-t">
+                        <div className="flex gap-3 pt-4 border-t border-gray-200">
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => handleApplyNoiseReduction(message.id)}
+                            className="rounded-full"
                           >
                             <Wand2 className="w-4 h-4 mr-2" />
                             Reduce Noise
@@ -345,6 +374,7 @@ const EditPodCard = () => {
                           <Button
                             variant="outline"
                             size="sm"
+                            className="rounded-full"
                           >
                             <Scissors className="w-4 h-4 mr-2" />
                             Trim
@@ -353,6 +383,7 @@ const EditPodCard = () => {
                             variant="outline"
                             size="sm"
                             onClick={() => handleMessageEdit(message.id, 'volume', 100)}
+                            className="rounded-full"
                           >
                             <RotateCcw className="w-4 h-4 mr-2" />
                             Reset
@@ -376,61 +407,64 @@ const EditPodCard = () => {
           </TabsContent>
 
           <TabsContent value="settings">
-            <Card className="border-0 bg-white/50 backdrop-blur-sm">
+            <Card className="border-0 bg-gray-50">
               <CardHeader>
-                <CardTitle>Pod-Card Settings</CardTitle>
+                <CardTitle className="text-2xl font-bold tracking-tight">Celebration Settings</CardTitle>
+                <p className="text-gray-600">Modify settings for your audio celebration</p>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <Alert>
-                  <AlertDescription>
+              <CardContent className="space-y-8">
+                <Alert className="bg-blue-50 border-blue-200">
+                  <AlertDescription className="text-blue-800">
                     Settings can be modified while collecting messages. Changes will affect new contributors.
                   </AlertDescription>
                 </Alert>
                 
-                <div className="grid md:grid-cols-2 gap-6">
+                <div className="grid md:grid-cols-2 gap-8">
                   <div>
-                    <h4 className="font-semibold mb-3">Collection Limits</h4>
-                    <div className="space-y-4">
+                    <h4 className="text-lg font-semibold mb-6">Collection Limits</h4>
+                    <div className="space-y-6">
                       <div>
-                        <label className="text-sm font-medium">Max Messages: {podCard.maxMessages}</label>
+                        <label className="font-medium text-gray-800 mb-3 block">
+                          Maximum Messages: {podCard.maxMessages}
+                        </label>
                         <Slider
                           value={[podCard.maxMessages]}
                           onValueChange={(value) => setPodCard(prev => ({ ...prev, maxMessages: value[0] }))}
                           max={50}
                           min={5}
                           step={1}
-                          className="mt-2"
                         />
                       </div>
                       <div>
-                        <label className="text-sm font-medium">Max Message Duration: {podCard.maxMessageDuration} min</label>
+                        <label className="font-medium text-gray-800 mb-3 block">
+                          Max Message Duration: {podCard.maxMessageDuration} min
+                        </label>
                         <Slider
                           value={[podCard.maxMessageDuration]}
                           onValueChange={(value) => setPodCard(prev => ({ ...prev, maxMessageDuration: value[0] }))}
                           max={5}
                           min={0.5}
                           step={0.5}
-                          className="mt-2"
                         />
                       </div>
                     </div>
                   </div>
                   
                   <div>
-                    <h4 className="font-semibold mb-3">Background Music</h4>
-                    <div className="p-4 bg-gray-50 rounded-lg">
-                      <div className="text-sm text-gray-600">
-                        Current: {podCard.backgroundMusic || 'None selected'}
+                    <h4 className="text-lg font-semibold mb-6">Background Music</h4>
+                    <div className="p-6 bg-white rounded-lg border">
+                      <div className="text-gray-600 mb-4">
+                        <strong>Current:</strong> {podCard.backgroundMusic || 'None selected'}
                       </div>
-                      <Button variant="outline" size="sm" className="mt-2">
+                      <Button variant="outline" size="sm" className="rounded-full">
                         Change Music
                       </Button>
                     </div>
                   </div>
                 </div>
                 
-                <div className="flex justify-end">
-                  <Button>Save Changes</Button>
+                <div className="flex justify-end pt-4 border-t border-gray-200">
+                  <Button className="rounded-full px-8">Save Changes</Button>
                 </div>
               </CardContent>
             </Card>
