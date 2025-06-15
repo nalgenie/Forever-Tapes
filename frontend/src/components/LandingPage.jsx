@@ -105,44 +105,96 @@ const LandingPage = () => {
     }
   ];
 
-  // Simple logo SVG component
-  const SimpleLogo = () => (
+  // Cute illustration inspired by the book pile image but with audio equipment
+  const CuteAudioIllustration = () => (
     <div className="simple-logo">
       <svg 
-        viewBox="0 0 200 120" 
+        viewBox="0 0 400 250" 
         className="w-full h-auto"
-        style={{ maxHeight: '200px' }}
+        style={{ maxHeight: '300px' }}
       >
-        {/* Cassette tape base */}
-        <rect x="40" y="50" width="120" height="40" rx="4" fill="none" stroke="#3B82F6" strokeWidth="2"/>
+        {/* Background pile of cassette tapes and audio equipment */}
         
-        {/* Cassette holes */}
-        <circle cx="65" cy="70" r="8" fill="none" stroke="#8B5CF6" strokeWidth="2"/>
-        <circle cx="135" cy="70" r="8" fill="none" stroke="#8B5CF6" strokeWidth="2"/>
+        {/* Back row - large items */}
+        <rect x="50" y="120" width="80" height="50" rx="4" fill="#E5E7EB" stroke="#9CA3AF" strokeWidth="2"/>
+        <rect x="300" y="100" width="70" height="60" rx="6" fill="#FCA5A5" stroke="#F87171" strokeWidth="2"/>
+        <rect x="200" y="90" width="90" height="45" rx="4" fill="#A7F3D0" stroke="#6EE7B7" strokeWidth="2"/>
         
-        {/* Tape reels inside */}
-        <circle cx="65" cy="70" r="4" fill="none" stroke="#F97316" strokeWidth="1"/>
-        <circle cx="135" cy="70" r="4" fill="none" stroke="#F97316" strokeWidth="1"/>
+        {/* Middle row - cassette tapes */}
+        <rect x="80" y="140" width="60" height="40" rx="3" fill="#FBBF24" stroke="#F59E0B" strokeWidth="2"/>
+        <rect x="150" y="135" width="65" height="42" rx="3" fill="#A78BFA" stroke="#8B5CF6" strokeWidth="2"/>
+        <rect x="260" y="130" width="70" height="45" rx="3" fill="#34D399" stroke="#10B981" strokeWidth="2"/>
+        <rect x="340" y="125" width="55" height="38" rx="3" fill="#60A5FA" stroke="#3B82F6" strokeWidth="2"/>
         
-        {/* Headphones */}
-        <path d="M80 20 Q100 10 120 20" fill="none" stroke="#3B82F6" strokeWidth="2"/>
-        <circle cx="80" cy="25" r="8" fill="none" stroke="#3B82F6" strokeWidth="2"/>
-        <circle cx="120" cy="25" r="8" fill="none" stroke="#3B82F6" strokeWidth="2"/>
+        {/* Cassette holes on visible tapes */}
+        <circle cx="95" cy="155" r="6" fill="none" stroke="#D97706" strokeWidth="1.5"/>
+        <circle cx="125" cy="155" r="6" fill="none" stroke="#D97706" strokeWidth="1.5"/>
+        <circle cx="165" cy="150" r="6" fill="none" stroke="#7C3AED" strokeWidth="1.5"/>
+        <circle cx="195" cy="150" r="6" fill="none" stroke="#7C3AED" strokeWidth="1.5"/>
+        <circle cx="275" cy="145" r="6" fill="none" stroke="#059669" strokeWidth="1.5"/>
+        <circle cx="305" cy="145" r="6" fill="none" stroke="#059669" strokeWidth="1.5"/>
         
-        {/* Little person (simple stick figure) */}
-        <circle cx="100" cy="35" r="3" fill="#8B5CF6"/>
-        <line x1="100" y1="38" x2="100" y2="48" stroke="#8B5CF6" strokeWidth="2"/>
-        <line x1="95" y1="42" x2="105" y2="42" stroke="#8B5CF6" strokeWidth="2"/>
+        {/* Front row - more tapes */}
+        <rect x="40" y="170" width="70" height="35" rx="3" fill="#F472B6" stroke="#EC4899" strokeWidth="2"/>
+        <rect x="120" y="175" width="75" height="40" rx="3" fill="#FB7185" stroke="#F43F5E" strokeWidth="2"/>
+        <rect x="280" y="165" width="80" height="38" rx="3" fill="#38BDF8" stroke="#0EA5E9" strokeWidth="2"/>
+        
+        {/* Old radio/boombox on the side */}
+        <rect x="20" y="80" width="60" height="45" rx="4" fill="#6B7280" stroke="#4B5563" strokeWidth="2"/>
+        <circle cx="35" cy="95" r="8" fill="#374151" stroke="#1F2937" strokeWidth="1"/>
+        <circle cx="55" cy="95" r="8" fill="#374151" stroke="#1F2937" strokeWidth="1"/>
+        <rect x="25" y="110" width="50" height="8" rx="2" fill="#9CA3AF"/>
+        
+        {/* Headphones draped over equipment */}
+        <path d="M150 60 Q200 40 250 60" fill="none" stroke="#3B82F6" strokeWidth="3"/>
+        <circle cx="150" cy="70" r="12" fill="#DBEAFE" stroke="#3B82F6" strokeWidth="2"/>
+        <circle cx="250" cy="70" r="12" fill="#DBEAFE" stroke="#3B82F6" strokeWidth="2"/>
+        <path d="M150 82 Q155 90 150 95" fill="none" stroke="#3B82F6" strokeWidth="2"/>
+        <path d="M250 82 Q245 90 250 95" fill="none" stroke="#3B82F6" strokeWidth="2"/>
+        
+        {/* Cute character (sleepy cat) resting on the pile */}
+        <ellipse cx="200" cy="125" rx="25" ry="18" fill="#D2B48C" stroke="#CD853F" strokeWidth="2"/>
+        <circle cx="195" cy="115" r="8" fill="#DEB887"/>
+        <circle cx="205" cy="115" r="8" fill="#DEB887"/>
+        <ellipse cx="200" cy="110" rx="12" ry="8" fill="#D2B48C" stroke="#CD853F" strokeWidth="1"/>
+        
+        {/* Cat ears */}
+        <polygon points="190,108 195,98 200,108" fill="#D2B48C" stroke="#CD853F" strokeWidth="1"/>
+        <polygon points="200,108 205,98 210,108" fill="#D2B48C" stroke="#CD853F" strokeWidth="1"/>
+        
+        {/* Cat face details */}
+        <circle cx="196" cy="108" r="1.5" fill="#8B4513"/>
+        <circle cx="204" cy="108" r="1.5" fill="#8B4513"/>
+        <path d="M198 112 Q200 114 202 112" fill="none" stroke="#8B4513" strokeWidth="1"/>
+        <path d="M200 114 L200 116" stroke="#8B4513" strokeWidth="1"/>
+        
+        {/* Cat tail curled */}
+        <path d="M220 125 Q230 115 225 105 Q220 100 215 105" fill="none" stroke="#CD853F" strokeWidth="3"/>
+        
+        {/* Musical notes floating around */}
+        <circle cx="100" cy="50" r="3" fill="#8B5CF6" opacity="0.7"/>
+        <line x1="103" y1="50" x2="103" y2="35" stroke="#8B5CF6" strokeWidth="2" opacity="0.7"/>
+        <path d="M103 35 Q108 32 108 37" fill="#8B5CF6" opacity="0.7"/>
+        
+        <circle cx="320" cy="40" r="3" fill="#F97316" opacity="0.7"/>
+        <line x1="323" y1="40" x2="323" y2="25" stroke="#F97316" strokeWidth="2" opacity="0.7"/>
+        <path d="M323 25 Q328 22 328 27" fill="#F97316" opacity="0.7"/>
+        
+        <circle cx="280" cy="60" r="2.5" fill="#10B981" opacity="0.6"/>
+        <line x1="282" y1="60" x2="282" y2="48" stroke="#10B981" strokeWidth="1.5" opacity="0.6"/>
         
         {/* Sound waves */}
-        <path d="M25 60 Q30 55 35 60 Q40 65 45 60" fill="none" stroke="#F97316" strokeWidth="1" opacity="0.7"/>
-        <path d="M155 60 Q160 55 165 60 Q170 65 175 60" fill="none" stroke="#F97316" strokeWidth="1" opacity="0.7"/>
+        <path d="M30 150 Q35 145 40 150 Q45 155 50 150" fill="none" stroke="#60A5FA" strokeWidth="1.5" opacity="0.6"/>
+        <path d="M350 140 Q355 135 360 140 Q365 145 370 140" fill="none" stroke="#34D399" strokeWidth="1.5" opacity="0.6"/>
         
-        {/* Musical notes */}
-        <circle cx="20" cy="40" r="2" fill="#8B5CF6" opacity="0.6"/>
-        <line x1="22" y1="40" x2="22" y2="30" stroke="#8B5CF6" strokeWidth="1" opacity="0.6"/>
-        <circle cx="180" cy="45" r="2" fill="#F97316" opacity="0.6"/>
-        <line x1="182" y1="45" x2="182" y2="35" stroke="#F97316" strokeWidth="1" opacity="0.6"/>
+        {/* Small details - tape reels visible */}
+        <circle cx="95" cy="155" r="3" fill="#92400E"/>
+        <circle cx="125" cy="155" r="3" fill="#92400E"/>
+        <circle cx="165" cy="150" r="3" fill="#581C87"/>
+        <circle cx="195" cy="150" r="3" fill="#581C87"/>
+        
+        {/* Cord/wire from headphones */}
+        <path d="M175 75 Q170 85 165 95 Q160 105 165 115" fill="none" stroke="#3B82F6" strokeWidth="2" opacity="0.8"/>
       </svg>
     </div>
   );
