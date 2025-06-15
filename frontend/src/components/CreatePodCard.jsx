@@ -6,7 +6,6 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import { Badge } from './ui/badge';
-import { Slider } from './ui/slider';
 import { Switch } from './ui/switch';
 import { ArrowLeft, Music, Users, Clock, Volume2, Zap, Crown, Star } from 'lucide-react';
 import { mockMusicLibrary, mockAPI, pricingTiers } from '../mock';
@@ -64,7 +63,7 @@ const CreatePodCard = () => {
     if (!formData.title.trim()) {
       toast({
         title: "Title required",
-        description: "Please enter a title for your audio experience.",
+        description: "Please enter a title for your audio memory.",
         variant: "destructive"
       });
       return;
@@ -85,8 +84,8 @@ const CreatePodCard = () => {
       });
       
       toast({
-        title: "Experience created",
-        description: "Your audio experience is ready for contributors.",
+        title: "Memory created",
+        description: "Your audio memory is ready for contributors.",
       });
       
       navigate(`/edit/${podCard.id}`);
@@ -177,10 +176,10 @@ const CreatePodCard = () => {
       <div className="container mx-auto max-w-4xl px-6 py-16">
         {/* Hero */}
         <div className="text-center mb-20">
-          <h1 className="text-4xl md:text-5xl font-light mb-6 tracking-tight leading-tight text-gray-900">
+          <h1 className="text-4xl md:text-5xl font-light mb-6 tracking-tight leading-tight text-gray-900 vintage-font">
             Create your
             <br />
-            <span className="italic">audio experience</span>
+            <span className="italic">audio memory</span>
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto font-light">
             Craft a meaningful audio collection that captures voices, emotions, and memories from the people who matter most.
@@ -192,9 +191,9 @@ const CreatePodCard = () => {
           <div className="space-y-8">
             <div className="text-center">
               <span className="text-xs font-mono text-gray-400 mb-4 block tracking-wider">{'{ 01 }'}</span>
-              <h2 className="text-2xl font-light mb-4 tracking-tight text-gray-900">Choose your plan</h2>
+              <h2 className="text-2xl font-light mb-4 tracking-tight text-gray-900 vintage-font">Choose your plan</h2>
               <p className="text-gray-600 max-w-xl mx-auto font-light">
-                Select the perfect tier for your experience. Start free or unlock advanced features.
+                Select the perfect tier for your memory. Start free or unlock advanced features.
               </p>
             </div>
 
@@ -240,16 +239,16 @@ const CreatePodCard = () => {
           <div className="space-y-8">
             <div className="text-center">
               <span className="text-xs font-mono text-gray-400 mb-4 block tracking-wider">{'{ 02 }'}</span>
-              <h2 className="text-2xl font-light mb-4 tracking-tight text-gray-900">Experience details</h2>
+              <h2 className="text-2xl font-light mb-4 tracking-tight text-gray-900 vintage-font">Memory details</h2>
               <p className="text-gray-600 max-w-xl mx-auto font-light">
-                Give your audio experience a meaningful title and description to guide contributors.
+                Give your audio memory a meaningful title and description to guide contributors.
               </p>
             </div>
 
             <Card className="border border-gray-200">
               <CardContent className="p-8 space-y-6">
                 <div>
-                  <Label htmlFor="title" className="text-sm font-medium text-gray-900">Experience title *</Label>
+                  <Label htmlFor="title" className="text-sm font-medium text-gray-900">Memory title *</Label>
                   <Input
                     id="title"
                     placeholder="e.g., Birthday Messages for Sarah"
@@ -263,7 +262,7 @@ const CreatePodCard = () => {
                   <Label htmlFor="description" className="text-sm font-medium text-gray-900">Description</Label>
                   <Textarea
                     id="description"
-                    placeholder="Tell contributors what this experience is for and what kind of message you'd like them to share..."
+                    placeholder="Tell contributors what this memory is for and what kind of message you'd like them to share..."
                     value={formData.description}
                     onChange={(e) => handleInputChange('description', e.target.value)}
                     className="mt-2 border-gray-200"
@@ -274,52 +273,34 @@ const CreatePodCard = () => {
             </Card>
           </div>
 
-          {/* Step 3: Audio Settings */}
+          {/* Step 3: Contributors */}
           <div className="space-y-8">
             <div className="text-center">
               <span className="text-xs font-mono text-gray-400 mb-4 block tracking-wider">{'{ 03 }'}</span>
-              <h2 className="text-2xl font-light mb-4 tracking-tight text-gray-900">Audio configuration</h2>
+              <h2 className="text-2xl font-light mb-4 tracking-tight text-gray-900 vintage-font">Contributors</h2>
               <p className="text-gray-600 max-w-xl mx-auto font-light">
-                Configure the parameters for your audio experience.
+                Configure who can contribute to your audio memory.
               </p>
             </div>
 
             <Card className="border border-gray-200">
-              <CardContent className="p-8 space-y-8">
-                <div className="grid md:grid-cols-2 gap-8">
-                  <div>
-                    <Label className="text-sm font-medium mb-4 block text-gray-900">
-                      Contributors: {formData.maxMessages}
-                    </Label>
-                    <Slider
-                      value={[formData.maxMessages]}
-                      onValueChange={(value) => handleInputChange('maxMessages', value[0])}
-                      max={selectedTier?.maxMessages || 50}
-                      min={5}
-                      step={1}
-                      className="mt-2"
-                    />
-                    <p className="text-xs text-gray-600 mt-2 font-light">
-                      How many people can contribute to this experience
-                    </p>
+              <CardContent className="p-8 space-y-6">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <Users className="w-5 h-5 text-blue-600" />
+                    <span className="font-medium text-blue-900">
+                      {formData.maxMessages} Contributors Maximum
+                    </span>
                   </div>
-                  
-                  <div>
-                    <Label className="text-sm font-medium mb-4 block text-gray-900">
-                      Message length: {Math.floor(formData.maxMessageDuration / 60)}:{(formData.maxMessageDuration % 60).toString().padStart(2, '0')}
-                    </Label>
-                    <Slider
-                      value={[formData.maxMessageDuration]}
-                      onValueChange={(value) => handleInputChange('maxMessageDuration', value[0])}
-                      max={selectedTier?.maxMessageDuration * 60 || 300}
-                      min={15}
-                      step={15}
-                      className="mt-2"
-                    />
-                    <p className="text-xs text-gray-600 mt-2 font-light">
-                      Maximum duration for each individual message
-                    </p>
+                  <div className="flex items-center gap-3">
+                    <Clock className="w-5 h-5 text-blue-600" />
+                    <span className="text-sm text-blue-700">
+                      Max message length: {Math.floor(formData.maxMessageDuration / 60)}:{(formData.maxMessageDuration % 60).toString().padStart(2, '0')} per contributor
+                    </span>
                   </div>
+                  <p className="text-xs text-blue-600 mt-2">
+                    Based on your selected plan: {selectedTier?.name}
+                  </p>
                 </div>
                 
                 <div className="flex items-center space-x-3 pt-4 border-t border-gray-100">
@@ -340,9 +321,9 @@ const CreatePodCard = () => {
           <div className="space-y-8">
             <div className="text-center">
               <span className="text-xs font-mono text-gray-400 mb-4 block tracking-wider">{'{ 04 }'}</span>
-              <h2 className="text-2xl font-light mb-4 tracking-tight text-gray-900">Background audio</h2>
+              <h2 className="text-2xl font-light mb-4 tracking-tight text-gray-900 vintage-font">Background audio</h2>
               <p className="text-gray-600 max-w-xl mx-auto font-light">
-                Add subtle background audio to enhance your experience.
+                Add subtle background audio to enhance your memory.
               </p>
             </div>
 
@@ -399,7 +380,7 @@ const CreatePodCard = () => {
                 disabled={loading}
                 className="bg-gray-900 text-white hover:bg-gray-800 px-8 py-3 font-normal"
               >
-                {loading ? 'Creating...' : `Create experience ${selectedTier?.price > 0 ? `($${selectedTier.price})` : '(Free)'}`}
+                {loading ? 'Creating...' : `Create memory ${selectedTier?.price > 0 ? `($${selectedTier.price})` : '(Free)'}`}
               </Button>
             </div>
           </div>
