@@ -346,7 +346,7 @@ const CreatePodCard = () => {
           {/* Step 4: Background Music */}
           <div className="space-y-8">
             <div className="text-center">
-              <span className="text-sm font-mono text-gray-400 mb-4 block">{ 04 }</span>
+              <span className="text-sm font-mono text-gray-400 mb-4 block">{'{ 04 }'}</span>
               <h2 className="text-3xl font-bold mb-4 tracking-tight">BACKGROUND MUSIC</h2>
               <p className="text-gray-600 max-w-xl mx-auto">
                 Add the perfect soundtrack to enhance the emotional impact of your audio celebration.
