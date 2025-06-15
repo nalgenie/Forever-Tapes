@@ -302,9 +302,9 @@ const LandingPage = () => {
               Collective Audio Archives for Shared Memories
             </p>
 
-            {/* Simple Logo Illustration */}
+            {/* Cute Audio Illustration */}
             <div className="mb-16 relative">
-              <SimpleLogo />
+              <CuteAudioIllustration />
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
