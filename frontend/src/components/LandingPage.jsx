@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-import { Mic, Music, Share2, Sparkles, PlayCircle, Heart, Gift, Clock, Users, Volume2, Radio, Disc, Headphones } from 'lucide-react';
+import { Mic, Music, Share2, PlayCircle, Users, Volume2, Radio } from 'lucide-react';
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -12,136 +12,134 @@ const LandingPage = () => {
   const experiences = [
     {
       id: '01',
-      title: 'CELEBRATIONS',
-      subtitle: 'birthday mixes • anniversary tapes • milestone recordings',
-      description: 'Collect heartfelt messages from loved ones and create unforgettable audio celebrations.',
-      gradient: 'from-orange-400 to-red-500',
-      hoverGradient: 'from-orange-500 to-red-600',
-      icon: '🎂'
+      title: 'Celebrations',
+      subtitle: 'birthday tapes, anniversaries, milestones',
+      description: 'Collect meaningful messages from loved ones to mark special occasions and create lasting audio memories.',
+      baseColor: 'bg-stone-100',
+      hoverColor: 'bg-stone-200',
+      textColor: 'text-stone-800'
     },
     {
       id: '02', 
-      title: 'MOMENTS',
-      subtitle: 'graduation mixes • achievement tapes • occasion recordings',
-      description: 'Preserve the emotions and excitement of life\'s most important moments.',
-      gradient: 'from-purple-400 to-indigo-500',
-      hoverGradient: 'from-purple-500 to-indigo-600',
-      icon: '✨'
+      title: 'Moments',
+      subtitle: 'graduations, achievements, transitions',
+      description: 'Preserve the emotions and significance of life\'s important moments through authentic voice recordings.',
+      baseColor: 'bg-slate-100',
+      hoverColor: 'bg-slate-200', 
+      textColor: 'text-slate-800'
     },
     {
       id: '03',
-      title: 'MEMORIES',
-      subtitle: 'family archives • tribute tapes • legacy recordings',
-      description: 'Create lasting audio memories that connect generations and preserve stories.',
-      gradient: 'from-cyan-400 to-blue-500',
-      hoverGradient: 'from-cyan-500 to-blue-600',
-      icon: '💿'
+      title: 'Memories',
+      subtitle: 'family stories, tributes, legacies',
+      description: 'Create audio archives that connect generations and preserve the stories that matter most.',
+      baseColor: 'bg-neutral-100',
+      hoverColor: 'bg-neutral-200',
+      textColor: 'text-neutral-800'
     }
   ];
 
   const features = [
     {
-      icon: <Mic className="w-6 h-6" />,
-      title: "audio collection",
-      description: "send a link. contributors record directly from their device with guided prompts."
+      icon: <Mic className="w-5 h-5" />,
+      title: "Audio Collection",
+      description: "Send a link. Contributors record directly from their device with guided prompts."
     },
     {
-      icon: <Music className="w-6 h-6" />,
-      title: "vintage mixing", 
-      description: "custom background loops, analog-style editing, and noise reduction for that perfect sound."
+      icon: <Music className="w-5 h-5" />,
+      title: "Professional Editing", 
+      description: "Custom background tracks, advanced editing tools, and audio enhancement for perfect quality."
     },
     {
-      icon: <Users className="w-6 h-6" />,
-      title: "collaborative creation",
-      description: "invite unlimited contributors to add their voice to your mixtape."
+      icon: <Users className="w-5 h-5" />,
+      title: "Collaborative Creation",
+      description: "Invite contributors to add their voice to your audio experience."
     },
     {
-      icon: <Share2 className="w-6 h-6" />,
-      title: "digital delivery",
-      description: "share your finished tape via email, text, or custom listening page."
+      icon: <Share2 className="w-5 h-5" />,
+      title: "Seamless Delivery",
+      description: "Share your finished audio experience via email, text, or custom listening page."
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-gray-200 z-50">
-        <div className="container mx-auto px-6 py-4">
+      <header className="fixed top-0 w-full bg-white/90 backdrop-blur-sm border-b border-gray-100 z-50">
+        <div className="container mx-auto px-6 py-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-red-500 rounded-full flex items-center justify-center">
-                <Radio className="w-5 h-5 text-white" />
+              <div className="w-8 h-8 bg-gray-900 rounded-sm flex items-center justify-center">
+                <Radio className="w-4 h-4 text-white" />
               </div>
-              <span className="text-2xl font-black tracking-wider">
-                FOREVER TAPES
+              <span className="text-lg font-medium tracking-wide text-gray-900">
+                Forever Tapes
               </span>
             </div>
             <Button 
               onClick={() => navigate('/dashboard')}
               variant="ghost"
-              className="hidden sm:flex font-medium"
+              className="text-gray-600 hover:text-gray-900 font-normal"
             >
-              dashboard
+              Dashboard
             </Button>
           </div>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6 bg-white">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <Badge className="mb-8 bg-red-100 text-red-800 border-0 px-4 py-2 text-sm font-medium">
-              bespoke audio experiences
+      <section className="pt-32 pb-24 px-6">
+        <div className="container mx-auto max-w-5xl">
+          <div className="text-center mb-20">
+            <Badge className="mb-8 bg-gray-100 text-gray-700 border-0 px-3 py-1 text-sm font-normal">
+              Bespoke audio experiences
             </Badge>
             
-            <h1 className="text-6xl md:text-8xl font-black mb-8 tracking-tight leading-none">
-              CREATE AUDIO
+            <h1 className="text-5xl md:text-7xl font-light mb-8 tracking-tight leading-none text-gray-900">
+              Create audio
               <br />
-              <span className="block text-red-500">MIXTAPES</span>
-              <span className="block text-4xl md:text-5xl font-normal italic">for life's moments</span>
+              <span className="font-normal italic">celebrations</span>
             </h1>
             
-            <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed font-light">
-              craft bespoke audio experiences that capture voices, emotions, and moments. 
-              turn heartfelt messages into lasting celebrations and memories.
+            <p className="text-lg md:text-xl text-gray-600 mb-16 max-w-2xl mx-auto leading-relaxed font-light">
+              Craft meaningful audio experiences that capture voices, emotions, and moments. 
+              Transform heartfelt messages into lasting memories.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Button 
                 size="lg" 
                 onClick={() => navigate('/create')}
-                className="bg-black text-white hover:bg-gray-800 px-12 py-6 text-lg font-black tracking-wide rounded-none shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
+                className="bg-gray-900 text-white hover:bg-gray-800 px-8 py-3 font-normal"
               >
-                START RECORDING
-                <Sparkles className="ml-2 w-5 h-5" />
+                Start creating
               </Button>
               
               <Button 
                 size="lg" 
                 variant="outline"
-                className="px-12 py-6 text-lg rounded-none border-2 border-gray-800 hover:bg-gray-800 hover:text-white transition-all duration-300 font-medium"
+                className="px-8 py-3 border-gray-300 text-gray-700 hover:bg-gray-50 font-normal"
                 onClick={() => navigate('/listen/demo')}
               >
-                <PlayCircle className="mr-2 w-5 h-5" />
-                listen to demo
+                <PlayCircle className="mr-2 w-4 h-4" />
+                Listen to demo
               </Button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Experience Grid - Halles Cartoucherie style */}
-      <section className="py-20 px-6">
-        <div className="container mx-auto max-w-7xl">
+      {/* Experience Grid */}
+      <section className="py-20 px-6 bg-gray-50">
+        <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tight">
-              CRAFTED FOR
+            <h2 className="text-3xl md:text-4xl font-light mb-4 tracking-tight text-gray-900">
+              Designed for life's
               <br />
-              <span className="text-3xl md:text-4xl font-normal italic">life's soundtrack</span>
+              <span className="italic">meaningful moments</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto font-light">
-              every audio experience is uniquely tailored to capture the essence of your special occasion.
+            <p className="text-lg text-gray-600 max-w-xl mx-auto font-light">
+              Each audio experience is thoughtfully crafted to capture the essence of your occasion.
             </p>
           </div>
           
@@ -150,7 +148,7 @@ const LandingPage = () => {
               <div key={experience.id} className="relative group">
                 {/* Base Card */}
                 <Card 
-                  className={`border-0 shadow-xl transition-all duration-500 cursor-pointer transform hover:scale-105 overflow-hidden bg-gradient-to-br ${experience.gradient} text-white relative z-10 ${
+                  className={`border-0 transition-all duration-700 cursor-pointer overflow-hidden ${experience.baseColor} relative z-10 ${
                     hoveredCard === experience.id ? 'opacity-0' : 'opacity-100'
                   }`}
                   onMouseEnter={() => setHoveredCard(experience.id)}
@@ -158,20 +156,19 @@ const LandingPage = () => {
                 >
                   <CardContent className="p-8 h-80 flex flex-col justify-between">
                     <div>
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="text-sm font-mono text-white/80">
-                          {`{ ${experience.id} }`}
+                      <div className="flex items-center justify-between mb-6">
+                        <span className="text-xs font-mono text-gray-500 tracking-wider">
+                          {experience.id}
                         </span>
-                        <span className="text-4xl">{experience.icon}</span>
                       </div>
-                      <CardTitle className="text-2xl font-black mb-2 tracking-tight">
+                      <CardTitle className="text-xl font-normal mb-2 tracking-tight text-gray-900">
                         {experience.title}
                       </CardTitle>
-                      <p className="text-sm font-medium text-white/80 uppercase tracking-wide">
+                      <p className="text-sm font-light text-gray-600 mb-6">
                         {experience.subtitle}
                       </p>
                     </div>
-                    <p className="text-white/90 leading-relaxed">
+                    <p className="text-gray-700 leading-relaxed text-sm font-light">
                       {experience.description}
                     </p>
                   </CardContent>
@@ -179,17 +176,16 @@ const LandingPage = () => {
 
                 {/* Hover Card */}
                 <Card 
-                  className={`absolute inset-0 border-0 shadow-xl transition-all duration-500 cursor-pointer transform hover:scale-105 overflow-hidden bg-gradient-to-br ${experience.hoverGradient} text-white z-20 ${
+                  className={`absolute inset-0 border-0 transition-all duration-700 cursor-pointer overflow-hidden ${experience.hoverColor} z-20 ${
                     hoveredCard === experience.id ? 'opacity-100' : 'opacity-0'
                   }`}
                   onMouseLeave={() => setHoveredCard(null)}
                   onClick={() => navigate('/create')}
                 >
                   <CardContent className="p-8 h-80 flex flex-col justify-center items-center text-center">
-                    <div className="text-6xl mb-6">{experience.icon}</div>
-                    <h3 className="text-3xl font-black mb-4">{experience.title}</h3>
-                    <Button className="bg-white text-gray-900 hover:bg-gray-100 font-semibold px-6 py-2">
-                      start creating
+                    <h3 className="text-2xl font-light mb-6 text-gray-900">{experience.title}</h3>
+                    <Button className="bg-gray-900 text-white hover:bg-gray-800 font-normal px-6 py-2">
+                      Create
                     </Button>
                   </CardContent>
                 </Card>
@@ -201,26 +197,26 @@ const LandingPage = () => {
 
       {/* How It Works */}
       <section className="py-20 px-6 bg-white">
-        <div className="container mx-auto max-w-6xl">
+        <div className="container mx-auto max-w-5xl">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tight">
-              HOW IT WORKS
+            <h2 className="text-3xl md:text-4xl font-light mb-4 tracking-tight text-gray-900">
+              How it works
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto font-light">
-              creating authentic audio experiences has never been simpler or more meaningful.
+            <p className="text-lg text-gray-600 max-w-xl mx-auto font-light">
+              Creating meaningful audio experiences has never been more intuitive.
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
             {features.map((feature, index) => (
               <div key={index} className="text-center group">
-                <div className="w-16 h-16 mx-auto mb-6 bg-gray-100 group-hover:bg-gradient-to-br group-hover:from-red-400 group-hover:to-orange-500 rounded-2xl flex items-center justify-center text-gray-700 group-hover:text-white transition-all duration-300">
+                <div className="w-12 h-12 mx-auto mb-6 bg-gray-100 group-hover:bg-gray-200 rounded-sm flex items-center justify-center text-gray-700 transition-colors duration-300">
                   {feature.icon}
                 </div>
-                <h3 className="text-lg font-black mb-3 text-gray-800 tracking-wide uppercase">
+                <h3 className="text-base font-medium mb-3 text-gray-900">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600 leading-relaxed text-sm">
+                <p className="text-gray-600 leading-relaxed text-sm font-light">
                   {feature.description}
                 </p>
               </div>
@@ -230,58 +226,57 @@ const LandingPage = () => {
       </section>
 
       {/* Pricing Teaser */}
-      <section className="py-20 px-6 bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 text-white">
+      <section className="py-20 px-6 bg-gray-900 text-white">
         <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tight">
-            START FOR FREE
+          <h2 className="text-3xl md:text-4xl font-light mb-6 tracking-tight">
+            Start for free
           </h2>
-          <p className="text-xl text-white/90 mb-8 font-light">
-            create your first audio mixtape at no cost. upgrade for extended features and unlimited possibilities.
+          <p className="text-lg text-gray-300 mb-8 font-light max-w-2xl mx-auto">
+            Create your first audio experience at no cost. Upgrade for extended features and unlimited possibilities.
           </p>
           
-          <div className="flex justify-center gap-8 text-sm text-white/80 mb-12">
+          <div className="flex justify-center gap-8 text-sm text-gray-400 mb-12 font-light">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-              first mixtape is free
+              <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+              First experience is free
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
-              analog-quality processing
+              <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+              Professional quality
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
-              no technical skills required
+              <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+              No technical skills required
             </div>
           </div>
           
           <Button 
             size="lg" 
             onClick={() => navigate('/create')}
-            className="bg-white text-purple-600 hover:bg-gray-100 px-12 py-6 text-lg font-black tracking-wide rounded-none shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
+            className="bg-white text-gray-900 hover:bg-gray-100 px-8 py-3 font-normal"
           >
-            CREATE YOUR FIRST MIXTAPE
-            <Sparkles className="ml-2 w-5 h-5" />
+            Create your first experience
           </Button>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-black text-white py-16 px-6">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-12">
-            <div className="flex items-center justify-center space-x-3 mb-6">
-              <div className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
-                <Radio className="w-4 h-4 text-white" />
+      <footer className="bg-white py-16 px-6 border-t border-gray-100">
+        <div className="container mx-auto max-w-5xl">
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-center space-x-3 mb-4">
+              <div className="w-6 h-6 bg-gray-900 rounded-sm flex items-center justify-center">
+                <Radio className="w-3 h-3 text-white" />
               </div>
-              <span className="text-2xl font-black tracking-wider">FOREVER TAPES</span>
+              <span className="text-base font-medium text-gray-900">Forever Tapes</span>
             </div>
-            <p className="text-gray-400 max-w-2xl mx-auto font-light">
-              crafting bespoke audio celebrations, moments and memories that last forever.
+            <p className="text-gray-600 max-w-xl mx-auto font-light">
+              Crafting meaningful audio experiences for life's most important moments.
             </p>
           </div>
           
-          <div className="text-center text-gray-500 text-sm">
-            <p>&copy; 2025 forever tapes. crafting authentic audio experiences.</p>
+          <div className="text-center text-gray-500 text-sm font-light">
+            <p>&copy; 2025 Forever Tapes</p>
           </div>
         </div>
       </footer>
