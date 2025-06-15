@@ -78,7 +78,7 @@ const SimpleSelect = ({ value, onValueChange, children, className, ...props }) =
 }
 
 export {
-  Select: SimpleSelect,
+  SimpleSelect as Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
