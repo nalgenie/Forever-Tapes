@@ -246,7 +246,7 @@ const CreatePodCard = () => {
           {/* Step 2: Basic Details */}
           <div className="space-y-8">
             <div className="text-center">
-              <span className="text-sm font-mono text-gray-400 mb-4 block">{ 02 }</span>
+              <span className="text-sm font-mono text-gray-400 mb-4 block">{'{ 02 }'}</span>
               <h2 className="text-3xl font-bold mb-4 tracking-tight">CELEBRATION DETAILS</h2>
               <p className="text-gray-600 max-w-xl mx-auto">
                 Give your audio celebration a meaningful title and description to guide your contributors.
