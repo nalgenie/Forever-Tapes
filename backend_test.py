@@ -139,15 +139,18 @@ class ForeverTapesAPITest(unittest.TestCase):
         print("✅ Verified podcard has been updated with the audio message")
 
 if __name__ == "__main__":
+    # Create a single test instance to share state between tests
+    test_instance = ForeverTapesAPITest()
+    
     # Run the tests in order
     test_suite = unittest.TestSuite()
-    test_suite.addTest(ForeverTapesAPITest('test_01_health_check'))
-    test_suite.addTest(ForeverTapesAPITest('test_02_create_podcard'))
-    test_suite.addTest(ForeverTapesAPITest('test_03_get_podcards'))
-    test_suite.addTest(ForeverTapesAPITest('test_04_get_podcard_by_id'))
-    test_suite.addTest(ForeverTapesAPITest('test_05_upload_audio'))
-    test_suite.addTest(ForeverTapesAPITest('test_06_get_audio_file'))
-    test_suite.addTest(ForeverTapesAPITest('test_07_verify_podcard_updated'))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_01_health_check))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_02_create_podcard))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_03_get_podcards))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_04_get_podcard_by_id))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_05_upload_audio))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_06_get_audio_file))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_07_verify_podcard_updated))
     
     runner = unittest.TextTestRunner(verbosity=2)
     runner.run(test_suite)
