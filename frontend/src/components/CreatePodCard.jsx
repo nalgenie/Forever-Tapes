@@ -319,20 +319,21 @@ const CreatePodCard = () => {
             </Card>
           </div>
 
-          {/* Step 4: Background Music */}
+          {/* Step 4: Background Music + Demo Messages */}
           <div className="space-y-8">
             <div className="text-center">
               <span className="text-xs font-mono text-gray-400 mb-4 block tracking-wider">{'{ 04 }'}</span>
-              <h2 className="text-2xl font-light mb-4 tracking-tight text-gray-900 vintage-font">Background audio</h2>
+              <h2 className="text-2xl font-light mb-4 tracking-tight text-gray-900 vintage-font">Background audio & examples</h2>
               <p className="text-gray-600 max-w-xl mx-auto font-light">
-                Add subtle background audio to enhance your memory.
+                Add subtle background audio and listen to example messages to get inspired
               </p>
             </div>
 
             <Card className="border border-gray-200">
-              <CardContent className="p-8 space-y-6">
+              <CardContent className="p-8 space-y-8">
+                {/* Background Music Selection */}
                 <div>
-                  <Label className="text-sm font-medium mb-4 block text-gray-900">Choose from library</Label>
+                  <Label className="text-sm font-medium mb-4 block text-gray-900">Choose background music</Label>
                   <select 
                     value={formData.backgroundMusic} 
                     onChange={(e) => handleInputChange('backgroundMusic', e.target.value)}
@@ -361,6 +362,87 @@ const CreatePodCard = () => {
                   <p className="text-xs text-gray-600 mt-2 font-light">
                     Supported formats: MP3, WAV, AIFF (max 10MB)
                   </p>
+                </div>
+
+                {/* Demo Message Examples */}
+                <div className="border-t border-gray-100 pt-6">
+                  <Label className="text-sm font-medium mb-4 block text-gray-900">
+                    Example messages for inspiration
+                  </Label>
+                  <p className="text-xs text-gray-600 mb-4 font-light">
+                    Listen to these sample messages to get ideas for your memory
+                  </p>
+                  
+                  <div className="grid md:grid-cols-3 gap-4">
+                    {/* Demo Message 1 - Birthday */}
+                    <Card className="border border-gray-200 hover:border-gray-300 transition-colors">
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between mb-3">
+                          <div>
+                            <h4 className="font-medium text-sm text-gray-900">Birthday message</h4>
+                            <p className="text-xs text-gray-600">Sarah, age 5</p>
+                          </div>
+                          <button className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center hover:bg-blue-200 transition-colors">
+                            <Play className="w-3 h-3 text-blue-600" />
+                          </button>
+                        </div>
+                        <div className="bg-gray-100 rounded p-2 mb-2">
+                          <p className="text-xs text-gray-700 italic">
+                            "Happy birthday grandpa! I drew you a picture of a dinosaur because you're really old like them..."
+                          </p>
+                        </div>
+                        <p className="text-xs text-gray-500">
+                          🎵 Demo audio placeholder - 15 seconds
+                        </p>
+                      </CardContent>
+                    </Card>
+
+                    {/* Demo Message 2 - Anniversary */}
+                    <Card className="border border-gray-200 hover:border-gray-300 transition-colors">
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between mb-3">
+                          <div>
+                            <h4 className="font-medium text-sm text-gray-900">Anniversary message</h4>
+                            <p className="text-xs text-gray-600">Mike, son</p>
+                          </div>
+                          <button className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center hover:bg-green-200 transition-colors">
+                            <Play className="w-3 h-3 text-green-600" />
+                          </button>
+                        </div>
+                        <div className="bg-gray-100 rounded p-2 mb-2">
+                          <p className="text-xs text-gray-700 italic">
+                            "Mom and Dad, watching you two together has shown me what real love looks like. Thank you for 30 amazing years..."
+                          </p>
+                        </div>
+                        <p className="text-xs text-gray-500">
+                          🎵 Demo audio placeholder - 22 seconds
+                        </p>
+                      </CardContent>
+                    </Card>
+
+                    {/* Demo Message 3 - Graduation */}
+                    <Card className="border border-gray-200 hover:border-gray-300 transition-colors">
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between mb-3">
+                          <div>
+                            <h4 className="font-medium text-sm text-gray-900">Graduation message</h4>
+                            <p className="text-xs text-gray-600">Emma, best friend</p>
+                          </div>
+                          <button className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center hover:bg-purple-200 transition-colors">
+                            <Play className="w-3 h-3 text-purple-600" />
+                          </button>
+                        </div>
+                        <div className="bg-gray-100 rounded p-2 mb-2">
+                          <p className="text-xs text-gray-700 italic">
+                            "Remember when we said we'd never graduate? Well look at us now! I'm so proud of everything you've accomplished..."
+                          </p>
+                        </div>
+                        <p className="text-xs text-gray-500">
+                          🎵 Demo audio placeholder - 18 seconds
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </div>
                 </div>
               </CardContent>
             </Card>
