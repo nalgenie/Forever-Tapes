@@ -2,6 +2,7 @@ import React from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "./components/ui/toaster";
+import { AuthProvider } from "./components/AuthContext";
 
 // Import components
 import LandingPage from "./components/LandingPage";
@@ -10,21 +11,46 @@ import ContributeAudio from "./components/ContributeAudio";
 import EditPodCard from "./components/EditPodCard";
 import ListenToPodCard from "./components/ListenToPodCard";
 import Dashboard from "./components/Dashboard";
+import LoginPage from "./components/Auth/LoginPage";
+import VerifyMagicLink from "./components/Auth/VerifyMagicLink";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
     <div className="App min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/create" element={<CreatePodCard />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/contribute/:shareId" element={<ContributeAudio />} />
-          <Route path="/edit/:podCardId" element={<EditPodCard />} />
-          <Route path="/listen/:podCardId" element={<ListenToPodCard />} />
-        </Routes>
-      </BrowserRouter>
-      <Toaster />
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/auth/login" element={<LoginPage />} />
+            <Route path="/auth/verify" element={<VerifyMagicLink />} />
+            <Route path="/contribute/:shareId" element={<ContributeAudio />} />
+            <Route path="/listen/:podCardId" element={<ListenToPodCard />} />
+            
+            {/* Protected Routes */}
+            <Route path="/create" element={
+              <ProtectedRoute>
+                <CreatePodCard />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/edit/:podCardId" element={
+              <ProtectedRoute>
+                <EditPodCard />
+              </ProtectedRoute>
+            } />
+          </Routes>
+        </BrowserRouter>
+        
+        {/* Toast notifications positioned bottom-left */}
+        <div className="alert-bottom-left">
+          <Toaster />
+        </div>
+      </AuthProvider>
     </div>
   );
 }
