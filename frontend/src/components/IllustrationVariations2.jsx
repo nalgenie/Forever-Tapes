@@ -3,7 +3,7 @@
 import React from 'react';
 
 // VARIATION 6: Retro Neon - Bright neon colors
-const Variation6 = () => (
+export const Variation6 = () => (
   <svg width="400" height="250" viewBox="0 0 400 250" className="drop-shadow-lg">
     <rect x="40" y="120" width="75" height="90" rx="15" fill="#0EA5E9" stroke="#0284C7" strokeWidth="3"/>
     <circle cx="77" cy="150" r="18" fill="#0C4A6E" stroke="#082F49" strokeWidth="2"/>
