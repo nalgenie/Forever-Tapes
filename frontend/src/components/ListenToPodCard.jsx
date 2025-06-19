@@ -192,7 +192,13 @@ const ListenToPodCard = () => {
 
   const getCurrentAudioSource = () => {
     if (podCardId === 'demo') {
-      return '/mock-audio/demo.mp3'; // Demo audio file
+      // Demo audio sources
+      const demoAudios = {
+        0: '/demo-audio/mike.wav',
+        1: '/demo-audio/emma.wav', 
+        2: '/demo-audio/david.wav'
+      };
+      return demoAudios[currentTrack] || '/demo-audio/intro.mp3';
     }
     
     const message = podCard?.audio_messages?.[currentTrack];
