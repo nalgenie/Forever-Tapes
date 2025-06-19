@@ -486,20 +486,71 @@ const ContributeAudio = () => {
           </Card>
         )}
 
-        {/* Recording Tips - Vintage Style */}
+        {/* Recording Tips - Vintage Style + Demo Examples */}
         <Card className="mt-8 border-0 shadow-lg bg-yellow-50 border-l-4 border-yellow-400">
           <CardContent className="p-8">
-            <h3 className="font-black text-lg mb-4 text-yellow-800 tracking-wide">RECORDING TIPS:</h3>
-            <div className="grid md:grid-cols-2 gap-4 text-sm text-yellow-700">
+            <h3 className="font-black text-lg mb-4 text-yellow-800 tracking-wide">RECORDING TIPS & EXAMPLES:</h3>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Recording Tips */}
               <div>
-                <p>• find a quiet spot</p>
-                <p>• keep phone 6 inches away</p>
-                <p>• speak clearly and naturally</p>
+                <h4 className="font-semibold mb-3 text-yellow-700">Recording tips:</h4>
+                <div className="text-sm text-yellow-700 space-y-1">
+                  <p>• find a quiet spot</p>
+                  <p>• keep phone 6 inches away</p>
+                  <p>• speak clearly and naturally</p>
+                  <p>• stay under 30 seconds</p>
+                  <p>• share a specific memory</p>
+                  <p>• keep it genuine</p>
+                </div>
               </div>
+
+              {/* Demo Examples */}
               <div>
-                <p>• stay under 30 seconds</p>
-                <p>• share a specific memory</p>
-                <p>• keep it genuine</p>
+                <h4 className="font-semibold mb-3 text-yellow-700">Example messages for inspiration:</h4>
+                <div className="space-y-3">
+                  {/* Demo Example 1 */}
+                  <div className="bg-white/60 rounded p-3 border border-yellow-200">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs font-medium text-yellow-800">Birthday example</span>
+                      <button className="w-6 h-6 bg-yellow-200 rounded-full flex items-center justify-center hover:bg-yellow-300 transition-colors">
+                        <Play className="w-3 h-3 text-yellow-700" />
+                      </button>
+                    </div>
+                    <p className="text-xs text-yellow-700 italic">
+                      "Remember when we got lost on our road trip? That was the best adventure..."
+                    </p>
+                    <p className="text-xs text-yellow-600 mt-1">🎵 Demo placeholder - 12s</p>
+                  </div>
+
+                  {/* Demo Example 2 */}
+                  <div className="bg-white/60 rounded p-3 border border-yellow-200">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs font-medium text-yellow-800">Thank you example</span>
+                      <button className="w-6 h-6 bg-yellow-200 rounded-full flex items-center justify-center hover:bg-yellow-300 transition-colors">
+                        <Play className="w-3 h-3 text-yellow-700" />
+                      </button>
+                    </div>
+                    <p className="text-xs text-yellow-700 italic">
+                      "Thank you for always believing in me, especially when I didn't believe in myself..."
+                    </p>
+                    <p className="text-xs text-yellow-600 mt-1">🎵 Demo placeholder - 18s</p>
+                  </div>
+
+                  {/* Demo Example 3 */}
+                  <div className="bg-white/60 rounded p-3 border border-yellow-200">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs font-medium text-yellow-800">Memory example</span>
+                      <button className="w-6 h-6 bg-yellow-200 rounded-full flex items-center justify-center hover:bg-yellow-300 transition-colors">
+                        <Play className="w-3 h-3 text-yellow-700" />
+                      </button>
+                    </div>
+                    <p className="text-xs text-yellow-700 italic">
+                      "You taught me how to ride a bike, and more importantly, how to get back up when I fall..."
+                    </p>
+                    <p className="text-xs text-yellow-600 mt-1">🎵 Demo placeholder - 15s</p>
+                  </div>
+                </div>
               </div>
             </div>
           </CardContent>
