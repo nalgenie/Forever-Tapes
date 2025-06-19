@@ -239,24 +239,41 @@ class ForeverTapesAPITest(unittest.TestCase):
         self.assertGreaterEqual(len(data["audio_messages"]), 3)
         print(f"✅ Retrieved demo audio with {len(data['audio_messages'])} messages")
 
-if __name__ == "__main__":
-    # Create a single test instance to share state between tests
-    test_instance = ForeverTapesAPITest()
-    
-    # Run the tests in order
-    test_suite = unittest.TestSuite()
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_01_health_check))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_02_request_magic_link))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_03_register_user))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_04_get_current_user))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_05_create_podcard_authenticated))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_06_get_my_podcards))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_07_get_podcards))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_08_get_podcard_by_id))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_09_upload_audio))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_10_get_audio_file))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_11_verify_podcard_updated))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_12_get_demo_audio))
-    
-    runner = unittest.TextTestRunner(verbosity=2)
-    runner.run(test_suite)
+    def test_13_unauthorized_access(self):
+        """Test unauthorized access to protected endpoints"""
+        print("\n🔍 Testing unauthorized access to protected endpoints...")
+        
+        # Try to access current user info without auth token
+        response = requests.get(f"{self.api_url}/auth/me")
+        self.assertEqual(response.status_code, 401)
+        
+        # Try to create a podcard without auth token
+        test_data = {
+            "title": "Unauthorized PodCard",
+            "description": "This should fail",
+            "occasion": "test"
+        }
+        response = requests.post(f"{self.api_url}/podcards", json=test_data)
+        self.assertEqual(response.status_code, 401)
+        
+        # Try to get my podcards without auth token
+        response = requests.get(f"{self.api_url}/podcards/my")
+        self.assertEqual(response.status_code, 401)
+        
+        print("✅ Unauthorized access properly rejected")
+        
+    def test_14_invalid_podcard_id(self):
+        """Test accessing a non-existent podcard"""
+        print("\n🔍 Testing access to non-existent podcard...")
+        invalid_id = "00000000-0000-0000-0000-000000000000"
+        response = requests.get(f"{self.api_url}/podcards/{invalid_id}")
+        self.assertEqual(response.status_code, 404)
+        print("✅ Non-existent podcard properly returns 404")
+        
+    def test_15_invalid_audio_id(self):
+        """Test accessing a non-existent audio file"""
+        print("\n🔍 Testing access to non-existent audio file...")
+        invalid_id = "00000000-0000-0000-0000-000000000000"
+        response = requests.get(f"{self.api_url}/audio/{invalid_id}")
+        self.assertEqual(response.status_code, 404)
+        print("✅ Non-existent audio file properly returns 404")
