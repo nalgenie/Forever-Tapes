@@ -96,4 +96,3 @@ export const Variation7 = () => (
   </svg>
 );
 
-export { Variation7 };
