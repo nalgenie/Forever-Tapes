@@ -62,6 +62,12 @@ const LandingPage = () => {
                   >
                     Contribute
                   </button>
+                  <button 
+                    onClick={() => navigate('/about')}
+                    className="text-gray-700 hover:text-gray-900 font-medium transition-colors px-4 py-2 rounded-lg hover:bg-white/50"
+                  >
+                    About
+                  </button>
                   <div className="flex items-center space-x-3 ml-4">
                     <span className="text-sm text-gray-600">
                       {user?.name}
@@ -94,6 +100,12 @@ const LandingPage = () => {
                     className="text-gray-700 hover:text-gray-900 font-medium transition-colors px-4 py-2 rounded-lg hover:bg-white/50"
                   >
                     Contribute
+                  </button>
+                  <button 
+                    onClick={() => navigate('/about')}
+                    className="text-gray-700 hover:text-gray-900 font-medium transition-colors px-4 py-2 rounded-lg hover:bg-white/50"
+                  >
+                    About
                   </button>
                 </>
               )}
