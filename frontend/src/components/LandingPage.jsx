@@ -105,10 +105,10 @@ const LandingPage = () => {
           {/* Main Title */}
           <div className="mb-8">
             <h1 className="text-6xl md:text-8xl font-light mb-4 tracking-tight leading-none text-gray-900">
-              <span className="font-mono lowercase vintage-gradient-text">forever tapes</span>
+              <span className="font-mono lowercase vintage-gradient-text vintage-font">forever tapes</span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 font-light tracking-wide">
-              Collective audio archives for shared memories
+              Collaborative Audio Memories
             </p>
           </div>
 
