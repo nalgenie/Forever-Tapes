@@ -57,11 +57,13 @@ class ForeverTapesAPITest(unittest.TestCase):
         
     def test_03_register_user(self):
         """Test user registration"""
-        print(f"\n🔍 Testing user registration for {self.test_user_email}...")
+        # Generate a new unique email for registration to avoid conflicts
+        unique_email = f"test_reg_{self.random_string(8)}@example.com"
+        print(f"\n🔍 Testing user registration for {unique_email}...")
         response = requests.post(
             f"{self.api_url}/auth/register", 
             json={
-                "email": self.test_user_email,
+                "email": unique_email,
                 "name": self.test_user_name,
                 "phone": "555-123-4567"
             }
@@ -70,11 +72,13 @@ class ForeverTapesAPITest(unittest.TestCase):
         data = response.json()
         self.assertIn("access_token", data)
         self.assertIn("user", data)
-        self.assertEqual(data["user"]["email"], self.test_user_email)
+        self.assertEqual(data["user"]["email"], unique_email)
         self.assertEqual(data["user"]["name"], self.test_user_name)
         
         # Save the auth token for later tests
         self.auth_token = data["access_token"]
+        # Update the test user email to the newly registered one
+        self.test_user_email = unique_email
         print(f"✅ User registered successfully with token: {self.auth_token[:10]}...")
         
     def test_04_get_current_user(self):
