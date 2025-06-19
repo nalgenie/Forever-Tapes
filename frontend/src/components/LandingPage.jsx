@@ -29,10 +29,6 @@ const LandingPage = () => {
     }
   };
 
-  const handleListenToDemo = () => {
-    navigate('/listen/demo');
-  };
-
   const handleLogout = () => {
     logout();
     // Optionally show a toast
