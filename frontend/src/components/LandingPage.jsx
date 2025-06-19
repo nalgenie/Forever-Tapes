@@ -118,10 +118,50 @@ const LandingPage = () => {
           {/* Hero Illustration */}
           <div className="mb-16 flex justify-center">
             <div className="relative">
-              {/* Illustration will be added here - placeholder for now */}
-              <div className="w-96 h-72 bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl flex items-center justify-center">
-                <p className="text-purple-600 font-medium">Cute audio equipment illustration coming soon!</p>
-              </div>
+              {/* Custom SVG Audio Equipment Pile */}
+              <svg width="400" height="300" viewBox="0 0 400 300" className="drop-shadow-lg">
+                {/* Background gradient */}
+                <defs>
+                  <linearGradient id="heroGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#818cf8" />
+                    <stop offset="50%" stopColor="#c084fc" />
+                    <stop offset="100%" stopColor="#fb7185" />
+                  </linearGradient>
+                </defs>
+                
+                {/* Large Boombox Base */}
+                <rect x="50" y="180" width="120" height="80" rx="8" fill="#2d3748" stroke="#4a5568" strokeWidth="2"/>
+                <circle cx="80" cy="220" r="15" fill="#1a202c"/>
+                <circle cx="140" cy="220" r="15" fill="#1a202c"/>
+                <rect x="100" y="200" width="20" height="8" rx="2" fill="#4a5568"/>
+                
+                {/* Vintage Radio */}
+                <rect x="200" y="160" width="100" height="60" rx="12" fill="#8b4513" stroke="#654321" strokeWidth="2"/>
+                <circle cx="225" cy="190" r="12" fill="#2d3748"/>
+                <circle cx="275" cy="190" r="12" fill="#2d3748"/>
+                <rect x="235" y="175" width="30" height="4" rx="2" fill="#654321"/>
+                
+                {/* Modern Speaker */}
+                <rect x="120" y="120" width="80" height="100" rx="10" fill="#1a365d" stroke="#2d3748" strokeWidth="2"/>
+                <circle cx="160" cy="155" r="20" fill="#2d3748"/>
+                <circle cx="160" cy="190" r="8" fill="#4a5568"/>
+                
+                {/* Small Cassette Recorder */}
+                <rect x="280" y="200" width="70" height="40" rx="6" fill="#4a5568" stroke="#2d3748" strokeWidth="2"/>
+                <rect x="290" y="210" width="20" height="15" rx="2" fill="#2d3748"/>
+                <rect x="320" y="210" width="20" height="15" rx="2" fill="#2d3748"/>
+                
+                {/* Character Resting on Equipment */}
+                <circle cx="200" cy="100" r="25" fill="#fbb6ce"/> {/* Head */}
+                <ellipse cx="200" cy="140" rx="30" ry="45" fill="#553c9a"/> {/* Body */}
+                <ellipse cx="180" cy="160" rx="8" ry="25" fill="#553c9a"/> {/* Left arm */}
+                <ellipse cx="220" cy="160" rx="8" ry="25" fill="#553c9a"/> {/* Right arm */}
+                
+                {/* Musical Notes */}
+                <text x="320" y="80" fontSize="24" fill="url(#heroGradient)">♪</text>
+                <text x="80" y="60" fontSize="20" fill="url(#heroGradient)">♫</text>
+                <text x="300" y="120" fontSize="18" fill="url(#heroGradient)">♪</text>
+              </svg>
             </div>
           </div>
 
