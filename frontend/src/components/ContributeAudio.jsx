@@ -157,7 +157,16 @@ const ContributeAudio = () => {
     if (!contributorData.name.trim()) {
       toast({
         title: "Name required",
-        description: "Let us know who this message is from.",
+        description: "Please enter your name.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!contributorData.email.trim()) {
+      toast({
+        title: "Email required",
+        description: "Please enter your email address.",
         variant: "destructive"
       });
       return;
