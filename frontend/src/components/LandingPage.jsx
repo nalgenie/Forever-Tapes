@@ -212,8 +212,8 @@ const LandingPage = () => {
               </Card>
             </div>
 
-            {/* Demo Button */}
-            <div className="pt-8">
+            {/* Demo Button - Removed */}
+            {/* <div className="pt-8">
               <button
                 onClick={handleListenToDemo}
                 className="group flex items-center justify-center gap-3 mx-auto px-8 py-4 bg-white/60 backdrop-blur-sm rounded-full text-gray-700 hover:bg-white/80 transition-all duration-300 border border-white/50"
@@ -221,7 +221,7 @@ const LandingPage = () => {
                 <Play className="w-5 h-5 group-hover:scale-110 transition-transform" />
                 <span className="font-medium">Listen to demo</span>
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
