@@ -43,11 +43,8 @@ const LandingPage = () => {
       {/* Header */}
       <header className="relative z-50">
         <div className="container mx-auto px-6 py-6">
-          <div className="flex items-center justify-between">
-            {/* Empty left side - removed logo */}
-            <div></div>
-            
-            {/* Navigation Menu */}
+          <div className="flex items-center justify-center">
+            {/* Centered Navigation Menu */}
             <div className="flex items-center space-x-8">
               {isAuthenticated ? (
                 <>
@@ -57,14 +54,19 @@ const LandingPage = () => {
                   >
                     Dashboard
                   </button>
-                  <Button 
+                  <button 
                     onClick={() => navigate('/create')}
-                    variant="outline"
-                    className="border-gray-300 text-gray-700 hover:bg-white/80 font-medium px-6 py-2"
+                    className="text-gray-700 hover:text-gray-900 font-medium transition-colors px-4 py-2 rounded-lg hover:bg-white/50"
                   >
-                    Create memory
-                  </Button>
-                  <div className="flex items-center space-x-3">
+                    Create
+                  </button>
+                  <button 
+                    onClick={() => setMemoryId('') || document.getElementById('memory-id-input')?.focus()}
+                    className="text-gray-700 hover:text-gray-900 font-medium transition-colors px-4 py-2 rounded-lg hover:bg-white/50"
+                  >
+                    Contribute
+                  </button>
+                  <div className="flex items-center space-x-3 ml-4">
                     <span className="text-sm text-gray-600">
                       {user?.name}
                     </span>
@@ -85,13 +87,18 @@ const LandingPage = () => {
                   >
                     Sign in
                   </button>
-                  <Button 
+                  <button 
                     onClick={() => navigate('/auth/login')}
-                    variant="outline"
-                    className="border-gray-300 text-gray-700 hover:bg-white/80 font-medium px-6 py-2"
+                    className="text-gray-700 hover:text-gray-900 font-medium transition-colors px-4 py-2 rounded-lg hover:bg-white/50"
                   >
-                    Start creating
-                  </Button>
+                    Create
+                  </button>
+                  <button 
+                    onClick={() => setMemoryId('') || document.getElementById('memory-id-input')?.focus()}
+                    className="text-gray-700 hover:text-gray-900 font-medium transition-colors px-4 py-2 rounded-lg hover:bg-white/50"
+                  >
+                    Contribute
+                  </button>
                 </>
               )}
             </div>
