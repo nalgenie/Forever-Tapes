@@ -334,7 +334,7 @@ const ContributeAudio = () => {
                 />
               </div>
               <div>
-                <Label htmlFor="email" className="text-white font-semibold">email (optional)</Label>
+                <Label htmlFor="email" className="text-white font-semibold">Email *</Label>
                 <Input
                   id="email"
                   type="email"
@@ -342,6 +342,7 @@ const ContributeAudio = () => {
                   value={contributorData.email}
                   onChange={(e) => setContributorData(prev => ({ ...prev, email: e.target.value }))}
                   className="mt-2 bg-white/10 border-white/20 text-white placeholder-white/60 backdrop-blur-sm"
+                  required
                 />
               </div>
             </CardContent>
