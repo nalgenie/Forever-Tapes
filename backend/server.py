@@ -1,16 +1,22 @@
-from fastapi import FastAPI, APIRouter, File, UploadFile, HTTPException, Form
+from fastapi import FastAPI, APIRouter, File, UploadFile, HTTPException, Form, Depends
 from fastapi.responses import FileResponse
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
 from pathlib import Path
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr
 from typing import List, Optional
 import uuid
-from datetime import datetime
+from datetime import datetime, timedelta
 import shutil
+import jwt
+import secrets
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -24,6 +30,14 @@ db = client[os.environ['DB_NAME']]
 UPLOADS_DIR = ROOT_DIR / "uploads"
 UPLOADS_DIR.mkdir(exist_ok=True)
 
+# JWT Settings
+JWT_SECRET = os.environ.get('JWT_SECRET', 'your-secret-key-change-in-production')
+JWT_ALGORITHM = "HS256"
+JWT_EXPIRATION_HOURS = 24
+
+# Security
+security = HTTPBearer(auto_error=False)
+
 # Create the main app without a prefix
 app = FastAPI(title="Forever Tapes API", description="Collaborative Audio Memories Platform")
 
@@ -34,18 +48,31 @@ api_router = APIRouter(prefix="/api")
 
 class User(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    email: EmailStr
     name: str
-    email: str
+    phone: Optional[str] = None
+    is_verified: bool = False
+    magic_link_token: Optional[str] = None
+    magic_link_expires: Optional[datetime] = None
+    password_hash: Optional[str] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
 class UserCreate(BaseModel):
+    email: EmailStr
     name: str
-    email: str
+    phone: Optional[str] = None
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: Optional[str] = None
+
+class MagicLinkRequest(BaseModel):
+    email: EmailStr
 
 class AudioMessage(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     contributor_name: str
-    contributor_email: Optional[str] = None
+    contributor_email: EmailStr  # Now required
     file_path: str
     duration: Optional[float] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
@@ -57,6 +84,7 @@ class PodCard(BaseModel):
     occasion: str  # birthday, anniversary, graduation, etc.
     creator_id: str
     creator_name: str
+    creator_email: EmailStr
     audio_messages: List[AudioMessage] = []
     background_music_path: Optional[str] = None
     is_public: bool = True
@@ -67,13 +95,52 @@ class PodCardCreate(BaseModel):
     title: str
     description: str
     occasion: str
-    creator_name: str
-    creator_email: str
 
 class ContributeAudioRequest(BaseModel):
     podcard_id: str
     contributor_name: str
-    contributor_email: Optional[str] = None
+    contributor_email: EmailStr  # Now required
+
+# === AUTHENTICATION HELPERS ===
+
+def create_access_token(user_id: str) -> str:
+    expire = datetime.utcnow() + timedelta(hours=JWT_EXPIRATION_HOURS)
+    to_encode = {"user_id": user_id, "exp": expire}
+    return jwt.encode(to_encode, JWT_SECRET, algorithm=JWT_ALGORITHM)
+
+def generate_magic_link_token() -> str:
+    return secrets.token_urlsafe(32)
+
+async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)) -> Optional[User]:
+    if not credentials:
+        return None
+    
+    try:
+        payload = jwt.decode(credentials.credentials, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        user_id = payload.get("user_id")
+        if not user_id:
+            return None
+        
+        user = await db.users.find_one({"id": user_id})
+        if not user:
+            return None
+            
+        return User(**user)
+    except jwt.ExpiredSignatureError:
+        return None
+    except jwt.JWTError:
+        return None
+
+async def get_current_user_required(user: User = Depends(get_current_user)) -> User:
+    if not user:
+        raise HTTPException(status_code=401, detail="Authentication required")
+    return user
+
+def send_magic_link_email(email: str, token: str) -> bool:
+    """Send magic link email (mock implementation)"""
+    # In production, this would send a real email
+    print(f"Magic link for {email}: http://localhost:3000/auth/verify?token={token}")
+    return True
 
 # === BASIC ROUTES ===
 
@@ -85,15 +152,111 @@ async def root():
 async def health_check():
     return {"status": "healthy", "timestamp": datetime.utcnow()}
 
-# === USER ROUTES ===
+# === AUTHENTICATION ROUTES ===
 
-@api_router.post("/users", response_model=User)
-async def create_user(user: UserCreate):
-    """Create a new user"""
-    user_dict = user.dict()
-    user_obj = User(**user_dict)
-    await db.users.insert_one(user_obj.dict())
-    return user_obj
+@api_router.post("/auth/register")
+async def register_user(user_data: UserCreate):
+    """Register a new user"""
+    # Check if user already exists
+    existing_user = await db.users.find_one({"email": user_data.email})
+    if existing_user:
+        raise HTTPException(status_code=400, detail="User already exists")
+    
+    # Create new user
+    user = User(**user_data.dict())
+    await db.users.insert_one(user.dict())
+    
+    # Generate access token
+    access_token = create_access_token(user.id)
+    
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user": {
+            "id": user.id,
+            "email": user.email,
+            "name": user.name
+        }
+    }
+
+@api_router.post("/auth/magic-link")
+async def request_magic_link(request: MagicLinkRequest):
+    """Request a magic link for authentication"""
+    # Check if user exists, create if not
+    user = await db.users.find_one({"email": request.email})
+    if not user:
+        # Create user with email only
+        user_obj = User(
+            email=request.email,
+            name=request.email.split('@')[0].title()  # Use email prefix as default name
+        )
+        await db.users.insert_one(user_obj.dict())
+        user = user_obj.dict()
+    
+    # Generate magic link token
+    token = generate_magic_link_token()
+    expires = datetime.utcnow() + timedelta(hours=1)
+    
+    # Update user with magic link token
+    await db.users.update_one(
+        {"email": request.email},
+        {"$set": {
+            "magic_link_token": token,
+            "magic_link_expires": expires
+        }}
+    )
+    
+    # Send magic link email
+    send_magic_link_email(request.email, token)
+    
+    return {"message": "Magic link sent to your email"}
+
+@api_router.post("/auth/verify-magic-link")
+async def verify_magic_link(token: str):
+    """Verify magic link token and authenticate user"""
+    user = await db.users.find_one({
+        "magic_link_token": token,
+        "magic_link_expires": {"$gt": datetime.utcnow()}
+    })
+    
+    if not user:
+        raise HTTPException(status_code=400, detail="Invalid or expired magic link")
+    
+    # Clear magic link token and mark as verified
+    await db.users.update_one(
+        {"id": user["id"]},
+        {"$set": {
+            "magic_link_token": None,
+            "magic_link_expires": None,
+            "is_verified": True
+        }}
+    )
+    
+    # Generate access token
+    access_token = create_access_token(user["id"])
+    
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user": {
+            "id": user["id"],
+            "email": user["email"],
+            "name": user["name"]
+        }
+    }
+
+@api_router.get("/auth/me")
+async def get_current_user_info(user: User = Depends(get_current_user_required)):
+    """Get current user information"""
+    return {
+        "id": user.id,
+        "email": user.email,
+        "name": user.name,
+        "phone": user.phone,
+        "is_verified": user.is_verified
+    }
+
+# === USER ROUTES ===
 
 @api_router.get("/users/{user_id}", response_model=User)
 async def get_user(user_id: str):
@@ -106,35 +269,42 @@ async def get_user(user_id: str):
 # === PODCARD ROUTES ===
 
 @api_router.post("/podcards", response_model=PodCard)
-async def create_podcard(podcard: PodCardCreate):
+async def create_podcard(podcard: PodCardCreate, user: User = Depends(get_current_user_required)):
     """Create a new PodCard (Audio Memory)"""
-    podcard_dict = podcard.dict()
-    
-    # Create or get user
-    user = await db.users.find_one({"email": podcard.creator_email})
-    if not user:
-        user_obj = User(name=podcard.creator_name, email=podcard.creator_email)
-        await db.users.insert_one(user_obj.dict())
-        creator_id = user_obj.id
-    else:
-        creator_id = user["id"]
-    
     # Create PodCard
     podcard_obj = PodCard(
         title=podcard.title,
         description=podcard.description,
         occasion=podcard.occasion,
-        creator_id=creator_id,
-        creator_name=podcard.creator_name
+        creator_id=user.id,
+        creator_name=user.name,
+        creator_email=user.email
     )
     
     await db.podcards.insert_one(podcard_obj.dict())
     return podcard_obj
 
 @api_router.get("/podcards", response_model=List[PodCard])
-async def get_podcards(skip: int = 0, limit: int = 10):
-    """Get all PodCards"""
-    podcards = await db.podcards.find().skip(skip).limit(limit).to_list(limit)
+async def get_podcards(skip: int = 0, limit: int = 10, user: User = Depends(get_current_user)):
+    """Get all PodCards (public ones + user's own)"""
+    if user:
+        # Authenticated user - show public podcards + their own
+        podcards = await db.podcards.find({
+            "$or": [
+                {"is_public": True},
+                {"creator_id": user.id}
+            ]
+        }).skip(skip).limit(limit).to_list(limit)
+    else:
+        # Anonymous user - show only public podcards
+        podcards = await db.podcards.find({"is_public": True}).skip(skip).limit(limit).to_list(limit)
+    
+    return [PodCard(**podcard) for podcard in podcards]
+
+@api_router.get("/podcards/my")
+async def get_my_podcards(user: User = Depends(get_current_user_required)):
+    """Get current user's podcards"""
+    podcards = await db.podcards.find({"creator_id": user.id}).to_list(100)
     return [PodCard(**podcard) for podcard in podcards]
 
 @api_router.get("/podcards/{podcard_id}", response_model=PodCard)
@@ -151,7 +321,7 @@ async def get_podcard(podcard_id: str):
 async def upload_audio_message(
     podcard_id: str,
     contributor_name: str = Form(...),
-    contributor_email: Optional[str] = Form(None),
+    contributor_email: EmailStr = Form(...),  # Now required
     audio_file: UploadFile = File(...)
 ):
     """Upload an audio message to a PodCard"""
@@ -205,6 +375,49 @@ async def get_audio_file(file_id: str):
         return FileResponse(file_path)
     
     raise HTTPException(status_code=404, detail="Audio file not found")
+
+# === DEMO ROUTE ===
+
+@api_router.get("/demo/audio")
+async def get_demo_audio():
+    """Get demo audio data"""
+    return {
+        "id": "demo",
+        "title": "Demo Audio Memory - Sarah's Birthday",
+        "description": "Listen to this sample birthday memory to hear how Forever Tapes works",
+        "occasion": "demo",
+        "creator_name": "Forever Tapes Team",
+        "creator_id": "demo",
+        "audio_messages": [
+            {
+                "id": "demo1",
+                "contributor_name": "Mike",
+                "contributor_email": "mike@example.com",
+                "file_path": "/demo/mike-message.wav",
+                "created_at": datetime.utcnow().isoformat(),
+                "duration": 25
+            },
+            {
+                "id": "demo2", 
+                "contributor_name": "Emma",
+                "contributor_email": "emma@example.com",
+                "file_path": "/demo/emma-message.wav",
+                "created_at": datetime.utcnow().isoformat(),
+                "duration": 30
+            },
+            {
+                "id": "demo3",
+                "contributor_name": "David",
+                "contributor_email": "david@example.com", 
+                "file_path": "/demo/david-message.wav",
+                "created_at": datetime.utcnow().isoformat(),
+                "duration": 28
+            }
+        ],
+        "created_at": datetime.utcnow().isoformat(),
+        "updated_at": datetime.utcnow().isoformat(),
+        "is_public": True
+    }
 
 # Include the router in the main app
 app.include_router(api_router)
