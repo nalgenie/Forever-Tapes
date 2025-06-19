@@ -14,6 +14,7 @@ import Dashboard from "./components/Dashboard";
 import LoginPage from "./components/Auth/LoginPage";
 import VerifyMagicLink from "./components/Auth/VerifyMagicLink";
 import ProtectedRoute from "./components/ProtectedRoute";
+import IllustrationShowcase from "./components/IllustrationShowcase";
 
 function App() {
   return (
@@ -26,6 +27,9 @@ function App() {
             <Route path="/auth/verify" element={<VerifyMagicLink />} />
             <Route path="/contribute/:shareId" element={<ContributeAudio />} />
             <Route path="/listen/:podCardId" element={<ListenToPodCard />} />
+            
+            {/* Temporary route to view illustration variations */}
+            <Route path="/illustrations" element={<IllustrationShowcase />} />
             
             {/* Protected Routes */}
             <Route path="/create" element={
