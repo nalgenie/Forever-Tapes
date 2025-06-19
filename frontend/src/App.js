@@ -24,6 +24,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<LandingPage />} />
+            <Route path="/about" element={<AboutPage />} />
             <Route path="/auth/login" element={<LoginPage />} />
             <Route path="/auth/verify" element={<VerifyMagicLink />} />
             <Route path="/contribute/:shareId" element={<ContributeAudio />} />
