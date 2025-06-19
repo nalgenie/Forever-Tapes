@@ -51,7 +51,7 @@ export const Variation6 = () => (
 );
 
 // VARIATION 7: Ocean Theme - Blue variations
-const Variation7 = () => (
+export const Variation7 = () => (
   <svg width="400" height="250" viewBox="0 0 400 250" className="drop-shadow-lg">
     <rect x="45" y="125" width="75" height="85" rx="15" fill="#1E40AF" stroke="#1E3A8A" strokeWidth="2"/>
     <circle cx="82" cy="155" r="18" fill="#0F172A" stroke="#020617" strokeWidth="2"/>
