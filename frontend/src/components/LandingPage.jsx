@@ -49,19 +49,51 @@ const LandingPage = () => {
             
             {/* Navigation Menu */}
             <div className="flex items-center space-x-8">
-              <button 
-                onClick={() => navigate('/dashboard')}
-                className="text-gray-700 hover:text-gray-900 font-medium transition-colors px-4 py-2 rounded-lg hover:bg-white/50"
-              >
-                Dashboard
-              </button>
-              <Button 
-                onClick={() => navigate('/create')}
-                variant="outline"
-                className="border-gray-300 text-gray-700 hover:bg-white/80 font-medium px-6 py-2"
-              >
-                Start creating
-              </Button>
+              {isAuthenticated ? (
+                <>
+                  <button 
+                    onClick={() => navigate('/dashboard')}
+                    className="text-gray-700 hover:text-gray-900 font-medium transition-colors px-4 py-2 rounded-lg hover:bg-white/50"
+                  >
+                    Dashboard
+                  </button>
+                  <Button 
+                    onClick={() => navigate('/create')}
+                    variant="outline"
+                    className="border-gray-300 text-gray-700 hover:bg-white/80 font-medium px-6 py-2"
+                  >
+                    Create memory
+                  </Button>
+                  <div className="flex items-center space-x-3">
+                    <span className="text-sm text-gray-600">
+                      {user?.name}
+                    </span>
+                    <button
+                      onClick={handleLogout}
+                      className="text-gray-500 hover:text-gray-700 p-2 rounded-lg hover:bg-white/50"
+                      title="Sign out"
+                    >
+                      <LogOut className="w-4 h-4" />
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <button 
+                    onClick={() => navigate('/auth/login')}
+                    className="text-gray-700 hover:text-gray-900 font-medium transition-colors px-4 py-2 rounded-lg hover:bg-white/50"
+                  >
+                    Sign in
+                  </button>
+                  <Button 
+                    onClick={() => navigate('/auth/login')}
+                    variant="outline"
+                    className="border-gray-300 text-gray-700 hover:bg-white/80 font-medium px-6 py-2"
+                  >
+                    Start creating
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>
