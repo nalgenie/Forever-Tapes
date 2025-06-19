@@ -22,6 +22,8 @@ function App() {
           <Route path="/contribute/:shareId" element={<ContributeAudio />} />
           <Route path="/edit/:podCardId" element={<EditPodCard />} />
           <Route path="/listen/:podCardId" element={<ListenToPodCard />} />
+          {/* Catch all route for unmatched paths */}
+          <Route path="*" element={<LandingPage />} />
         </Routes>
       </BrowserRouter>
       <Toaster />
