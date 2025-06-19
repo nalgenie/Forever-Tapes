@@ -272,45 +272,6 @@ const LandingPage = () => {
         </div>
       </div>
 
-      {/* Music Library Preview Section */}
-      <div className="py-20">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-light mb-6 text-gray-900">
-              Background music library
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Choose from our curated collection of background music to enhance your memories
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-            {[
-              { title: 'Birthday jazz loop', artist: 'Tape studio', duration: '1:00', category: 'Birthday' },
-              { title: 'Celebration breaks', artist: 'Tape studio', duration: '0:45', category: 'General' },
-              { title: 'Warm analog', artist: 'Tape studio', duration: '1:30', category: 'Calm' },
-              { title: 'Lo-fi romance', artist: 'Tape studio', duration: '2:00', category: 'Love' }
-            ].map((track, index) => (
-              <Card key={index} className="border-0 bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-300 group cursor-pointer">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-3">
-                    <Badge className="bg-purple-100 text-purple-700 border-0 text-xs">
-                      {track.category}
-                    </Badge>
-                    <button className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center group-hover:bg-purple-200 transition-colors">
-                      <Play className="w-4 h-4 text-purple-600" />
-                    </button>
-                  </div>
-                  <h4 className="font-semibold text-gray-900 mb-1 capitalize">{track.title}</h4>
-                  <p className="text-sm text-gray-600 mb-2 capitalize">{track.artist}</p>
-                  <p className="text-xs text-gray-500">{track.duration}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </div>
-
       {/* CTA Section - Subtle redesign */}
       <div className="bg-white/40 backdrop-blur-sm py-20">
         <div className="container mx-auto px-6 text-center">
