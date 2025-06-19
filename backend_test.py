@@ -277,3 +277,28 @@ class ForeverTapesAPITest(unittest.TestCase):
         response = requests.get(f"{self.api_url}/audio/{invalid_id}")
         self.assertEqual(response.status_code, 404)
         print("✅ Non-existent audio file properly returns 404")
+
+if __name__ == "__main__":
+    # Create a single test instance to share state between tests
+    test_instance = ForeverTapesAPITest()
+    
+    # Run the tests in order
+    test_suite = unittest.TestSuite()
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_01_health_check))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_02_request_magic_link))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_03_register_user))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_04_get_current_user))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_05_create_podcard_authenticated))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_06_get_my_podcards))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_07_get_podcards))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_08_get_podcard_by_id))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_09_upload_audio))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_10_get_audio_file))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_11_verify_podcard_updated))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_12_get_demo_audio))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_13_unauthorized_access))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_14_invalid_podcard_id))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_15_invalid_audio_id))
+    
+    runner = unittest.TextTestRunner(verbosity=2)
+    runner.run(test_suite)
