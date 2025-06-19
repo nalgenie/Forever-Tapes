@@ -273,7 +273,6 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Backend API Testing"
     - "Frontend UI Flow Testing"
   stuck_tasks:
     - "Illustration Showcase Page"
