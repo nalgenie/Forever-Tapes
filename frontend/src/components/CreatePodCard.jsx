@@ -8,7 +8,7 @@ import { Textarea } from './ui/textarea';
 import { Badge } from './ui/badge';
 import { Switch } from './ui/switch';
 import { ArrowLeft, Music, Users, Clock, Volume2, Zap, Crown, Star } from 'lucide-react';
-import { mockMusicLibrary, mockAPI, pricingTiers } from '../mock';
+import { api, musicLibrary } from '../api';
 import { useToast } from '../hooks/use-toast';
 
 const CreatePodCard = () => {
@@ -72,7 +72,7 @@ const CreatePodCard = () => {
     setLoading(true);
     
     try {
-      const podCard = await mockAPI.createPodCard({
+      const podCard = await api.createPodCard({
         title: formData.title,
         description: formData.description,
         maxMessages: formData.maxMessages,
@@ -88,8 +88,10 @@ const CreatePodCard = () => {
         description: "Your audio memory is ready for contributors.",
       });
       
-      navigate(`/edit/${podCard.id}`);
+      // Navigate to contribute page to add first message
+      navigate(`/contribute/${podCard.id}`);
     } catch (error) {
+      console.error('Error creating podcard:', error);
       toast({
         title: "Error",
         description: "Something went wrong. Please try again.",
@@ -100,10 +102,8 @@ const CreatePodCard = () => {
     }
   };
 
-  const selectedTier = pricingTiers.find(t => t.id === formData.selectedTier);
-
-  // Updated pricing tiers with refined styling
-  const updatedPricingTiers = [
+  // Pricing tiers
+  const pricingTiers = [
     {
       id: 'free',
       name: 'Starter',
@@ -145,6 +145,8 @@ const CreatePodCard = () => {
       description: 'For the most important moments'
     }
   ];
+
+  const selectedTier = pricingTiers.find(t => t.id === formData.selectedTier);
 
   return (
     <div className="min-h-screen bg-white">
@@ -198,7 +200,7 @@ const CreatePodCard = () => {
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {updatedPricingTiers.map((tier) => (
+              {pricingTiers.map((tier) => (
                 <Card 
                   key={tier.id}
                   className={`cursor-pointer transition-all duration-300 hover:shadow-lg border ${
@@ -337,7 +339,7 @@ const CreatePodCard = () => {
                     className="w-full px-3 py-2 border border-gray-200 rounded-md bg-white text-sm"
                   >
                     <option value="">No background audio</option>
-                    {mockMusicLibrary.map((music) => (
+                    {musicLibrary.map((music) => (
                       <option key={music.id} value={music.title}>
                         {music.title} - {music.artist} ({Math.floor(music.duration/60)}:{(music.duration%60).toString().padStart(2, '0')})
                       </option>
