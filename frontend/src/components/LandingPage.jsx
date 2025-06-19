@@ -4,15 +4,20 @@ import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
 import { Input } from './ui/input';
 import { Badge } from './ui/badge';
-import { Play, ArrowRight, Users, Heart, Gift, Headphones, Music } from 'lucide-react';
+import { Play, ArrowRight, Users, Heart, Gift, Headphones, Music, LogOut } from 'lucide-react';
+import { useAuth } from './AuthContext';
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const { isAuthenticated, user, logout } = useAuth();
   const [memoryId, setMemoryId] = useState('');
 
   const handleOrganiseMemory = () => {
-    // Will navigate to auth/signup flow
-    navigate('/create');
+    if (isAuthenticated) {
+      navigate('/create');
+    } else {
+      navigate('/auth/login');
+    }
   };
 
   const handleContributeToMemory = () => {
@@ -26,6 +31,11 @@ const LandingPage = () => {
 
   const handleListenToDemo = () => {
     navigate('/listen/demo');
+  };
+
+  const handleLogout = () => {
+    logout();
+    // Optionally show a toast
   };
 
   return (
