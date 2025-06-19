@@ -15,6 +15,7 @@ import LoginPage from "./components/Auth/LoginPage";
 import VerifyMagicLink from "./components/Auth/VerifyMagicLink";
 import ProtectedRoute from "./components/ProtectedRoute";
 import IllustrationShowcase from "./components/IllustrationShowcase";
+import AboutPage from "./components/AboutPage";
 
 function App() {
   return (
