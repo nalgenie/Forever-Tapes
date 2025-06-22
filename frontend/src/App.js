@@ -18,6 +18,7 @@ import VerifyMagicLink from "./components/Auth/VerifyMagicLink";
 import ProtectedRoute from "./components/ProtectedRoute";
 import IllustrationShowcase from "./components/IllustrationShowcase";
 import AboutPage from "./components/AboutPage";
+import TestingDashboard from "./components/TestingDashboard";
 
 function App() {
   return (
