@@ -152,6 +152,23 @@ const ContributeAudio = () => {
     }
   };
 
+  const handleReadyToSubmit = () => {
+    if (!recordedBlob) {
+      toast({
+        title: "No recording found",
+        description: "Please record a message first.",
+        variant: "destructive"
+      });
+      return;
+    }
+    setShowSubmissionForm(true);
+  };
+
+  const handleCancelSubmission = () => {
+    setShowSubmissionForm(false);
+    setContributorData({ name: '', email: '', phone: '' });
+  };
+
   const handleUpload = async () => {
     if (!recordedBlob || !podCard) return;
     
