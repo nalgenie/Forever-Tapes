@@ -549,7 +549,7 @@ async def create_test_data():
                         "id": "test-msg-4",
                         "contributor_name": "Dave",
                         "contributor_email": "dave@test.com",
-                        "file_path": "/demo/david-message.wav",
+                        "file_path": "/app/backend/demo-audio/david-message.wav",
                         "created_at": datetime.utcnow(),
                         "duration": 28
                     },
