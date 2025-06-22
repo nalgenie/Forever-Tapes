@@ -592,7 +592,7 @@ async def create_test_data():
                         "id": "test-msg-6",
                         "contributor_name": "Frank",
                         "contributor_email": "frank@test.com",
-                        "file_path": "/demo/emma-message.wav",
+                        "file_path": "/app/backend/demo-audio/emma-message.wav",
                         "created_at": datetime.utcnow(),
                         "duration": 30
                     },
