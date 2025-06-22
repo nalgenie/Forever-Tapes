@@ -352,6 +352,7 @@ metadata:
 test_plan:
   current_focus:
     - "Audio Collage Functionality"
+    - "How It Works Page"
 
   stuck_tasks:
     - "Audio Collage Functionality"
