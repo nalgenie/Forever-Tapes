@@ -295,30 +295,41 @@ const ContributeAudio = () => {
       </header>
 
       <div className="container mx-auto max-w-4xl px-6 py-12">
-        {/* Hero Card */}
-        <Card className="mb-12 border-0 shadow-xl bg-gradient-to-br from-orange-400 via-red-400 to-pink-500 text-white overflow-hidden relative">
-          <div className="absolute inset-0 bg-black/10"></div>
-          <CardContent className="p-12 relative z-10 text-center">
-            <Badge className="mb-6 bg-white/20 text-white border-0 px-4 py-2 backdrop-blur-sm">
+        {/* Hero Section - matching home page style */}
+        <div className="text-center mb-16">
+          <div className="mb-8">
+            <h1 className="text-6xl md:text-8xl font-light mb-4 tracking-tight leading-none text-gray-900">
+              <span className="font-mono lowercase vintage-gradient-text vintage-font">forever tapes</span>
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-600 font-light tracking-wide">
+              Add Your Voice to the Memory
+            </p>
+          </div>
+        </div>
+
+        {/* Memory Details Card */}
+        <Card className="mb-12 border-0 shadow-xl bg-white/80 backdrop-blur-sm">
+          <CardContent className="p-8 text-center">
+            <Badge className="mb-4 bg-purple-100 text-purple-700 border-purple-200 px-4 py-2">
               {podCard.occasion || 'Memory'}
             </Badge>
             
-            <h1 className="text-4xl md:text-5xl font-black mb-6 tracking-tight leading-tight">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
               {podCard.title}
-            </h1>
+            </h2>
             
-            <p className="text-xl text-white/90 mb-8 leading-relaxed max-w-2xl mx-auto">
+            <p className="text-lg text-gray-600 mb-6 leading-relaxed max-w-2xl mx-auto">
               {podCard.description || 'Add your voice to this audio memory collection.'}
             </p>
             
-            <div className="flex justify-center gap-6 text-sm text-white/80">
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-3 py-2 rounded-full">
-                <Clock className="w-3 h-3" />
-                max 30s
+            <div className="flex justify-center gap-6 text-sm text-gray-500">
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4" />
+                Max 30 seconds
               </div>
-              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-3 py-2 rounded-full">
-                <User className="w-3 h-3" />
-                {podCard.audio_messages.length} messages so far
+              <div className="flex items-center gap-2">
+                <User className="w-4 h-4" />
+                {podCard.audio_messages.length} messages collected
               </div>
             </div>
           </CardContent>
@@ -326,26 +337,26 @@ const ContributeAudio = () => {
 
         <div className="grid md:grid-cols-2 gap-8">
           {/* Contributor Info Card */}
-          <Card className="border-0 shadow-lg bg-gradient-to-br from-blue-400 to-cyan-500 text-white">
+          <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
             <CardHeader className="pb-4">
-              <CardTitle className="text-2xl font-black tracking-tight text-white">
-                CONTRIBUTOR INFO
+              <CardTitle className="text-2xl font-bold text-gray-900">
+                Your Information
               </CardTitle>
-              <p className="text-blue-100">who's adding to this memory?</p>
+              <p className="text-gray-600">Let them know who this message is from</p>
             </CardHeader>
             <CardContent className="space-y-6">
               <div>
-                <Label htmlFor="name" className="text-white font-semibold">name *</Label>
+                <Label htmlFor="name" className="text-gray-700 font-semibold">Name *</Label>
                 <Input
                   id="name"
-                  placeholder="your name"
+                  placeholder="Your name"
                   value={contributorData.name}
                   onChange={(e) => setContributorData(prev => ({ ...prev, name: e.target.value }))}
-                  className="mt-2 bg-white/10 border-white/20 text-white placeholder-white/60 backdrop-blur-sm"
+                  className="mt-2 border-gray-200 focus:border-purple-300 focus:ring-purple-200"
                 />
               </div>
               <div>
-                <Label htmlFor="email" className="text-white font-semibold">Email *</Label>
+                <Label htmlFor="email" className="text-gray-700 font-semibold">Email *</Label>
                 <Input
                   id="email"
                   type="email"
