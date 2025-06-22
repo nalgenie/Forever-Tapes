@@ -224,6 +224,9 @@ backend:
       - working: false
         agent: "testing"
         comment: "The audio collage functionality is implemented but not working correctly. The API endpoints for audio processing (/api/audio/process-memory, /api/audio/status/{task_id}, and /api/audio/processed/{memory_id}) are correctly defined in server.py, but there are issues with the Redis connection needed for Celery to function properly. The backend logs show 'Connection to Redis lost' errors and 'Retry limit exceeded while trying to reconnect to the Celery redis result store backend'. The audio processing endpoints return 500 Internal Server Error. The issue appears to be that Redis is not running or not accessible, which is required for the Celery task queue to function."
+      - working: false
+        agent: "testing"
+        comment: "After installing and starting Redis, the audio processing tasks are now being queued correctly. However, there are issues with the task execution. The tasks are being routed to specific queues ('audio_processing' and 'audio_enhancement'), but the Celery worker was only listening to the default 'celery' queue. After restarting the Celery worker with the correct queues, the tasks are now being processed, but there are errors during execution. The Celery logs show 'ValueError: Exception information must include the exception type'. This suggests there might be issues with the audio processing code or dependencies. The audio processing functionality is partially working (tasks are queued and status updates are available), but the actual processing is failing."
 
 frontend:
   - task: "Landing Page with Custom Illustration"
