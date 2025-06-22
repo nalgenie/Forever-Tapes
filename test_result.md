@@ -330,6 +330,18 @@ frontend:
       - working: true
         agent: "testing"
         comment: "Fixed the environment variable access issue in CreateFreeMemory.jsx by replacing 'import.meta.env.REACT_APP_BACKEND_URL || process.env.REACT_APP_BACKEND_URL' with 'process.env.REACT_APP_BACKEND_URL' and adding proper error handling. The form now submits successfully and creates a free memory. The success page loads correctly with the memory details and share link. The 'Listen Now' and 'Contribute' buttons are present and functional. The freemium model implementation is now working correctly."
+        
+  - task: "How It Works Page"
+    implemented: true
+    working: true
+    file: "HowItWorksPage.jsx"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "The 'How It Works' page is fully implemented and working correctly. The page is accessible from the main navigation via the 'How It Works' button. The page features three flow selector buttons (Memory Organizer, Voice Contributor, Memory Listener) that correctly change the displayed content when clicked. Each flow displays appropriate illustrations, 4 steps with detailed explanations, and relevant call-to-action buttons. The 'Back to Home' button works correctly, returning users to the landing page. Cross-flow navigation buttons at the bottom of each flow work as expected. The page is responsive, with all elements displaying and functioning correctly on desktop, tablet, and mobile viewports. The content clearly explains the three different user roles and flows with logical steps and appropriate illustrations."
 
 metadata:
   created_by: "main_agent"
