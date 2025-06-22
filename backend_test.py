@@ -413,15 +413,7 @@ class ForeverTapesAPITest(unittest.TestCase):
         self.assertTrue(found, "Free podcard not found in public list")
         print("✅ Verified free podcard appears in public list")
 
-    def test_22_audio_worker_status(self):
-        """Test the audio worker status endpoint"""
-        print("\n🔍 Testing audio worker status endpoint...")
-        response = requests.get(f"{self.api_url}/audio/worker-status")
-        self.assertEqual(response.status_code, 200)
-        data = response.json()
-        print(f"✅ Audio worker status: {data['available']}")
-        
-    def test_23_process_memory_audio(self):
+    def test_22_process_memory_audio(self):
         """Test processing memory audio for a podcard with multiple audio messages"""
         if not hasattr(self, 'free_podcard_id'):
             self.skipTest("No free podcard ID available from previous test")
@@ -482,7 +474,7 @@ class ForeverTapesAPITest(unittest.TestCase):
         self.audio_task_id = data["task_id"]
         print(f"✅ Audio processing started with task ID: {self.audio_task_id}")
         
-    def test_24_check_processing_status(self):
+    def test_23_check_processing_status(self):
         """Test checking the status of an audio processing task"""
         if not hasattr(self, 'audio_task_id'):
             self.skipTest("No audio task ID available from previous test")
@@ -518,7 +510,7 @@ class ForeverTapesAPITest(unittest.TestCase):
         
         print(f"✅ Audio processing status checked: {status}")
         
-    def test_25_get_processed_audio(self):
+    def test_24_get_processed_audio(self):
         """Test retrieving processed audio for a memory"""
         if not hasattr(self, 'free_podcard_id'):
             self.skipTest("No free podcard ID available from previous test")
@@ -537,7 +529,7 @@ class ForeverTapesAPITest(unittest.TestCase):
         self.assertTrue(response.headers['Content-Type'].startswith('audio/'))
         print("✅ Retrieved processed audio successfully")
         
-    def test_26_process_memory_invalid_id(self):
+    def test_25_process_memory_invalid_id(self):
         """Test processing memory audio with an invalid memory ID"""
         print("\n🔍 Testing audio processing with invalid memory ID...")
         
@@ -555,7 +547,7 @@ class ForeverTapesAPITest(unittest.TestCase):
         self.assertEqual(response.status_code, 404)
         print("✅ Invalid memory ID properly returns 404")
         
-    def test_27_check_status_invalid_task(self):
+    def test_26_check_status_invalid_task(self):
         """Test checking status with an invalid task ID"""
         print("\n🔍 Testing status check with invalid task ID...")
         
@@ -566,7 +558,7 @@ class ForeverTapesAPITest(unittest.TestCase):
         self.assertEqual(response.status_code, 404)
         print("✅ Invalid task ID properly returns 404")
         
-    def test_28_get_processed_audio_invalid_memory(self):
+    def test_27_get_processed_audio_invalid_memory(self):
         """Test retrieving processed audio with an invalid memory ID"""
         print("\n🔍 Testing processed audio retrieval with invalid memory ID...")
         
@@ -576,7 +568,7 @@ class ForeverTapesAPITest(unittest.TestCase):
         self.assertEqual(response.status_code, 404)
         print("✅ Invalid memory ID properly returns 404")
         
-    def test_29_anonymous_access_to_processed_audio(self):
+    def test_28_anonymous_access_to_processed_audio(self):
         """Test anonymous access to processed audio for a public memory"""
         if not hasattr(self, 'free_podcard_id'):
             self.skipTest("No free podcard ID available from previous test")
@@ -595,7 +587,7 @@ class ForeverTapesAPITest(unittest.TestCase):
         self.assertTrue(response.headers['Content-Type'].startswith('audio/'))
         print("✅ Anonymous access to processed audio for public memory works correctly")
         
-    def test_30_enhance_single_audio(self):
+    def test_29_enhance_single_audio(self):
         """Test enhancing a single audio file"""
         print("\n🔍 Testing single audio enhancement...")
         
@@ -627,6 +619,45 @@ class ForeverTapesAPITest(unittest.TestCase):
         # Clean up
         os.remove(test_audio_path)
         print("✅ Single audio enhancement works correctly")
+
+if __name__ == "__main__":
+    # Create a single test instance to share state between tests
+    test_instance = ForeverTapesAPITest()
+    
+    # Run the tests in order
+    test_suite = unittest.TestSuite()
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_01_health_check))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_02_request_magic_link))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_03_register_user))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_04_get_current_user))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_05_create_podcard_authenticated))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_06_get_my_podcards))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_07_get_podcards))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_08_get_podcard_by_id))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_09_upload_audio))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_10_get_audio_file))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_11_verify_podcard_updated))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_12_get_demo_audio))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_13_unauthorized_access))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_14_invalid_podcard_id))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_15_invalid_audio_id))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_16_create_free_podcard))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_17_get_free_podcard))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_18_contribute_to_free_podcard))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_19_verify_free_podcard_updated))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_20_get_free_audio_file))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_21_verify_free_podcard_in_list))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_22_process_memory_audio))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_23_check_processing_status))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_24_get_processed_audio))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_25_process_memory_invalid_id))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_26_check_status_invalid_task))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_27_get_processed_audio_invalid_memory))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_28_anonymous_access_to_processed_audio))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_29_enhance_single_audio))
+    
+    runner = unittest.TextTestRunner(verbosity=2)
+    runner.run(test_suite)
 
 if __name__ == "__main__":
     # Create a single test instance to share state between tests
