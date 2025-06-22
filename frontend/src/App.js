@@ -37,6 +37,9 @@ function App() {
             <Route path="/create-free" element={<CreateFreeMemory />} />
             <Route path="/free-memory-created/:memoryId" element={<FreeMemoryCreated />} />
             
+            {/* Testing Dashboard */}
+            <Route path="/testing" element={<TestingDashboard />} />
+            
             {/* Temporary route to view illustration variations */}
             <Route path="/illustrations" element={<IllustrationShowcase />} />
             
