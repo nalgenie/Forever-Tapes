@@ -186,14 +186,7 @@ const ContributeAudio = () => {
       return;
     }
 
-    if (!contributorData.email.trim()) {
-      toast({
-        title: "Email required",
-        description: "Please enter your email address.",
-        variant: "destructive"
-      });
-      return;
-    }
+    // Email is now optional - no validation needed
 
     setIsUploading(true);
     setUploadProgress(0);
