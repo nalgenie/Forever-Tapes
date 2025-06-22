@@ -32,6 +32,10 @@ function App() {
             <Route path="/contribute/:shareId" element={<ContributeAudio />} />
             <Route path="/listen/:podCardId" element={<ListenToPodCard />} />
             
+            {/* Free Memory Routes */}
+            <Route path="/create-free" element={<CreateFreeMemory />} />
+            <Route path="/free-memory-created/:memoryId" element={<FreeMemoryCreated />} />
+            
             {/* Temporary route to view illustration variations */}
             <Route path="/illustrations" element={<IllustrationShowcase />} />
             
