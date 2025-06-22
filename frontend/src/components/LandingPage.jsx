@@ -223,40 +223,56 @@ const LandingPage = () => {
           {/* Main Action Buttons */}
           <div className="max-w-2xl mx-auto space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
-              {/* Organise Memory Button */}
-              <Card className="border-0 bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-300 cursor-pointer group" onClick={handleOrganiseMemory}>
+              {/* Create Free Memory Button */}
+              <Card className="border-0 bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-300 cursor-pointer group" onClick={handleCreateFreeMemory}>
                 <CardContent className="p-8 text-center">
-                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-green-400 to-blue-400 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
                     <Gift className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-2xl font-semibold mb-2 text-gray-900">Organise a memory</h3>
-                  <p className="text-gray-600 mb-4">Create and collect heartfelt messages for someone special</p>
-                  <ArrowRight className="w-5 h-5 mx-auto text-purple-500 group-hover:translate-x-1 transition-transform" />
+                  <h3 className="text-2xl font-semibold mb-2 text-gray-900">Create a Free Memory</h3>
+                  <p className="text-gray-600 mb-4">Start collecting messages instantly - no sign up required</p>
+                  <Badge className="bg-green-100 text-green-700 border-green-200">Free</Badge>
+                  <ArrowRight className="w-5 h-5 mx-auto mt-2 text-green-500 group-hover:translate-x-1 transition-transform" />
                 </CardContent>
               </Card>
 
-              {/* Contribute to Memory Button */}
-              <Card className="border-0 bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-300">
+              {/* Premium Sign In Button */}
+              <Card className="border-0 bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-300 cursor-pointer group" onClick={handleOrganiseMemory}>
                 <CardContent className="p-8 text-center">
-                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-2xl flex items-center justify-center">
-                    <Heart className="w-8 h-8 text-white" />
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Users className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-2xl font-semibold mb-2 text-gray-900">Contribute to a memory</h3>
-                  <p className="text-gray-600 mb-4">Add your voice to an existing memory collection</p>
+                  <h3 className="text-2xl font-semibold mb-2 text-gray-900">Sign In for Premium</h3>
+                  <p className="text-gray-600 mb-4">Full dashboard, unlimited memories, and advanced features</p>
+                  <Badge className="bg-purple-100 text-purple-700 border-purple-200">Premium</Badge>
+                  <ArrowRight className="w-5 h-5 mx-auto mt-2 text-purple-500 group-hover:translate-x-1 transition-transform" />
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Contribute to Memory Section */}
+            <div className="pt-4">
+              <Card className="border-0 bg-white/60 backdrop-blur-sm">
+                <CardContent className="p-6 text-center">
+                  <div className="w-12 h-12 mx-auto mb-3 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-xl flex items-center justify-center">
+                    <Heart className="w-6 h-6 text-white" />
+                  </div>
+                  <h4 className="text-lg font-semibold mb-2 text-gray-900">Contribute to a Memory</h4>
+                  <p className="text-gray-600 mb-3 text-sm">Add your voice to an existing memory collection</p>
                   
-                  <div className="space-y-3">
+                  <div className="flex gap-2 max-w-md mx-auto">
                     <Input
                       id="memory-id-input"
                       placeholder="Enter memory ID or link"
                       value={memoryId}
                       onChange={(e) => setMemoryId(e.target.value)}
-                      className="border-gray-200 text-center"
+                      className="border-gray-200 text-center text-sm"
                     />
                     <Button 
                       onClick={handleContributeToMemory}
-                      className="w-full bg-blue-500 hover:bg-blue-600 text-white"
+                      className="bg-blue-500 hover:bg-blue-600 text-white px-6"
                     >
-                      Continue
+                      Go
                     </Button>
                   </div>
                 </CardContent>
