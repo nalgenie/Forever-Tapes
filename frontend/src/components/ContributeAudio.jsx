@@ -360,10 +360,10 @@ const ContributeAudio = () => {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="your email"
+                  placeholder="Your email"
                   value={contributorData.email}
                   onChange={(e) => setContributorData(prev => ({ ...prev, email: e.target.value }))}
-                  className="mt-2 bg-white/10 border-white/20 text-white placeholder-white/60 backdrop-blur-sm"
+                  className="mt-2 border-gray-200 focus:border-purple-300 focus:ring-purple-200"
                   required
                 />
               </div>
@@ -371,25 +371,25 @@ const ContributeAudio = () => {
           </Card>
 
           {/* Recording Interface Card */}
-          <Card className="border-0 shadow-lg bg-gradient-to-br from-purple-400 to-indigo-500 text-white">
+          <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm">
             <CardHeader className="pb-4">
-              <CardTitle className="text-2xl font-black tracking-tight text-white">
-                RECORD MESSAGE
+              <CardTitle className="text-2xl font-bold text-gray-900">
+                Record Your Message
               </CardTitle>
-              <p className="text-purple-100">lay down your track</p>
+              <p className="text-gray-600">Share your voice with the memory</p>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Analog-style Timer Display */}
-              <div className="text-center bg-black/20 backdrop-blur-sm rounded-2xl p-6">
-                <div className="text-5xl font-mono font-black text-white mb-2 tracking-wider">
+              {/* Timer Display */}
+              <div className="text-center bg-gray-50 rounded-2xl p-6">
+                <div className="text-5xl font-mono font-bold text-gray-900 mb-2 tracking-wider">
                   {formatTime(recordingTime)}
                 </div>
-                <div className="text-sm text-purple-200 mb-3">
+                <div className="text-sm text-gray-500 mb-3">
                   / {formatTime(30)}
                 </div>
                 <Progress 
                   value={(recordingTime / 30) * 100} 
-                  className="h-2 bg-white/10"
+                  className="h-2"
                 />
               </div>
 
@@ -399,21 +399,21 @@ const ContributeAudio = () => {
                   <Button
                     onClick={isRecording ? stopRecording : startRecording}
                     size="lg"
-                    className={`px-12 py-6 rounded-full text-lg font-black tracking-wide ${
+                    className={`px-12 py-6 rounded-full text-lg font-bold tracking-wide ${
                       isRecording 
-                        ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse shadow-lg shadow-red-500/50' 
-                        : 'bg-white text-purple-600 hover:bg-gray-100 shadow-lg'
+                        ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse shadow-lg' 
+                        : 'bg-purple-600 text-white hover:bg-purple-700 shadow-lg'
                     }`}
                   >
                     {isRecording ? (
                       <>
                         <MicOff className="w-6 h-6 mr-3" />
-                        STOP REC
+                        Stop Recording
                       </>
                     ) : (
                       <>
                         <Mic className="w-6 h-6 mr-3" />
-                        START REC
+                        Start Recording
                       </>
                     )}
                   </Button>
@@ -421,26 +421,26 @@ const ContributeAudio = () => {
                   <div className="flex gap-4">
                     <Button
                       onClick={isPlaying ? pauseRecording : playRecording}
-                      className="bg-white text-purple-600 hover:bg-gray-100 px-6 py-3 font-semibold"
+                      className="bg-purple-600 text-white hover:bg-purple-700 px-6 py-3 font-semibold"
                     >
                       {isPlaying ? (
                         <>
                           <Pause className="w-4 h-4 mr-2" />
-                          pause
+                          Pause
                         </>
                       ) : (
                         <>
                           <Play className="w-4 h-4 mr-2" />
-                          play
+                          Play
                         </>
                       )}
                     </Button>
                     <Button
                       onClick={resetRecording}
-                      className="bg-white/20 text-white border-white/30 hover:bg-white/30 px-6 py-3 font-semibold"
+                      className="bg-gray-200 text-gray-700 hover:bg-gray-300 px-6 py-3 font-semibold"
                       variant="outline"
                     >
-                      re-record
+                      Re-record
                     </Button>
                   </div>
                 )}
