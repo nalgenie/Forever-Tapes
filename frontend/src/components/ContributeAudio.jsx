@@ -543,7 +543,7 @@ const ContributeAudio = () => {
                   </Button>
                   <Button
                     onClick={handleUpload}
-                    disabled={isUploading || !contributorData.name.trim() || !contributorData.email.trim()}
+                    disabled={isUploading || !contributorData.name.trim()}
                     className="flex-1 bg-green-600 text-white hover:bg-green-700"
                   >
                     {isUploading ? (
