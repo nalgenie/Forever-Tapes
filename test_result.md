@@ -342,11 +342,11 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Audio Processing Infrastructure"
-    - "Audio Processing Pipeline"
+
+
   stuck_tasks:
-    - "Audio Processing Infrastructure"
-    - "Audio Processing Pipeline"
+
+
   test_all: false
   test_priority: "high_first"
 
