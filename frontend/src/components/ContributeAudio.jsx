@@ -461,22 +461,22 @@ const ContributeAudio = () => {
 
         {/* Upload Section */}
         {recordedBlob && (
-          <Card className="mt-8 border-0 shadow-lg bg-gradient-to-br from-green-400 to-emerald-500 text-white">
+          <Card className="mt-8 border-0 shadow-lg bg-white/80 backdrop-blur-sm">
             <CardContent className="p-8">
-              <Alert className="mb-6 bg-white/20 border-white/30 backdrop-blur-sm">
-                <Radio className="w-4 h-4 text-white" />
-                <AlertDescription className="text-white">
-                  Your track is ready for the memory. Click to add it to the collection.
+              <Alert className="mb-6 bg-green-50 border-green-200">
+                <Radio className="w-4 h-4 text-green-600" />
+                <AlertDescription className="text-green-700">
+                  Your message is ready! Click to add it to the memory collection.
                 </AlertDescription>
               </Alert>
               
               {isUploading && (
                 <div className="mb-6">
-                  <div className="flex justify-between text-sm font-medium mb-2 text-green-100">
-                    <span>adding to memory...</span>
+                  <div className="flex justify-between text-sm font-medium mb-2 text-gray-600">
+                    <span>Adding to memory...</span>
                     <span>{uploadProgress}%</span>
                   </div>
-                  <Progress value={uploadProgress} className="h-2 bg-white/20" />
+                  <Progress value={uploadProgress} className="h-2" />
                 </div>
               )}
               
@@ -484,14 +484,14 @@ const ContributeAudio = () => {
                 onClick={handleUpload}
                 disabled={isUploading}
                 size="lg"
-                className="w-full bg-white text-green-600 hover:bg-gray-100 py-4 text-lg font-black tracking-wide shadow-lg"
+                className="w-full bg-green-600 text-white hover:bg-green-700 py-4 text-lg font-bold tracking-wide shadow-lg"
               >
                 {isUploading ? (
-                  'ADDING TO MEMORY...'
+                  'Adding to Memory...'
                 ) : (
                   <>
                     <Upload className="w-5 h-5 mr-2" />
-                    ADD TO MEMORY
+                    Add to Memory
                   </>
                 )}
               </Button>
