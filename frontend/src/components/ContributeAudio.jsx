@@ -26,6 +26,7 @@ const ContributeAudio = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [isUploaded, setIsUploaded] = useState(false);
   const [audioURL, setAudioURL] = useState(null);
+  const [showSubmissionForm, setShowSubmissionForm] = useState(false); // New state for final step
   
   const [contributorData, setContributorData] = useState({
     name: '',
