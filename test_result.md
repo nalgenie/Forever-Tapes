@@ -297,9 +297,10 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Frontend UI Flow Testing"
+    - "Freemium Model Implementation"
+    - "Free Memory Creation API"
   stuck_tasks:
-    - "Illustration Showcase Page"
+    []
   test_all: false
   test_priority: "high_first"
 
