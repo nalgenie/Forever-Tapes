@@ -21,6 +21,18 @@ from email.mime.multipart import MIMEMultipart
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
+# Audio processing imports
+try:
+    from audio_processor.tasks import process_memory_audio, process_single_audio
+    from audio_processor import celery_app
+    AUDIO_PROCESSING_AVAILABLE = True
+    logger = logging.getLogger(__name__)
+    logger.info("Audio processing system loaded successfully")
+except ImportError as e:
+    AUDIO_PROCESSING_AVAILABLE = False
+    logger = logging.getLogger(__name__)
+    logger.warning(f"Audio processing not available: {e}")
+
 # MongoDB connection
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
