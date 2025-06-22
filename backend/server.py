@@ -478,7 +478,7 @@ async def get_demo_audio():
                 "id": "demo3",
                 "contributor_name": "David",
                 "contributor_email": "david@example.com", 
-                "file_path": "/demo/david-message.wav",
+                "file_path": "/app/backend/demo-audio/david-message.wav",
                 "created_at": datetime.utcnow().isoformat(),
                 "duration": 28
             }
