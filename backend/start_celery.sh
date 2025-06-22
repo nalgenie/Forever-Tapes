@@ -4,4 +4,4 @@
 cd /app/backend
 
 # Start Celery worker
-celery -A audio_processor worker --loglevel=info --concurrency=2 --queues=audio_processing,audio_enhancement
+python -m celery -A audio_processor worker --loglevel=info --concurrency=2 --queues=audio_processing,audio_enhancement
