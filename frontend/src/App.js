@@ -7,6 +7,8 @@ import { AuthProvider } from "./components/AuthContext";
 // Import components
 import LandingPage from "./components/LandingPage";
 import CreatePodCard from "./components/CreatePodCard";
+import CreateFreeMemory from "./components/CreateFreeMemory";
+import FreeMemoryCreated from "./components/FreeMemoryCreated";
 import ContributeAudio from "./components/ContributeAudio";
 import EditPodCard from "./components/EditPodCard";
 import ListenToPodCard from "./components/ListenToPodCard";
