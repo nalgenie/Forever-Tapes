@@ -53,7 +53,10 @@ const CreateFreeMemory = () => {
     
     try {
       // Call the free memory creation endpoint
-      const backendUrl = import.meta.env.REACT_APP_BACKEND_URL || process.env.REACT_APP_BACKEND_URL;
+      const backendUrl = process.env.REACT_APP_BACKEND_URL;
+      if (!backendUrl) {
+        throw new Error('Backend URL not configured. Please check environment variables.');
+      }
       const response = await fetch(`${backendUrl}/api/podcards/free`, {
         method: 'POST',
         headers: {
