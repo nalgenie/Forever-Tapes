@@ -488,6 +488,67 @@ const ListenToPodCard = () => {
           <div className="max-w-2xl mx-auto">
             <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
               <CardContent className="p-8">
+                {/* View Mode Toggle */}
+                {podCard.audio_messages && podCard.audio_messages.length > 1 && (
+                  <div className="flex justify-center mb-8">
+                    <div className="bg-gray-100 p-1 rounded-lg flex">
+                      <Button
+                        onClick={() => setViewMode('individual')}
+                        variant={viewMode === 'individual' ? 'default' : 'ghost'}
+                        size="sm"
+                        className={`px-4 py-2 ${
+                          viewMode === 'individual' 
+                            ? 'bg-white shadow-sm text-gray-900' 
+                            : 'text-gray-600 hover:text-gray-900'
+                        }`}
+                      >
+                        <MessageSquare className="w-4 h-4 mr-2" />
+                        Individual Messages
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          if (processedCollageUrl) {
+                            setViewMode('collage');
+                          } else {
+                            createCollage();
+                          }
+                        }}
+                        variant={viewMode === 'collage' ? 'default' : 'ghost'}
+                        size="sm"
+                        disabled={collageProcessing}
+                        className={`px-4 py-2 ${
+                          viewMode === 'collage' 
+                            ? 'bg-white shadow-sm text-gray-900' 
+                            : 'text-gray-600 hover:text-gray-900'
+                        }`}
+                      >
+                        <Music className="w-4 h-4 mr-2" />
+                        {collageProcessing ? 'Creating Mix...' : 'Mixed Memory'}
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Collage Status */}
+                {collageProcessing && collageStatus && (
+                  <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
+                      <span className="text-sm font-medium text-blue-900">
+                        Creating Professional Audio Mix...
+                      </span>
+                    </div>
+                    {collageStatus.stage && (
+                      <div className="text-xs text-blue-700 capitalize">
+                        {collageStatus.stage.replace('_', ' ')}
+                        {collageStatus.current && collageStatus.total && (
+                          <span> ({collageStatus.current}/{collageStatus.total})</span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {/* Current Track Info */}
                 <div className="text-center mb-8">
                   <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
