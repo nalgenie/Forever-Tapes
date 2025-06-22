@@ -219,9 +219,9 @@ const ListenToPodCard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading memory...</p>
         </div>
       </div>
@@ -230,11 +230,12 @@ const ListenToPodCard = () => {
 
   if (!podCard) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="text-2xl font-black text-gray-800 mb-4 tracking-tight">MEMORY NOT FOUND</div>
+          <div className="text-2xl font-bold text-gray-800 mb-4">Memory Not Found</div>
           <p className="text-gray-600 mb-6">The audio memory you're looking for doesn't exist.</p>
-          <Button onClick={() => navigate('/')} className="font-medium">
+          <Button onClick={() => navigate('/')} className="bg-purple-600 hover:bg-purple-700 text-white">
+            <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Home
           </Button>
         </div>
@@ -245,159 +246,299 @@ const ListenToPodCard = () => {
   const hasMessages = podCard.audio_messages && podCard.audio_messages.length > 0;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section - Vintage Tape Style */}
-      <div className="bg-gradient-to-br from-orange-400 via-red-500 to-pink-600 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="container mx-auto max-w-6xl px-6 py-20 relative z-10">
-          <div className="text-center">
-            <Badge className="mb-6 bg-white/20 text-white border-0 px-4 py-2 backdrop-blur-sm">
-              AUDIO MEMORY
-            </Badge>
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
+      {/* Header */}
+      <header className="relative z-50">
+        <div className="container mx-auto px-6 py-6">
+          <div className="flex items-center justify-between">
+            <Button
+              variant="ghost"
+              onClick={() => navigate('/')}
+              className="p-0 h-auto text-gray-600 hover:text-gray-900"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Home
+            </Button>
             
-            <h1 className="text-5xl md:text-7xl font-black mb-6 tracking-tight leading-none">
-              {podCard.title}
-            </h1>
-            
-            <p className="text-xl md:text-2xl mb-8 text-white/90 max-w-3xl mx-auto">
-              {podCard.description || `Curated by ${podCard.creator_name}`}
-            </p>
-            
-            <div className="flex justify-center gap-8 text-white/80">
-              <div className="flex items-center gap-2">
-                <Users className="w-5 h-5" />
-                {podCard.audio_messages?.length || 0} message{(podCard.audio_messages?.length || 0) !== 1 ? 's' : ''}
-              </div>
-              <div className="flex items-center gap-2">
-                <Clock className="w-5 h-5" />
-                {podCard.occasion}
-              </div>
-              <div className="flex items-center gap-2">
-                <Music className="w-5 h-5" />
-                {podCard.creator_name}
-              </div>
+            <div className="flex items-center gap-3">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleShare}
+                className="border-gray-300 text-gray-700 hover:bg-gray-50"
+              >
+                <Share2 className="w-4 h-4 mr-2" />
+                Share
+              </Button>
+              {hasMessages && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleDownload}
+                  className="border-gray-300 text-gray-700 hover:bg-gray-50"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Download
+                </Button>
+              )}
             </div>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Content */}
-      <div className="py-12 px-6">
-        <div className="container mx-auto max-w-6xl">
-          {!hasMessages ? (
-            <Card className="border-0 shadow-xl text-center bg-gradient-to-br from-purple-400 to-indigo-500 text-white">
-              <CardContent className="p-16">
-                <div className="w-24 h-24 mx-auto mb-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-                  <MessageSquare className="w-12 h-12 text-white" />
-                </div>
-                <h2 className="text-3xl font-black mb-6 text-white tracking-tight">
-                  NO MESSAGES YET
-                </h2>
-                <p className="text-purple-100 mb-8 text-lg">
-                  This memory is waiting for the first contribution. Be the first to add your voice!
-                </p>
-                <div className="flex justify-center gap-6">
-                  <Button 
-                    onClick={() => navigate(`/contribute/${podCardId}`)}
-                    className="bg-white text-purple-600 hover:bg-gray-100 px-8 py-3 font-black tracking-wide"
-                  >
-                    <Plus className="w-5 h-5 mr-2" />
-                    ADD FIRST MESSAGE
-                  </Button>
-                  <Button 
-                    onClick={() => navigate('/')}
-                    className="bg-white/20 text-white border-white/30 hover:bg-white/30 px-8 py-3 font-semibold"
-                    variant="outline"
-                  >
-                    Browse More
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ) : (
-            <>
-              {/* Audio Player */}
-              <Card className="border-0 shadow-xl bg-gradient-to-r from-gray-900 to-black text-white rounded-2xl overflow-hidden mb-8">
-                <CardContent className="p-8">
-                  <div className="flex items-center justify-between mb-6">
-                    <div>
-                      <h3 className="font-black text-xl tracking-wider text-white mb-1">
-                        {getCurrentTrackName()}
-                      </h3>
-                      <p className="text-gray-300 text-sm font-mono">
-                        MESSAGE {(currentTrack + 1).toString().padStart(2, '0')} OF {podCard.audio_messages.length.toString().padStart(2, '0')}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={handleShare}
-                        className="border-gray-600 text-gray-300 hover:bg-gray-800"
-                      >
-                        <Share2 className="w-4 h-4" />
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={handleDownload}
-                        className="border-gray-600 text-gray-300 hover:bg-gray-800"
-                      >
-                        <Download className="w-4 h-4" />
-                      </Button>
-                    </div>
+      {/* Hero Section */}
+      <div className="container mx-auto px-6 py-12">
+        <div className="text-center mb-16">
+          <div className="mb-8">
+            <h1 className="text-6xl md:text-8xl font-light mb-4 tracking-tight leading-none text-gray-900">
+              <span className="font-mono lowercase vintage-gradient-text vintage-font">forever tapes</span>
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-600 font-light tracking-wide">
+              Listen to the Memory
+            </p>
+          </div>
+        </div>
+
+        {/* Memory Details Card */}
+        <Card className="mb-12 border-0 shadow-xl bg-white/80 backdrop-blur-sm">
+          <CardContent className="p-8 text-center">
+            <Badge className="mb-4 bg-purple-100 text-purple-700 border-purple-200 px-4 py-2">
+              {podCard.occasion || 'Memory'}
+            </Badge>
+            
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
+              {podCard.title}
+            </h2>
+            
+            <p className="text-lg text-gray-600 mb-6 leading-relaxed max-w-2xl mx-auto">
+              {podCard.description || `Curated by ${podCard.creator_name}`}
+            </p>
+            
+            <div className="flex justify-center gap-6 text-sm text-gray-500">
+              <div className="flex items-center gap-2">
+                <Users className="w-4 h-4" />
+                {podCard.audio_messages?.length || 0} message{(podCard.audio_messages?.length || 0) !== 1 ? 's' : ''}
+              </div>
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4" />
+                {podCard.occasion}
+              </div>
+              <div className="flex items-center gap-2">
+                <Music className="w-4 h-4" />
+                {podCard.creator_name}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {!hasMessages ? (
+          /* No Messages State */
+          <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm text-center">
+            <CardContent className="p-16">
+              <div className="w-24 h-24 mx-auto mb-8 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
+                <MessageSquare className="w-12 h-12 text-white" />
+              </div>
+              <h3 className="text-3xl font-bold mb-6 text-gray-900">
+                No Messages Yet
+              </h3>
+              <p className="text-gray-600 mb-8 text-lg leading-relaxed max-w-md mx-auto">
+                This memory is waiting for the first contribution. Be the first to add your voice!
+              </p>
+              <div className="flex flex-col sm:flex-row justify-center gap-4">
+                <Button 
+                  onClick={() => navigate(`/contribute/${podCardId}`)}
+                  className="bg-green-600 text-white hover:bg-green-700 px-8 py-3 font-semibold"
+                >
+                  <Plus className="w-5 h-5 mr-2" />
+                  Add First Message
+                </Button>
+                <Button 
+                  onClick={() => navigate('/')}
+                  variant="outline"
+                  className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 font-semibold"
+                >
+                  Browse More Memories
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ) : (
+          /* Audio Player */
+          <div className="max-w-2xl mx-auto">
+            <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-8">
+                {/* Current Track Info */}
+                <div className="text-center mb-8">
+                  <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
+                    <Music className="w-10 h-10 text-white" />
                   </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    {getCurrentTrackName()}
+                  </h3>
+                  <p className="text-gray-500 text-sm">
+                    Message {currentTrack + 1} of {podCard.audio_messages.length}
+                  </p>
+                </div>
 
-                  {/* Progress Bar */}
+                {/* Progress Bar */}
+                <div className="mb-8">
                   <div 
                     ref={progressRef}
-                    className="w-full bg-gray-700 rounded-full h-3 mb-4 cursor-pointer overflow-hidden"
+                    className="w-full bg-gray-200 rounded-full h-3 cursor-pointer overflow-hidden mb-3"
                     onClick={handleProgressClick}
                   >
                     <div 
-                      className="bg-gradient-to-r from-orange-500 to-red-500 h-3 rounded-full transition-all duration-100 shadow-lg"
+                      className="bg-gradient-to-r from-purple-500 to-pink-500 h-3 rounded-full transition-all duration-100"
                       style={{ width: `${duration ? (playbackTime / duration) * 100 : 0}%` }}
                     />
                   </div>
-
-                  <div className="flex items-center justify-between mb-6">
-                    <span className="text-sm font-mono text-gray-400">{formatTime(playbackTime)}</span>
-                    <span className="text-sm font-mono text-gray-400">{formatTime(duration)}</span>
+                  <div className="flex items-center justify-between text-sm text-gray-500">
+                    <span>{formatTime(playbackTime)}</span>
+                    <span>{formatTime(duration)}</span>
                   </div>
+                </div>
 
-                  {/* Controls */}
-                  <div className="flex items-center justify-center gap-6 mb-6">
-                    <Button
-                      onClick={handleSkipBack}
-                      disabled={currentTrack === 0}
-                      className="bg-gray-700 hover:bg-gray-600 text-white p-3 rounded-full disabled:opacity-50"
-                    >
-                      <SkipBack className="w-5 h-5" />
-                    </Button>
-                    
-                    <Button
-                      onClick={handlePlayPause}
-                      size="lg"
-                      className="bg-red-500 hover:bg-red-600 text-white rounded-full px-12 py-4 shadow-lg shadow-red-500/30"
-                    >
-                      {isPlaying ? (
-                        <Pause className="w-8 h-8" />
-                      ) : (
-                        <Play className="w-8 h-8" />
-                      )}
-                    </Button>
-                    
-                    <Button
-                      onClick={handleSkipForward}
-                      disabled={currentTrack >= (podCard.audio_messages?.length || 0) - 1}
-                      className="bg-gray-700 hover:bg-gray-600 text-white p-3 rounded-full disabled:opacity-50"
-                    >
-                      <SkipForward className="w-5 h-5" />
-                    </Button>
+                {/* Main Controls */}
+                <div className="flex items-center justify-center gap-6 mb-8">
+                  <Button
+                    onClick={handleSkipBack}
+                    disabled={currentTrack === 0}
+                    variant="outline"
+                    size="lg"
+                    className="rounded-full p-4 disabled:opacity-50 border-gray-300 hover:bg-gray-50"
+                  >
+                    <SkipBack className="w-6 h-6" />
+                  </Button>
+                  
+                  <Button
+                    onClick={handlePlayPause}
+                    size="lg"
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-full px-8 py-4 shadow-lg"
+                  >
+                    {isPlaying ? (
+                      <Pause className="w-8 h-8" />
+                    ) : (
+                      <Play className="w-8 h-8 ml-1" />
+                    )}
+                  </Button>
+                  
+                  <Button
+                    onClick={handleSkipForward}
+                    disabled={currentTrack >= (podCard.audio_messages?.length || 0) - 1}
+                    variant="outline"
+                    size="lg"
+                    className="rounded-full p-4 disabled:opacity-50 border-gray-300 hover:bg-gray-50"
+                  >
+                    <SkipForward className="w-6 h-6" />
+                  </Button>
+                </div>
+
+                {/* Volume Control */}
+                <div className="flex items-center gap-4 justify-center">
+                  <Volume2 className="w-5 h-5 text-gray-500" />
+                  <div className="flex-1 max-w-32">
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={volume}
+                      onChange={handleVolumeChange}
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                    />
                   </div>
+                  <span className="text-sm text-gray-500 w-8">{volume}%</span>
+                </div>
+              </CardContent>
+            </Card>
 
-                  {/* Volume Control */}
-                  <div className="flex items-center gap-4">
+            {/* Message List */}
+            <Card className="mt-8 border-0 shadow-xl bg-white/80 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle className="text-xl font-bold text-gray-900 flex items-center">
+                  <MessageSquare className="w-5 h-5 mr-2" />
+                  All Messages
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {podCard.audio_messages.map((message, index) => (
+                    <div 
+                      key={message.id || index}
+                      className={`p-4 rounded-lg cursor-pointer transition-all ${
+                        currentTrack === index 
+                          ? 'bg-gradient-to-r from-purple-100 to-pink-100 border-l-4 border-purple-500' 
+                          : 'bg-gray-50 hover:bg-gray-100'
+                      }`}
+                      onClick={() => {
+                        setCurrentTrack(index);
+                        setPlaybackTime(0);
+                      }}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="font-semibold text-gray-900">
+                            {message.contributor_name}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {new Date(message.created_at).toLocaleDateString()}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {currentTrack === index && isPlaying && (
+                            <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
+                          )}
+                          <span className="text-sm font-mono text-gray-500">
+                            #{(index + 1).toString().padStart(2, '0')}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Call to Action */}
+            <Card className="mt-8 border-0 shadow-xl bg-gradient-to-r from-green-50 to-blue-50">
+              <CardContent className="p-8 text-center">
+                <Gift className="w-12 h-12 mx-auto mb-4 text-green-600" />
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  Want to add your voice?
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  Contribute your own message to this memory collection
+                </p>
+                <Button 
+                  onClick={() => navigate(`/contribute/${podCardId}`)}
+                  className="bg-green-600 text-white hover:bg-green-700 px-8 py-3 font-semibold"
+                >
+                  <Plus className="w-5 h-5 mr-2" />
+                  Add Your Message
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+      </div>
+
+      {/* Hidden Audio Element */}
+      <audio
+        ref={audioRef}
+        src={getCurrentAudioSrc()}
+        onLoadedMetadata={() => setDuration(audioRef.current?.duration || 0)}
+        onTimeUpdate={() => setPlaybackTime(audioRef.current?.currentTime || 0)}
+        onEnded={() => {
+          if (currentTrack < (podCard?.audio_messages?.length || 0) - 1) {
+            handleSkipForward();
+          } else {
+            setIsPlaying(false);
+          }
+        }}
+        volume={volume / 100}
+        style={{ display: 'none' }}
+      />
+    </div>
+  );
                     <Volume2 className="w-5 h-5 text-gray-400" />
                     <div className="flex-1">
                       <input
