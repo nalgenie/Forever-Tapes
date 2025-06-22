@@ -43,13 +43,30 @@ const ListenToPodCard = () => {
 
   const fetchPodCard = async () => {
     try {
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+      
       // Handle demo case
       if (podCardId === 'demo') {
-        const response = await api.get('/demo/audio');
-        setPodCard(response.data);
+        const url = backendUrl ? `${backendUrl}/api/demo/audio` : '/api/demo/audio';
+        const response = await fetch(url);
+        if (response.ok) {
+          const data = await response.json();
+          setPodCard(data);
+        } else {
+          throw new Error(`Failed to load demo: ${response.status}`);
+        }
       } else {
-        const response = await api.get(`/podcards/${podCardId}`);
-        setPodCard(response.data);
+        const url = backendUrl ? `${backendUrl}/api/podcards/${podCardId}` : `/api/podcards/${podCardId}`;
+        console.log('Fetching memory from:', url);
+        
+        const response = await fetch(url);
+        if (response.ok) {
+          const data = await response.json();
+          setPodCard(data);
+        } else {
+          console.error('Failed to fetch memory:', response.status, response.statusText);
+          throw new Error(`Memory not found: ${response.status}`);
+        }
       }
     } catch (error) {
       console.error('Error fetching PodCard:', error);
