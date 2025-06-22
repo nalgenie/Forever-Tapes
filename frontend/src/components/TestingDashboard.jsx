@@ -32,13 +32,28 @@ const TestingDashboard = () => {
 
   const loadTestMemories = async () => {
     try {
-      const response = await fetch(`${backendUrl}/api/testing/memories`);
+      const url = backendUrl ? `${backendUrl}/api/testing/memories` : '/api/testing/memories';
+      console.log('Loading test memories from:', url);
+      
+      const response = await fetch(url);
       if (response.ok) {
         const data = await response.json();
         setTestMemories(data.test_memories || []);
+      } else {
+        console.error('Failed to load test memories:', response.status, response.statusText);
+        toast({
+          title: "Error loading test memories",
+          description: `HTTP ${response.status}: ${response.statusText}`,
+          variant: "destructive"
+        });
       }
     } catch (error) {
       console.error('Error loading test memories:', error);
+      toast({
+        title: "Error loading test memories",
+        description: error.message,
+        variant: "destructive"
+      });
     }
   };
 
