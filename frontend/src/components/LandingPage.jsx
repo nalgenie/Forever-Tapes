@@ -94,10 +94,10 @@ const LandingPage = () => {
                     Sign in
                   </button>
                   <button 
-                    onClick={() => navigate('/auth/login')}
+                    onClick={() => navigate('/create-free')}
                     className="text-gray-700 hover:text-gray-900 font-medium transition-colors px-4 py-2 rounded-lg hover:bg-white/50"
                   >
-                    Create
+                    Create a Free Memory
                   </button>
                   <button 
                     onClick={() => setMemoryId('') || document.getElementById('memory-id-input')?.focus()}
