@@ -30,6 +30,10 @@ db = client[os.environ['DB_NAME']]
 UPLOADS_DIR = ROOT_DIR / "uploads"
 UPLOADS_DIR.mkdir(exist_ok=True)
 
+# Create processed directory for final audio files
+PROCESSED_DIR = ROOT_DIR / "processed"
+PROCESSED_DIR.mkdir(exist_ok=True)
+
 # JWT Settings
 JWT_SECRET = os.environ.get('JWT_SECRET', 'your-secret-key-change-in-production')
 JWT_ALGORITHM = "HS256"
