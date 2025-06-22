@@ -482,6 +482,9 @@ async def start_memory_processing(
     user: User = Depends(get_current_user)
 ):
     """Start processing all audio messages for a memory into a professional collage"""
+    if not AUDIO_PROCESSING_AVAILABLE:
+        raise HTTPException(status_code=503, detail="Audio processing service not available")
+        
     try:
         # Get the memory/podcard
         podcard = await db.podcards.find_one({"id": memory_id})
@@ -514,8 +517,7 @@ async def start_memory_processing(
         if not audio_files:
             raise HTTPException(status_code=400, detail="No valid audio files found")
         
-        # Import and start the processing task
-        from audio_processor.tasks import process_memory_audio
+        # Start the processing task
         task = process_memory_audio.delay(
             memory_id=memory_id,
             audio_file_paths=audio_files,
@@ -536,8 +538,6 @@ async def start_memory_processing(
             "message": f"Started processing {len(audio_files)} audio messages for memory {memory_id}"
         }
         
-    except ImportError:
-        raise HTTPException(status_code=503, detail="Audio processing service not available")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to start processing: {str(e)}")
 
@@ -550,59 +550,59 @@ async def get_processing_status(task_id: str):
         if not job:
             raise HTTPException(status_code=404, detail="Task not found")
         
-        # Try to get live status from Celery
-        try:
-            from audio_processor import celery_app
-            result = celery_app.AsyncResult(task_id)
-            
-            # Update job status based on Celery status
-            update_data = {}
-            
-            if result.status == 'PENDING':
-                update_data["status"] = "queued"
-                update_data["stage"] = "queued"
-            elif result.status == 'PROGRESS':
-                update_data["status"] = "processing"
-                if result.info:
-                    update_data["stage"] = result.info.get('stage')
-                    update_data["progress"] = result.info
-            elif result.status == 'SUCCESS':
-                update_data["status"] = "completed"
-                update_data["stage"] = "completed"
-                update_data["completed_at"] = datetime.utcnow()
-                if result.result and 'output_path' in result.result:
-                    # Move file to processed directory
-                    output_path = result.result['output_path']
-                    if os.path.exists(output_path):
-                        filename = f"memory_{job['memory_id']}_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.mp3"
-                        final_path = PROCESSED_DIR / filename
-                        shutil.move(output_path, final_path)
-                        update_data["output_file"] = str(final_path)
-                        
-                        # Create processed memory record
-                        processed = ProcessedMemory(
-                            memory_id=job['memory_id'],
-                            processed_file_path=str(final_path),
-                            duration=result.result.get('duration', 0),
-                            file_size=result.result.get('file_size', 0),
-                            processed_messages_count=result.result.get('processed_messages', 0)
-                        )
-                        await db.processed_memories.insert_one(processed.dict())
-            elif result.status == 'FAILURE':
-                update_data["status"] = "failed"
-                update_data["error_message"] = str(result.info) if result.info else "Unknown error"
-            
-            # Update job in database
-            if update_data:
-                update_data["updated_at"] = datetime.utcnow()
-                await db.audio_jobs.update_one(
-                    {"task_id": task_id},
-                    {"$set": update_data}
-                )
-                job.update(update_data)
+        # Try to get live status from Celery if available
+        if AUDIO_PROCESSING_AVAILABLE:
+            try:
+                result = celery_app.AsyncResult(task_id)
                 
-        except ImportError:
-            pass  # Celery not available, use database status
+                # Update job status based on Celery status
+                update_data = {}
+                
+                if result.status == 'PENDING':
+                    update_data["status"] = "queued"
+                    update_data["stage"] = "queued"
+                elif result.status == 'PROGRESS':
+                    update_data["status"] = "processing"
+                    if result.info:
+                        update_data["stage"] = result.info.get('stage')
+                        update_data["progress"] = result.info
+                elif result.status == 'SUCCESS':
+                    update_data["status"] = "completed"
+                    update_data["stage"] = "completed"
+                    update_data["completed_at"] = datetime.utcnow()
+                    if result.result and 'output_path' in result.result:
+                        # Move file to processed directory
+                        output_path = result.result['output_path']
+                        if os.path.exists(output_path):
+                            filename = f"memory_{job['memory_id']}_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.mp3"
+                            final_path = PROCESSED_DIR / filename
+                            shutil.move(output_path, final_path)
+                            update_data["output_file"] = str(final_path)
+                            
+                            # Create processed memory record
+                            processed = ProcessedMemory(
+                                memory_id=job['memory_id'],
+                                processed_file_path=str(final_path),
+                                duration=result.result.get('duration', 0),
+                                file_size=result.result.get('file_size', 0),
+                                processed_messages_count=result.result.get('processed_messages', 0)
+                            )
+                            await db.processed_memories.insert_one(processed.dict())
+                elif result.status == 'FAILURE':
+                    update_data["status"] = "failed"
+                    update_data["error_message"] = str(result.info) if result.info else "Unknown error"
+                
+                # Update job in database
+                if update_data:
+                    update_data["updated_at"] = datetime.utcnow()
+                    await db.audio_jobs.update_one(
+                        {"task_id": task_id},
+                        {"$set": update_data}
+                    )
+                    job.update(update_data)
+                    
+            except Exception as e:
+                logger.warning(f"Could not get live Celery status: {e}")
         
         return {
             "task_id": task_id,
@@ -658,8 +658,15 @@ async def enhance_single_audio(audio_path: str, contributor_name: str):
         if not os.path.exists(audio_path):
             raise HTTPException(status_code=404, detail="Audio file not found")
         
-        # Import and start enhancement task
-        from audio_processor.tasks import process_single_audio
+        if not AUDIO_PROCESSING_AVAILABLE:
+            # Audio processing not available, just return success
+            return {
+                "task_id": "mock",
+                "status": "completed",
+                "message": f"Audio enhancement not available, using original file"
+            }
+        
+        # Start enhancement task
         task = process_single_audio.delay(
             audio_path=audio_path,
             contributor_name=contributor_name
@@ -671,13 +678,6 @@ async def enhance_single_audio(audio_path: str, contributor_name: str):
             "message": f"Started enhancing audio for {contributor_name}"
         }
         
-    except ImportError:
-        # Audio processing not available, just return success
-        return {
-            "task_id": "mock",
-            "status": "completed",
-            "message": f"Audio enhancement not available, using original file"
-        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to start enhancement: {str(e)}")
 
