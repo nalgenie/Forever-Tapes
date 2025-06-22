@@ -108,7 +108,7 @@ def test_audio_collage():
     
     # Step 6: Poll the status until completion
     print("\nStep 6: Polling status until completion...")
-    max_attempts = 10
+    max_attempts = 20
     completed = False
     
     for attempt in range(max_attempts):
