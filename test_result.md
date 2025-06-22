@@ -213,23 +213,17 @@ backend:
         agent: "testing"
         comment: "The audio processing infrastructure is now working correctly. The API endpoints for audio processing are accessible and return proper responses. The /api/audio/worker-status endpoint returns a 200 response, and the /api/audio/process-memory endpoint successfully queues tasks. The /api/audio/enhance-single endpoint also works correctly. The issue was resolved by properly importing the audio_processor module in server.py and ensuring the Celery worker is configured correctly."
         
-  - task: "Audio Processing Pipeline"
+  - task: "Audio Collage Functionality"
     implemented: true
-    working: true
-    file: "server.py"
-    stuck_count: 0
+    working: false
+    file: "server.py, audio_processor/tasks.py"
+    stuck_count: 1
     priority: "high"
     needs_retesting: false
     status_history:
-      - working: true
+      - working: false
         agent: "testing"
-        comment: "The audio processing pipeline API endpoints are correctly implemented in server.py, including /api/audio/process-memory, /api/audio/status/{task_id}, and /api/audio/enhance-single. However, they cannot be fully tested because the Celery worker is not running. The error handling for these endpoints works correctly, returning appropriate error codes for invalid memory IDs (404) and invalid task IDs (404/500). The complete flow (create memory → upload audio → process → check status) works up to the processing step, but fails at that point with a 503 error."
-      - working: true
-        agent: "testing"
-        comment: "The audio processing pipeline is now working correctly. The /api/audio/process-memory endpoint successfully queues tasks and returns a task ID. The /api/audio/status/{task_id} endpoint correctly reports the status of the task. The /api/audio/enhance-single endpoint also works correctly. The complete flow (create memory → upload audio → process → check status) works as expected. The error handling for invalid memory IDs and task IDs also works correctly."
-      - working: true
-        agent: "testing"
-        comment: "Despite getting the Celery worker running and connected to Redis, the audio processing pipeline still returns a 503 error. The issue appears to be with the ImportError exception in the /api/audio/process-memory endpoint, which suggests that the audio_processor.tasks module is not being imported correctly within the FastAPI application context. This could be due to a Python path issue or a circular import problem. The error handling is working correctly, but the actual processing functionality cannot be tested until this import issue is resolved."
+        comment: "The audio collage functionality is implemented but not working correctly. The API endpoints for audio processing (/api/audio/process-memory, /api/audio/status/{task_id}, and /api/audio/processed/{memory_id}) are correctly defined in server.py, but there are issues with the Redis connection needed for Celery to function properly. The backend logs show 'Connection to Redis lost' errors and 'Retry limit exceeded while trying to reconnect to the Celery redis result store backend'. The audio processing endpoints return 500 Internal Server Error. The issue appears to be that Redis is not running or not accessible, which is required for the Celery task queue to function."
 
 frontend:
   - task: "Landing Page with Custom Illustration"
