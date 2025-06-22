@@ -93,34 +93,34 @@ const HowItWorksPage = () => {
       ]
     },
     listener: {
-      title: "Memory Listener",
-      subtitle: "Experience beautiful audio memory collections", 
+      title: "Forever Tapes Recipient",
+      subtitle: "Receive and share beautiful audio memory collections", 
       color: "blue",
       illustration: <Variation3 />,
       steps: [
         {
-          icon: <Headphones className="w-8 h-8" />,
-          title: "Open the Memory",
-          description: "Click a memory link to access the audio collection",
-          detail: "Works on any device - phone, tablet, or computer"
+          icon: <Gift className="w-8 h-8" />,
+          title: "Receive Your Memory",
+          description: "The organiser shares the completed audio memory collection with you as the intended recipient",
+          detail: "You'll get special access to the full memory once all contributions have been collected"
         },
         {
           icon: <Play className="w-8 h-8" />,
           title: "Choose Your Experience", 
           description: "Listen to individual messages one by one, or enjoy the full mixed collage",
-          detail: "Individual mode lets you hear each person separately, while collage mode blends all voices together"
+          detail: "Individual mode lets you hear each person separately, whilst collage mode blends all voices together"
         },
         {
           icon: <Music className="w-8 h-8" />,
           title: "Enjoy High-Quality Audio",
           description: "Professional audio processing ensures every voice sounds clear and balanced",
-          detail: "We automatically normalize volume levels and add smooth transitions"
+          detail: "We automatically normalise volume levels and add smooth transitions"
         },
         {
-          icon: <Heart className="w-8 h-8" />,
-          title: "Share the Love",
-          description: "Forward the memory to others or keep it for personal reflection",
-          detail: "These audio memories become treasured keepsakes that can be enjoyed for years"
+          icon: <Share2 className="w-8 h-8" />,
+          title: "Share Public Links",
+          description: "Create public links to specific messages or the complete collage for others to enjoy",
+          detail: "As the recipient, you control who else can access the memory through public sharing"
         }
       ]
     }
