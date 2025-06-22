@@ -180,34 +180,7 @@ const ListenToPodCard = () => {
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
-  const getCurrentAudioSrc = () => {
-    if (!podCard?.audio_messages || podCard.audio_messages.length === 0) {
-      return '';
-    }
-    
-    // Handle demo case
-    if (podCardId === 'demo') {
-      const demoAudios = {
-        0: '/demo-audio/mike-message.mp3',
-        1: '/demo-audio/emma-message.mp3',
-        2: '/demo-audio/david-message.mp3'
-      };
-      return demoAudios[currentTrack] || '/demo-audio/intro.mp3';
-    }
-    
-    const message = podCard?.audio_messages?.[currentTrack];
-    if (message) {
-      // Check if it's a demo audio file (starts with /demo-audio/)
-      if (message.file_path.startsWith('/demo-audio/')) {
-        return message.file_path; // Use the path directly for demo files
-      }
-      
-      // For uploaded files, extract file ID and construct API URL
-      const fileId = message.file_path.split('/').pop().split('.')[0];
-      return `${process.env.REACT_APP_BACKEND_URL}/api/audio/${fileId}`;
-    }
-    return '';
-  };
+
 
   const getCurrentTrackName = () => {
     if (!podCard?.audio_messages || podCard.audio_messages.length === 0) {
