@@ -595,15 +595,17 @@ const ListenToPodCard = () => {
 
                 {/* Main Controls */}
                 <div className="flex items-center justify-center gap-6 mb-8">
-                  <Button
-                    onClick={handleSkipBack}
-                    disabled={currentTrack === 0}
-                    variant="outline"
-                    size="lg"
-                    className="rounded-full p-4 disabled:opacity-50 border-gray-300 hover:bg-gray-50"
-                  >
-                    <SkipBack className="w-6 h-6" />
-                  </Button>
+                  {viewMode === 'individual' && (
+                    <Button
+                      onClick={handleSkipBack}
+                      disabled={currentTrack === 0}
+                      variant="outline"
+                      size="lg"
+                      className="rounded-full p-4 disabled:opacity-50 border-gray-300 hover:bg-gray-50"
+                    >
+                      <SkipBack className="w-6 h-6" />
+                    </Button>
+                  )}
                   
                   <Button
                     onClick={handlePlayPause}
@@ -617,15 +619,17 @@ const ListenToPodCard = () => {
                     )}
                   </Button>
                   
-                  <Button
-                    onClick={handleSkipForward}
-                    disabled={currentTrack >= (podCard.audio_messages?.length || 0) - 1}
-                    variant="outline"
-                    size="lg"
-                    className="rounded-full p-4 disabled:opacity-50 border-gray-300 hover:bg-gray-50"
-                  >
-                    <SkipForward className="w-6 h-6" />
-                  </Button>
+                  {viewMode === 'individual' && (
+                    <Button
+                      onClick={handleSkipForward}
+                      disabled={currentTrack >= (podCard.audio_messages?.length || 0) - 1}
+                      variant="outline"
+                      size="lg"
+                      className="rounded-full p-4 disabled:opacity-50 border-gray-300 hover:bg-gray-50"
+                    >
+                      <SkipForward className="w-6 h-6" />
+                    </Button>
+                  )}
                 </div>
 
                 {/* Volume Control */}
