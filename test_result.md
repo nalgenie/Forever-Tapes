@@ -180,6 +180,18 @@ backend:
         agent: "testing"
         comment: "Demo audio endpoint tested successfully. Returns the expected placeholder data with 3 sample audio messages."
 
+  - task: "Free Memory Creation API"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "Added /api/podcards/free endpoint for anonymous PodCard creation. Handles free memory creation without authentication, sets anonymous user details, and ensures memories are public by default."
+
 frontend:
   - task: "Landing Page with Custom Illustration"
     implemented: true
