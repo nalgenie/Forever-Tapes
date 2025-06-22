@@ -105,6 +105,28 @@ class ContributeAudioRequest(BaseModel):
     contributor_name: str
     contributor_email: EmailStr  # Now required
 
+class AudioProcessingJob(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    memory_id: str
+    task_id: str
+    status: str = "queued"  # queued, processing, completed, failed
+    stage: Optional[str] = None
+    progress: Optional[dict] = None
+    output_file: Optional[str] = None
+    error_message: Optional[str] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    completed_at: Optional[datetime] = None
+
+class ProcessedMemory(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    memory_id: str
+    processed_file_path: str
+    duration: float
+    file_size: int
+    processed_messages_count: int
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
 # === AUTHENTICATION HELPERS ===
 
 def create_access_token(user_id: str) -> str:
