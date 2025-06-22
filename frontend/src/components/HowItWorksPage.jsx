@@ -15,7 +15,8 @@ import {
   UserPlus,
   Play,
   Gift,
-  Sparkles
+  Sparkles,
+  Heart
 } from 'lucide-react';
 
 // Import illustration components
