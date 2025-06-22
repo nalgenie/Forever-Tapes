@@ -336,10 +336,10 @@ metadata:
 
 test_plan:
   current_focus:
-
+    - "Audio Collage Functionality"
 
   stuck_tasks:
-
+    - "Audio Collage Functionality"
 
   test_all: false
   test_priority: "high_first"
