@@ -166,7 +166,12 @@ const ListenToPodCard = () => {
     
     const message = podCard?.audio_messages?.[currentTrack];
     if (message) {
-      // Extract file ID from file path and construct API URL
+      // Check if it's a demo audio file (starts with /demo-audio/)
+      if (message.file_path.startsWith('/demo-audio/')) {
+        return message.file_path; // Use the path directly for demo files
+      }
+      
+      // For uploaded files, extract file ID and construct API URL
       const fileId = message.file_path.split('/').pop().split('.')[0];
       return `${process.env.REACT_APP_BACKEND_URL}/api/audio/${fileId}`;
     }
