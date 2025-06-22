@@ -18,6 +18,7 @@ import VerifyMagicLink from "./components/Auth/VerifyMagicLink";
 import ProtectedRoute from "./components/ProtectedRoute";
 import IllustrationShowcase from "./components/IllustrationShowcase";
 import AboutPage from "./components/AboutPage";
+import HowItWorksPage from "./components/HowItWorksPage";
 import TestingDashboard from "./components/TestingDashboard";
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/how-it-works" element={<HowItWorksPage />} />
             <Route path="/auth/login" element={<LoginPage />} />
             <Route path="/auth/verify" element={<VerifyMagicLink />} />
             <Route path="/contribute/:shareId" element={<ContributeAudio />} />
