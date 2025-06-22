@@ -206,7 +206,7 @@ const ContributeAudio = () => {
       const file = new File([recordedBlob], 'message.wav', { type: 'audio/wav' });
       formData.append('audio_file', file);
       formData.append('contributor_name', contributorData.name);
-      formData.append('contributor_email', contributorData.email);
+      formData.append('contributor_email', contributorData.email || 'anonymous@forever-tapes.com'); // Use fallback for empty email
 
       const response = await fetch(url, {
         method: 'POST',
