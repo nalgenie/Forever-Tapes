@@ -1019,7 +1019,7 @@ async def get_processing_status(task_id: str):
         raise HTTPException(status_code=500, detail=f"Failed to get status: {str(e)}")
 
 @api_router.get("/audio/processed/{memory_id}")
-async def get_processed_memory(memory_id: str, user: User = Depends(get_current_user)):
+async def get_processed_memory(memory_id: str, user: User = Depends(get_current_user_optional)):
     """Get processed audio file for a memory"""
     try:
         # Check if memory exists
@@ -1031,6 +1031,8 @@ async def get_processed_memory(memory_id: str, user: User = Depends(get_current_
         
         # Check permission (owner, anonymous memory, or public memory)
         if user and podcard_obj.creator_id != user.id and podcard_obj.creator_id != "anonymous" and not podcard_obj.is_public:
+            raise HTTPException(status_code=403, detail="Permission denied")
+        elif not user and podcard_obj.creator_id != "anonymous" and not podcard_obj.is_public:
             raise HTTPException(status_code=403, detail="Permission denied")
         
         # Get processed memory
