@@ -102,12 +102,13 @@ const TestingDashboard = () => {
     
     setLoading(true);
     try {
-      const response = await fetch(`${backendUrl}/api/testing/clear-all`, {
+      const url = backendUrl ? `${backendUrl}/api/testing/clear-all` : '/api/testing/clear-all';
+      const response = await fetch(url, {
         method: 'DELETE'
       });
       
       if (!response.ok) {
-        throw new Error('Failed to clear test memories');
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
       
       const result = await response.json();
@@ -120,6 +121,7 @@ const TestingDashboard = () => {
       setTestMemories([]);
       
     } catch (error) {
+      console.error('Error clearing test memories:', error);
       toast({
         title: "Error",
         description: "Failed to clear test memories: " + error.message,
