@@ -20,6 +20,10 @@ const LandingPage = () => {
     }
   };
 
+  const handleCreateFreeMemory = () => {
+    navigate('/create-free');
+  };
+
   const handleContributeToMemory = () => {
     if (memoryId.trim()) {
       navigate(`/contribute/${memoryId.trim()}`);
