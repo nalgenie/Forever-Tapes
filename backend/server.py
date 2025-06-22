@@ -879,7 +879,7 @@ async def clear_all_test_memories(user: User = Depends(get_current_user_optional
 @api_router.post("/audio/process-memory")
 async def start_memory_processing(
     memory_id: str = Form(...),
-    user: User = Depends(get_current_user)
+    user: User = Depends(get_current_user_optional)
 ):
     """Start processing all audio messages for a memory into a professional collage"""
     if not AUDIO_PROCESSING_AVAILABLE:
@@ -893,8 +893,10 @@ async def start_memory_processing(
         
         podcard_obj = PodCard(**podcard)
         
-        # Check if user has permission (owner or anonymous memory)
-        if user and podcard_obj.creator_id != user.id and podcard_obj.creator_id != "anonymous":
+        # Check permission (owner, anonymous memory, or public memory)
+        if user and podcard_obj.creator_id != user.id and podcard_obj.creator_id != "anonymous" and not podcard_obj.is_public:
+            raise HTTPException(status_code=403, detail="Permission denied")
+        elif not user and podcard_obj.creator_id != "anonymous" and not podcard_obj.is_public:
             raise HTTPException(status_code=403, detail="Permission denied")
         
         # Check if there are audio messages to process
