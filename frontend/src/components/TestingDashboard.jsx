@@ -60,16 +60,17 @@ const TestingDashboard = () => {
   const createTestTemplate = async (templateType) => {
     setLoading(true);
     try {
+      const url = backendUrl ? `${backendUrl}/api/testing/create-template` : '/api/testing/create-template';
       const formData = new FormData();
       formData.append('template_type', templateType);
       
-      const response = await fetch(`${backendUrl}/api/testing/create-template`, {
+      const response = await fetch(url, {
         method: 'POST',
         body: formData
       });
       
       if (!response.ok) {
-        throw new Error('Failed to create test template');
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
       
       const result = await response.json();
@@ -83,6 +84,7 @@ const TestingDashboard = () => {
       await loadTestMemories();
       
     } catch (error) {
+      console.error('Error creating test template:', error);
       toast({
         title: "Error",
         description: "Failed to create test memory: " + error.message,
