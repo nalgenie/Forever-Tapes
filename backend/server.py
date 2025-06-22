@@ -108,6 +108,7 @@ class PodCard(BaseModel):
     audio_messages: List[AudioMessage] = []
     background_music_path: Optional[str] = None
     is_public: bool = True
+    is_test_memory: bool = False  # New field for testing dashboard
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
