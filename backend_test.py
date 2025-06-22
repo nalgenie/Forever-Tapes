@@ -413,6 +413,221 @@ class ForeverTapesAPITest(unittest.TestCase):
         self.assertTrue(found, "Free podcard not found in public list")
         print("✅ Verified free podcard appears in public list")
 
+    def test_22_audio_worker_status(self):
+        """Test the audio worker status endpoint"""
+        print("\n🔍 Testing audio worker status endpoint...")
+        response = requests.get(f"{self.api_url}/audio/worker-status")
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        print(f"✅ Audio worker status: {data['available']}")
+        
+    def test_23_process_memory_audio(self):
+        """Test processing memory audio for a podcard with multiple audio messages"""
+        if not hasattr(self, 'free_podcard_id'):
+            self.skipTest("No free podcard ID available from previous test")
+            
+        print(f"\n🔍 Testing audio processing for memory ID: {self.free_podcard_id}...")
+        
+        # First, ensure we have at least 2 audio messages in the podcard
+        # Add another audio message if needed
+        response = requests.get(f"{self.api_url}/podcards/{self.free_podcard_id}")
+        self.assertEqual(response.status_code, 200)
+        podcard_data = response.json()
+        
+        if len(podcard_data["audio_messages"]) < 2:
+            print("Adding another audio message to ensure we have multiple messages...")
+            # Create a simple test audio file
+            test_audio_path = "/tmp/test_audio2.wav"
+            with open(test_audio_path, "wb") as f:
+                # Write a simple WAV header and some data
+                f.write(b"RIFF\x24WAVEfmt \x10\x01\x01\x44\xac\x88\x58\x01\x02\x10data")
+            
+            files = {'audio_file': ('test_audio2.wav', open(test_audio_path, 'rb'), 'audio/wav')}
+            data = {
+                'contributor_name': 'Second Contributor',
+                'contributor_email': 'second@example.com'
+            }
+            
+            response = requests.post(
+                f"{self.api_url}/podcards/{self.free_podcard_id}/audio",
+                files=files,
+                data=data
+            )
+            
+            self.assertEqual(response.status_code, 200)
+            os.remove(test_audio_path)
+            
+            # Get updated podcard data
+            response = requests.get(f"{self.api_url}/podcards/{self.free_podcard_id}")
+            self.assertEqual(response.status_code, 200)
+            podcard_data = response.json()
+        
+        # Now process the memory audio
+        response = requests.post(
+            f"{self.api_url}/audio/process-memory",
+            data={'memory_id': self.free_podcard_id}
+        )
+        
+        # Check if audio processing is available
+        if response.status_code == 503:
+            print("⚠️ Audio processing service not available, skipping test")
+            self.skipTest("Audio processing service not available")
+        
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertIn("task_id", data)
+        self.assertEqual(data["status"], "started")
+        
+        # Save the task ID for the next test
+        self.audio_task_id = data["task_id"]
+        print(f"✅ Audio processing started with task ID: {self.audio_task_id}")
+        
+    def test_24_check_processing_status(self):
+        """Test checking the status of an audio processing task"""
+        if not hasattr(self, 'audio_task_id'):
+            self.skipTest("No audio task ID available from previous test")
+            
+        print(f"\n🔍 Testing audio processing status for task ID: {self.audio_task_id}...")
+        
+        # Check status (may still be processing)
+        response = requests.get(f"{self.api_url}/audio/status/{self.audio_task_id}")
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data["task_id"], self.audio_task_id)
+        
+        # Wait for a short time to allow processing to progress
+        print("Waiting for processing to progress...")
+        max_attempts = 5
+        for attempt in range(max_attempts):
+            response = requests.get(f"{self.api_url}/audio/status/{self.audio_task_id}")
+            self.assertEqual(response.status_code, 200)
+            data = response.json()
+            status = data.get("status", "unknown")
+            
+            print(f"  Attempt {attempt+1}/{max_attempts}: Status = {status}, Stage = {data.get('stage')}")
+            
+            if status in ["success", "completed"]:
+                break
+                
+            if status == "failure" or status == "failed":
+                print(f"⚠️ Processing failed: {data.get('error', 'Unknown error')}")
+                break
+                
+            # Wait before checking again
+            time.sleep(2)
+        
+        print(f"✅ Audio processing status checked: {status}")
+        
+    def test_25_get_processed_audio(self):
+        """Test retrieving processed audio for a memory"""
+        if not hasattr(self, 'free_podcard_id'):
+            self.skipTest("No free podcard ID available from previous test")
+            
+        print(f"\n🔍 Testing retrieval of processed audio for memory ID: {self.free_podcard_id}...")
+        
+        # Try to get the processed audio
+        response = requests.get(f"{self.api_url}/audio/processed/{self.free_podcard_id}")
+        
+        # If processing is still ongoing or failed, this might return 404
+        if response.status_code == 404:
+            print("⚠️ Processed audio not found yet, processing may still be ongoing")
+            self.skipTest("Processed audio not available yet")
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.headers['Content-Type'].startswith('audio/'))
+        print("✅ Retrieved processed audio successfully")
+        
+    def test_26_process_memory_invalid_id(self):
+        """Test processing memory audio with an invalid memory ID"""
+        print("\n🔍 Testing audio processing with invalid memory ID...")
+        
+        invalid_id = "00000000-0000-0000-0000-000000000000"
+        response = requests.post(
+            f"{self.api_url}/audio/process-memory",
+            data={'memory_id': invalid_id}
+        )
+        
+        # If audio processing is not available, we'll get a 503
+        if response.status_code == 503:
+            print("⚠️ Audio processing service not available, skipping test")
+            self.skipTest("Audio processing service not available")
+        
+        self.assertEqual(response.status_code, 404)
+        print("✅ Invalid memory ID properly returns 404")
+        
+    def test_27_check_status_invalid_task(self):
+        """Test checking status with an invalid task ID"""
+        print("\n🔍 Testing status check with invalid task ID...")
+        
+        invalid_id = "00000000-0000-0000-0000-000000000000"
+        response = requests.get(f"{self.api_url}/audio/status/{invalid_id}")
+        
+        # This should return 404 if the task doesn't exist
+        self.assertEqual(response.status_code, 404)
+        print("✅ Invalid task ID properly returns 404")
+        
+    def test_28_get_processed_audio_invalid_memory(self):
+        """Test retrieving processed audio with an invalid memory ID"""
+        print("\n🔍 Testing processed audio retrieval with invalid memory ID...")
+        
+        invalid_id = "00000000-0000-0000-0000-000000000000"
+        response = requests.get(f"{self.api_url}/audio/processed/{invalid_id}")
+        
+        self.assertEqual(response.status_code, 404)
+        print("✅ Invalid memory ID properly returns 404")
+        
+    def test_29_anonymous_access_to_processed_audio(self):
+        """Test anonymous access to processed audio for a public memory"""
+        if not hasattr(self, 'free_podcard_id'):
+            self.skipTest("No free podcard ID available from previous test")
+            
+        print(f"\n🔍 Testing anonymous access to processed audio for public memory: {self.free_podcard_id}...")
+        
+        # Try to get the processed audio without authentication
+        response = requests.get(f"{self.api_url}/audio/processed/{self.free_podcard_id}")
+        
+        # If processing is still ongoing or failed, this might return 404
+        if response.status_code == 404:
+            print("⚠️ Processed audio not found yet, processing may still be ongoing")
+            self.skipTest("Processed audio not available yet")
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.headers['Content-Type'].startswith('audio/'))
+        print("✅ Anonymous access to processed audio for public memory works correctly")
+        
+    def test_30_enhance_single_audio(self):
+        """Test enhancing a single audio file"""
+        print("\n🔍 Testing single audio enhancement...")
+        
+        # Create a simple test audio file
+        test_audio_path = "/tmp/test_enhance.wav"
+        with open(test_audio_path, "wb") as f:
+            # Write a simple WAV header and some data
+            f.write(b"RIFF\x24WAVEfmt \x10\x01\x01\x44\xac\x88\x58\x01\x02\x10data")
+        
+        # Call the enhance endpoint
+        response = requests.post(
+            f"{self.api_url}/audio/enhance-single",
+            params={
+                'audio_path': test_audio_path,
+                'contributor_name': 'Test Enhancer'
+            }
+        )
+        
+        # If audio processing is not available, we'll get a 503 or a mock response
+        if response.status_code == 503:
+            print("⚠️ Audio processing service not available, skipping test")
+            self.skipTest("Audio processing service not available")
+        
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertIn("task_id", data)
+        self.assertEqual(data["status"], "started")
+        
+        # Clean up
+        os.remove(test_audio_path)
+        print("✅ Single audio enhancement works correctly")
+
 if __name__ == "__main__":
     # Create a single test instance to share state between tests
     test_instance = ForeverTapesAPITest()
@@ -440,6 +655,15 @@ if __name__ == "__main__":
     test_suite.addTest(unittest.FunctionTestCase(test_instance.test_19_verify_free_podcard_updated))
     test_suite.addTest(unittest.FunctionTestCase(test_instance.test_20_get_free_audio_file))
     test_suite.addTest(unittest.FunctionTestCase(test_instance.test_21_verify_free_podcard_in_list))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_22_audio_worker_status))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_23_process_memory_audio))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_24_check_processing_status))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_25_get_processed_audio))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_26_process_memory_invalid_id))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_27_check_status_invalid_task))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_28_get_processed_audio_invalid_memory))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_29_anonymous_access_to_processed_audio))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_30_enhance_single_audio))
     
     runner = unittest.TextTestRunner(verbosity=2)
     runner.run(test_suite)
