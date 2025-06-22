@@ -318,50 +318,6 @@ const LandingPage = () => {
       </div>
 
       {/* Features Section */}
-      <div className="bg-white/60 backdrop-blur-sm py-20">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-light mb-6 text-gray-900">
-              How it works
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Simple steps to create beautiful audio memories that last forever
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-12 max-w-5xl mx-auto">
-            <div className="text-center">
-              <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl flex items-center justify-center">
-                <Gift className="w-10 h-10 text-white" />
-              </div>
-              <h3 className="text-2xl font-semibold mb-4 text-gray-900">Create your memory</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Set up a memory collection for any occasion. Choose your theme and customize the experience.
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-blue-400 to-cyan-400 rounded-2xl flex items-center justify-center">
-                <Users className="w-10 h-10 text-white" />
-              </div>
-              <h3 className="text-2xl font-semibold mb-4 text-gray-900">Invite contributors</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Share your memory link with friends and family. They can record messages directly from their phone or computer.
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-green-400 to-emerald-400 rounded-2xl flex items-center justify-center">
-                <Headphones className="w-10 h-10 text-white" />
-              </div>
-              <h3 className="text-2xl font-semibold mb-4 text-gray-900">Listen together</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Enjoy the finished audio collection with beautiful background music mixing all the heartfelt messages.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* CTA Section - Subtle redesign */}
       <div className="bg-white/40 backdrop-blur-sm py-20">
