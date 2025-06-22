@@ -179,6 +179,15 @@ async def get_current_user_required(user: User = Depends(get_current_user)) -> U
         raise HTTPException(status_code=401, detail="Authentication required")
     return user
 
+async def get_current_user_optional(credentials: HTTPAuthorizationCredentials = Depends(security)) -> Optional[User]:
+    """Get current user but don't require authentication"""
+    if not credentials:
+        return None
+    try:
+        return await get_current_user(credentials)
+    except:
+        return None
+
 def send_magic_link_email(email: str, token: str) -> bool:
     """Send magic link email (mock implementation)"""
     # In production, this would send a real email
