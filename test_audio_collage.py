@@ -30,59 +30,32 @@ def test_audio_collage():
     else:
         print(f"Error: {response.text}")
     
-    # Step 2: Create a test memory with multiple audio messages
-    print("\nStep 2: Creating a test memory...")
-    memory_data = {
-        "title": "Audio Collage Test Memory",
-        "description": "Test memory for audio collage functionality",
-        "occasion": "testing"
-    }
-    
-    response = requests.post(f"{api_url}/podcards/free", json=memory_data)
+    # Step 2: Create test data with the test data generation endpoint
+    print("\nStep 2: Creating test data...")
+    response = requests.post(f"{api_url}/dev/create-test-data")
     if response.status_code != 200:
-        print(f"Failed to create test memory: {response.text}")
+        print(f"Failed to create test data: {response.text}")
         return
     
-    memory = response.json()
-    memory_id = memory["id"]
-    print(f"Created test memory with ID: {memory_id}")
+    test_data = response.json()
+    print(f"Created test data: {test_data['message']}")
+    print(f"Test memory IDs: {test_data['test_ids']}")
     
-    # Step 3: Add audio messages to the memory
-    print("\nStep 3: Adding audio messages to the memory...")
+    # Use the multiple messages test memory
+    memory_id = None
+    for id in test_data['test_ids']:
+        if "multiple" in id:
+            memory_id = id
+            break
     
-    # Create test audio files
-    test_files = []
-    for i in range(2):
-        test_audio_path = f"/tmp/test_audio_{i}.wav"
-        with open(test_audio_path, "wb") as f:
-            # Write a simple WAV header and some data
-            f.write(b"RIFF\x24\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x01\x00\x44\xac\x00\x00\x88\x58\x01\x00\x02\x00\x10\x00data\x00\x00\x00\x00")
-            # Add some random data
-            f.write(bytes([i % 256 for _ in range(1000)]))
-        test_files.append(test_audio_path)
+    if not memory_id:
+        print("Could not find a test memory with multiple messages")
+        return
     
-    # Upload audio messages
-    for i, file_path in enumerate(test_files):
-        files = {'audio_file': (f'test_audio_{i}.wav', open(file_path, 'rb'), 'audio/wav')}
-        data = {
-            'contributor_name': f'Test Contributor {i}',
-            'contributor_email': f'contributor{i}@example.com'
-        }
-        
-        response = requests.post(
-            f"{api_url}/podcards/{memory_id}/audio",
-            files=files,
-            data=data
-        )
-        
-        if response.status_code != 200:
-            print(f"Failed to upload audio message {i}: {response.text}")
-            continue
-        
-        print(f"Uploaded audio message {i} successfully")
+    print(f"Using test memory with ID: {memory_id}")
     
-    # Step 4: Verify the memory has the audio messages
-    print("\nStep 4: Verifying memory has audio messages...")
+    # Step 3: Verify the memory has audio messages
+    print("\nStep 3: Verifying memory has audio messages...")
     response = requests.get(f"{api_url}/podcards/{memory_id}")
     if response.status_code != 200:
         print(f"Failed to get memory: {response.text}")
@@ -91,8 +64,12 @@ def test_audio_collage():
     memory = response.json()
     print(f"Memory has {len(memory['audio_messages'])} audio messages")
     
-    # Step 5: Process the memory audio
-    print("\nStep 5: Processing memory audio...")
+    if len(memory['audio_messages']) < 2:
+        print("Memory does not have enough audio messages for collage testing")
+        return
+    
+    # Step 4: Process the memory audio
+    print("\nStep 4: Processing memory audio...")
     response = requests.post(
         f"{api_url}/audio/process-memory",
         data={'memory_id': memory_id}
@@ -106,9 +83,9 @@ def test_audio_collage():
     task_id = process_result["task_id"]
     print(f"Started processing with task ID: {task_id}")
     
-    # Step 6: Poll the status until completion
-    print("\nStep 6: Polling status until completion...")
-    max_attempts = 20
+    # Step 5: Poll the status until completion
+    print("\nStep 5: Polling status until completion...")
+    max_attempts = 30
     completed = False
     
     for attempt in range(max_attempts):
@@ -136,9 +113,9 @@ def test_audio_collage():
         # Wait before checking again
         time.sleep(2)
     
-    # Step 7: Get the processed audio
+    # Step 6: Get the processed audio
     if completed:
-        print("\nStep 7: Getting processed audio...")
+        print("\nStep 6: Getting processed audio...")
         response = requests.get(f"{api_url}/audio/processed/{memory_id}")
         
         if response.status_code == 200:
@@ -167,12 +144,18 @@ def test_audio_collage():
         else:
             print(f"Failed to get processed audio: {response.text}")
     
-    # Clean up
-    for file_path in test_files:
-        if os.path.exists(file_path):
-            os.remove(file_path)
+    # Step 7: Clean up test data
+    print("\nStep 7: Cleaning up test data...")
+    response = requests.delete(f"{api_url}/dev/clear-test-data")
+    if response.status_code == 200:
+        print(f"Test data cleaned up: {response.json()['message']}")
+    else:
+        print(f"Failed to clean up test data: {response.text}")
     
     print("\n=== Audio Collage Testing Complete ===\n")
+
+if __name__ == "__main__":
+    test_audio_collage()
 
 if __name__ == "__main__":
     test_audio_collage()
