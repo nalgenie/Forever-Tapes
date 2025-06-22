@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
+import { Progress } from './ui/progress';
 import { 
   Play, 
   Pause, 
@@ -45,17 +46,44 @@ const ListenToPodCard = () => {
     try {
       // Handle demo case
       if (podCardId === 'demo') {
-        const response = await api.get('/demo/audio');
-        setPodCard(response.data);
+        setPodCard({
+          id: 'demo',
+          title: 'Demo Audio Memory',
+          description: 'This is a sample audio memory to showcase Forever Tapes',
+          occasion: 'demo',
+          creator_name: 'Forever Tapes Team',
+          creator_id: 'demo',
+          audio_messages: [
+            {
+              id: 'demo1',
+              contributor_name: 'Sarah',
+              contributor_email: 'sarah@example.com',
+              file_path: '/demo/audio1.wav',
+              created_at: new Date().toISOString(),
+              duration: 15
+            },
+            {
+              id: 'demo2', 
+              contributor_name: 'Mike',
+              contributor_email: 'mike@example.com',
+              file_path: '/demo/audio2.wav',
+              created_at: new Date().toISOString(),
+              duration: 20
+            }
+          ],
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          is_public: true
+        });
       } else {
-        const response = await api.get(`/podcards/${podCardId}`);
-        setPodCard(response.data);
+        const data = await api.getPodCard(podCardId);
+        setPodCard(data);
       }
     } catch (error) {
-      console.error('Error fetching PodCard:', error);
+      console.error('Error fetching podcard:', error);
       toast({
-        title: "Error",
-        description: "Failed to load memory. Please try again.",
+        title: "Memory not found",
+        description: "The audio memory you're looking for doesn't exist.",
         variant: "destructive"
       });
     } finally {
@@ -63,13 +91,46 @@ const ListenToPodCard = () => {
     }
   };
 
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const handleTimeUpdate = () => {
+      setPlaybackTime(audio.currentTime);
+    };
+
+    const handleLoadedMetadata = () => {
+      setDuration(audio.duration);
+    };
+
+    const handleEnded = () => {
+      setIsPlaying(false);
+      if (currentTrack < (podCard?.audio_messages?.length || 0) - 1) {
+        setCurrentTrack(currentTrack + 1);
+      } else {
+        setCurrentTrack(0);
+      }
+    };
+
+    audio.addEventListener('timeupdate', handleTimeUpdate);
+    audio.addEventListener('loadedmetadata', handleLoadedMetadata);
+    audio.addEventListener('ended', handleEnded);
+
+    return () => {
+      audio.removeEventListener('timeupdate', handleTimeUpdate);
+      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      audio.removeEventListener('ended', handleEnded);
+    };
+  }, [currentTrack, podCard]);
+
   const handlePlayPause = () => {
-    if (!audioRef.current) return;
-    
+    const audio = audioRef.current;
+    if (!audio) return;
+
     if (isPlaying) {
-      audioRef.current.pause();
+      audio.pause();
     } else {
-      audioRef.current.play();
+      audio.play();
     }
     setIsPlaying(!isPlaying);
   };
@@ -77,89 +138,65 @@ const ListenToPodCard = () => {
   const handleSkipBack = () => {
     if (currentTrack > 0) {
       setCurrentTrack(currentTrack - 1);
-      setPlaybackTime(0);
-      setIsPlaying(false);
     }
   };
 
   const handleSkipForward = () => {
-    if (currentTrack < (podCard?.audio_messages?.length || 0) - 1) {
+    if (podCard && currentTrack < (podCard.audio_messages?.length || 0) - 1) {
       setCurrentTrack(currentTrack + 1);
-      setPlaybackTime(0);
-      setIsPlaying(false);
     }
   };
 
   const handleProgressClick = (e) => {
-    if (!audioRef.current || !progressRef.current) return;
-    
-    const rect = progressRef.current.getBoundingClientRect();
+    const audio = audioRef.current;
+    const progressBar = progressRef.current;
+    if (!audio || !progressBar) return;
+
+    const rect = progressBar.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
     const width = rect.width;
-    const newTime = (clickX / width) * duration;
+    const clickTime = (clickX / width) * duration;
     
-    audioRef.current.currentTime = newTime;
-    setPlaybackTime(newTime);
+    audio.currentTime = clickTime;
+    setPlaybackTime(clickTime);
   };
 
-  const handleVolumeChange = (e) => {
-    const newVolume = parseInt(e.target.value);
+  const handleVolumeChange = (newVolume) => {
     setVolume(newVolume);
     if (audioRef.current) {
       audioRef.current.volume = newVolume / 100;
     }
   };
 
-  const handleShare = async () => {
+  const handleShare = () => {
     const shareUrl = `${window.location.origin}/listen/${podCardId}`;
-    
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: podCard?.title || 'Forever Tapes Memory',
-          text: `Listen to this audio memory: ${podCard?.title}`,
-          url: shareUrl,
-        });
-      } catch (err) {
-        navigator.clipboard.writeText(shareUrl);
-        toast({
-          title: "Link copied!",
-          description: "Memory link copied to clipboard.",
-        });
-      }
-    } else {
-      navigator.clipboard.writeText(shareUrl);
-      toast({
-        title: "Link copied!",
-        description: "Memory link copied to clipboard.",
-      });
-    }
+    navigator.clipboard.writeText(shareUrl);
+    toast({
+      title: "Memory link copied ●",
+      description: "Share this memory with others.",
+    });
   };
 
   const handleDownload = () => {
     toast({
-      title: "Download feature coming soon!",
-      description: "Professional audio processing and download will be available soon.",
+      title: "Download started",
+      description: "Your audio memory is being prepared.",
     });
   };
 
-  const formatTime = (timeInSeconds) => {
-    const minutes = Math.floor(timeInSeconds / 60);
-    const seconds = Math.floor(timeInSeconds % 60);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const getCurrentAudioSrc = () => {
-    if (!podCard?.audio_messages || podCard.audio_messages.length === 0) {
-      return '';
-    }
-    
-    // Handle demo case
+  const getCurrentAudioSource = () => {
     if (podCardId === 'demo') {
+      // Demo audio sources
       const demoAudios = {
-        0: '/demo-audio/mike-message.mp3',
-        1: '/demo-audio/emma-message.mp3',
-        2: '/demo-audio/david-message.mp3'
+        0: '/demo-audio/mike.wav',
+        1: '/demo-audio/emma.wav', 
+        2: '/demo-audio/david.wav'
       };
       return demoAudios[currentTrack] || '/demo-audio/intro.mp3';
     }
@@ -500,6 +537,116 @@ const ListenToPodCard = () => {
         volume={volume / 100}
         style={{ display: 'none' }}
       />
+    </div>
+  );
+                    <Volume2 className="w-5 h-5 text-gray-400" />
+                    <div className="flex-1">
+                      <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        value={volume}
+                        onChange={(e) => handleVolumeChange(Number(e.target.value))}
+                        className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
+                      />
+                    </div>
+                    <span className="text-sm font-mono text-gray-400 min-w-[40px]">{volume}%</span>
+                  </div>
+
+                  {/* Audio Element */}
+                  <audio
+                    ref={audioRef}
+                    src={getCurrentAudioSource()}
+                    volume={volume / 100}
+                    style={{ display: 'none' }}
+                  />
+                </CardContent>
+              </Card>
+
+              {/* Messages List */}
+              <div className="space-y-4">
+                <h2 className="text-2xl font-black tracking-tight text-gray-800 mb-6">ALL MESSAGES</h2>
+                {podCard.audio_messages.map((message, index) => (
+                  <Card 
+                    key={message.id} 
+                    className={`border-0 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer ${
+                      currentTrack === index 
+                        ? 'bg-gradient-to-r from-cyan-400 to-blue-500 text-white' 
+                        : 'bg-white hover:bg-gray-50'
+                    }`}
+                    onClick={() => {
+                      setCurrentTrack(index);
+                      if (!isPlaying) setIsPlaying(true);
+                    }}
+                  >
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <div className={`w-12 h-12 ${currentTrack === index ? 'bg-white/20' : 'bg-gray-100'} backdrop-blur-sm rounded-full flex items-center justify-center`}>
+                            <span className={`font-mono font-black ${currentTrack === index ? 'text-white' : 'text-gray-600'}`}>
+                              {String(index + 1).padStart(2, '0')}
+                            </span>
+                          </div>
+                          <div>
+                            <h4 className={`font-black text-lg ${currentTrack === index ? 'text-white' : 'text-gray-800'}`}>
+                              {message.contributor_name}
+                            </h4>
+                            <p className={`text-sm font-mono ${currentTrack === index ? 'text-blue-100' : 'text-gray-500'}`}>
+                              {new Date(message.created_at).toLocaleDateString()}
+                            </p>
+                          </div>
+                        </div>
+                        <Button
+                          className={`${
+                            currentTrack === index 
+                              ? 'bg-white/20 hover:bg-white/30 text-white border-white/30' 
+                              : 'bg-gray-100 hover:bg-gray-200 text-gray-600 border-gray-200'
+                          } rounded-full p-3`}
+                          variant="outline"
+                        >
+                          {currentTrack === index && isPlaying ? (
+                            <Pause className="w-5 h-5" />
+                          ) : (
+                            <Play className="w-5 h-5" />
+                          )}
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+
+              {/* Add Message CTA */}
+              <Card className="mt-8 border-0 shadow-lg bg-gradient-to-br from-green-400 to-emerald-500 text-white">
+                <CardContent className="p-8 text-center">
+                  <h3 className="text-2xl font-black mb-4 text-white tracking-tight">
+                    ADD YOUR MESSAGE
+                  </h3>
+                  <p className="text-green-100 mb-6">
+                    Want to contribute to this memory? Add your own message to the collection.
+                  </p>
+                  <div className="flex justify-center gap-4">
+                    <Button 
+                      onClick={() => navigate(`/contribute/${podCardId}`)}
+                      className="bg-white text-green-600 hover:bg-gray-100 px-8 py-3 font-black tracking-wide"
+                    >
+                      <Plus className="w-5 h-5 mr-2" />
+                      CONTRIBUTE
+                    </Button>
+                    <Button 
+                      onClick={() => navigate('/')}
+                      className="bg-white/20 text-white border-white/30 hover:bg-white/30 px-8 py-3 font-semibold"
+                      variant="outline"
+                    >
+                      Browse More
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
