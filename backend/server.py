@@ -284,6 +284,23 @@ async def create_podcard(podcard: PodCardCreate, user: User = Depends(get_curren
     await db.podcards.insert_one(podcard_obj.dict())
     return podcard_obj
 
+@api_router.post("/podcards/free", response_model=PodCard)
+async def create_free_podcard(podcard: PodCardCreate):
+    """Create a new Free PodCard (Audio Memory) without authentication"""
+    # Create PodCard with anonymous user info
+    podcard_obj = PodCard(
+        title=podcard.title,
+        description=podcard.description,
+        occasion=podcard.occasion,
+        creator_id="anonymous",
+        creator_name="Anonymous User",
+        creator_email="anonymous@forever-tapes.com",
+        is_public=True  # Free memories are always public
+    )
+    
+    await db.podcards.insert_one(podcard_obj.dict())
+    return podcard_obj
+
 @api_router.get("/podcards", response_model=List[PodCard])
 async def get_podcards(skip: int = 0, limit: int = 10, user: User = Depends(get_current_user)):
     """Get all PodCards (public ones + user's own)"""
