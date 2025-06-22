@@ -554,12 +554,25 @@ const ListenToPodCard = () => {
                   <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
                     <Music className="w-10 h-10 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    {getCurrentTrackName()}
-                  </h3>
-                  <p className="text-gray-500 text-sm">
-                    Message {currentTrack + 1} of {podCard.audio_messages.length}
-                  </p>
+                  {viewMode === 'collage' ? (
+                    <>
+                      <h3 className="text-xl font-bold text-gray-900 mb-2">
+                        Mixed Memory Collage
+                      </h3>
+                      <p className="text-gray-500 text-sm">
+                        All {podCard.audio_messages.length} messages professionally mixed together
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <h3 className="text-xl font-bold text-gray-900 mb-2">
+                        {getCurrentTrackName()}
+                      </h3>
+                      <p className="text-gray-500 text-sm">
+                        Message {currentTrack + 1} of {podCard.audio_messages.length}
+                      </p>
+                    </>
+                  )}
                 </div>
 
                 {/* Progress Bar */}
