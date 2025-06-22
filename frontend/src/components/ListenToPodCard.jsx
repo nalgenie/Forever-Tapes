@@ -4,7 +4,6 @@ import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { 
   Play, 
   Pause, 
@@ -13,13 +12,14 @@ import {
   Volume2, 
   Download,
   Share2,
-  Radio,
   MessageSquare,
   Clock,
   Users,
   Music,
-  Disc,
-  Plus
+  Plus,
+  ArrowLeft,
+  Heart,
+  Gift
 } from 'lucide-react';
 import { api } from '../api';
 import { useToast } from '../hooks/use-toast';
