@@ -434,6 +434,12 @@ if __name__ == "__main__":
     test_suite.addTest(unittest.FunctionTestCase(test_instance.test_13_unauthorized_access))
     test_suite.addTest(unittest.FunctionTestCase(test_instance.test_14_invalid_podcard_id))
     test_suite.addTest(unittest.FunctionTestCase(test_instance.test_15_invalid_audio_id))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_16_create_free_podcard))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_17_get_free_podcard))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_18_contribute_to_free_podcard))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_19_verify_free_podcard_updated))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_20_get_free_audio_file))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_21_verify_free_podcard_in_list))
     
     runner = unittest.TextTestRunner(verbosity=2)
     runner.run(test_suite)
