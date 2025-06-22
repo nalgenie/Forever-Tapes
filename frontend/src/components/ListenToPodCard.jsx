@@ -655,7 +655,7 @@ const ListenToPodCard = () => {
               <CardHeader>
                 <CardTitle className="text-xl font-bold text-gray-900 flex items-center">
                   <MessageSquare className="w-5 h-5 mr-2" />
-                  All Messages
+                  {viewMode === 'collage' ? 'Included in Mix' : 'All Messages'}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -663,14 +663,18 @@ const ListenToPodCard = () => {
                   {podCard.audio_messages.map((message, index) => (
                     <div 
                       key={message.id || index}
-                      className={`p-4 rounded-lg cursor-pointer transition-all ${
-                        currentTrack === index 
-                          ? 'bg-gradient-to-r from-purple-100 to-pink-100 border-l-4 border-purple-500' 
-                          : 'bg-gray-50 hover:bg-gray-100'
+                      className={`p-4 rounded-lg transition-all ${
+                        viewMode === 'collage'
+                          ? 'bg-gradient-to-r from-purple-50 to-pink-50 border-l-4 border-purple-300'
+                          : currentTrack === index 
+                            ? 'bg-gradient-to-r from-purple-100 to-pink-100 border-l-4 border-purple-500 cursor-pointer' 
+                            : 'bg-gray-50 hover:bg-gray-100 cursor-pointer'
                       }`}
                       onClick={() => {
-                        setCurrentTrack(index);
-                        setPlaybackTime(0);
+                        if (viewMode === 'individual') {
+                          setCurrentTrack(index);
+                          setPlaybackTime(0);
+                        }
                       }}
                     >
                       <div className="flex items-center justify-between">
@@ -683,12 +687,18 @@ const ListenToPodCard = () => {
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          {currentTrack === index && isPlaying && (
-                            <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
+                          {viewMode === 'collage' ? (
+                            <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+                          ) : (
+                            <>
+                              {currentTrack === index && isPlaying && (
+                                <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
+                              )}
+                              <span className="text-sm font-mono text-gray-500">
+                                #{(index + 1).toString().padStart(2, '0')}
+                              </span>
+                            </>
                           )}
-                          <span className="text-sm font-mono text-gray-500">
-                            #{(index + 1).toString().padStart(2, '0')}
-                          </span>
                         </div>
                       </div>
                     </div>
