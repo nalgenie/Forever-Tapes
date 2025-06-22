@@ -210,6 +210,155 @@ const ListenToPodCard = () => {
     return podCard.audio_messages[currentTrack]?.contributor_name || 'Unknown';
   };
 
+  // Collage functions
+  const createCollage = async () => {
+    if (!podCard || !podCard.audio_messages || podCard.audio_messages.length < 2) {
+      toast({
+        title: "Not enough messages",
+        description: "Need at least 2 messages to create a mixed collage.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setCollageProcessing(true);
+    try {
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+      const url = backendUrl ? `${backendUrl}/api/audio/process-memory` : '/api/audio/process-memory';
+      
+      const formData = new FormData();
+      formData.append('memory_id', podCardId);
+      
+      const response = await fetch(url, {
+        method: 'POST',
+        body: formData
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Failed to start processing: ${response.status}`);
+      }
+      
+      const result = await response.json();
+      setCollageTaskId(result.task_id);
+      
+      toast({
+        title: "Creating audio collage...",
+        description: "Mixing all messages together with professional audio processing.",
+      });
+      
+      // Start polling for status
+      pollCollageStatus(result.task_id);
+      
+    } catch (error) {
+      console.error('Error creating collage:', error);
+      setCollageProcessing(false);
+      toast({
+        title: "Error",
+        description: "Failed to create audio collage: " + error.message,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const pollCollageStatus = async (taskId) => {
+    try {
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+      const url = backendUrl ? `${backendUrl}/api/audio/status/${taskId}` : `/api/audio/status/${taskId}`;
+      
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Status check failed: ${response.status}`);
+      }
+      
+      const status = await response.json();
+      setCollageStatus(status);
+      
+      if (status.status === 'completed') {
+        setCollageProcessing(false);
+        toast({
+          title: "Audio collage ready!",
+          description: "Your mixed memory is ready to listen to.",
+        });
+        
+        // Get the processed audio URL
+        const processedUrl = backendUrl ? `${backendUrl}/api/audio/processed/${podCardId}` : `/api/audio/processed/${podCardId}`;
+        setProcessedCollageUrl(processedUrl);
+        setViewMode('collage');
+        
+      } else if (status.status === 'failed') {
+        setCollageProcessing(false);
+        toast({
+          title: "Processing failed",
+          description: status.error || "Audio processing failed. Please try again.",
+          variant: "destructive"
+        });
+        
+      } else {
+        // Still processing, continue polling
+        setTimeout(() => pollCollageStatus(taskId), 2000);
+      }
+      
+    } catch (error) {
+      console.error('Error checking status:', error);
+      setCollageProcessing(false);
+      toast({
+        title: "Error",
+        description: "Failed to check processing status.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const checkExistingCollage = async () => {
+    try {
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
+      const url = backendUrl ? `${backendUrl}/api/audio/processed/${podCardId}` : `/api/audio/processed/${podCardId}`;
+      
+      const response = await fetch(url);
+      if (response.ok) {
+        setProcessedCollageUrl(url);
+      }
+    } catch (error) {
+      // No existing collage, that's fine
+      console.log('No existing collage found');
+    }
+  };
+
+  const getCurrentAudioSrc = () => {
+    // If in collage mode and we have a processed collage, use that
+    if (viewMode === 'collage' && processedCollageUrl) {
+      return processedCollageUrl;
+    }
+    
+    // Otherwise use individual message logic
+    if (!podCard?.audio_messages || podCard.audio_messages.length === 0) {
+      return '';
+    }
+    
+    // Handle demo case
+    if (podCardId === 'demo') {
+      const demoAudios = {
+        0: '/demo-audio/mike-message.mp3',
+        1: '/demo-audio/emma-message.mp3',
+        2: '/demo-audio/david-message.mp3'
+      };
+      return demoAudios[currentTrack] || '/demo-audio/intro.mp3';
+    }
+    
+    const message = podCard?.audio_messages?.[currentTrack];
+    if (message) {
+      // Check if it's a demo audio file (starts with /demo-audio/)
+      if (message.file_path.startsWith('/demo-audio/')) {
+        return message.file_path; // Use the path directly for demo files
+      }
+      
+      // For uploaded files, extract file ID and construct API URL
+      const fileId = message.file_path.split('/').pop().split('.')[0];
+      return `${process.env.REACT_APP_BACKEND_URL}/api/audio/${fileId}`;
+    }
+    return '';
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex items-center justify-center">
