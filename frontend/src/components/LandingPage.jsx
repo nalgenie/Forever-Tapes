@@ -351,11 +351,19 @@ const LandingPage = () => {
               Create your first audio memory in minutes.
             </p>
             <Button 
+              onClick={handleCreateFreeMemory}
+              size="lg" 
+              className="bg-green-600 text-white hover:bg-green-700 rounded-full px-12 py-4 text-lg font-medium mr-4"
+            >
+              Create a Free Memory
+            </Button>
+            <Button 
               onClick={handleOrganiseMemory}
               size="lg" 
-              className="bg-gray-900 text-white hover:bg-gray-800 rounded-full px-12 py-4 text-lg font-medium"
+              variant="outline"
+              className="border-gray-300 text-gray-700 hover:bg-gray-50 rounded-full px-12 py-4 text-lg font-medium"
             >
-              Start creating for free
+              Sign In for Premium
             </Button>
           </div>
         </div>
