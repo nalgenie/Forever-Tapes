@@ -34,6 +34,14 @@ const ListenToPodCard = () => {
   const [playbackTime, setPlaybackTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(100);
+  const [viewMode, setViewMode] = useState('individual'); // 'individual' or 'collage'
+  
+  // Collage-specific states
+  const [collageProcessing, setCollageProcessing] = useState(false);
+  const [collageStatus, setCollageStatus] = useState(null);
+  const [collageTaskId, setCollageTaskId] = useState(null);
+  const [processedCollageUrl, setProcessedCollageUrl] = useState(null);
+  
   const audioRef = useRef(null);
   const progressRef = useRef(null);
 
