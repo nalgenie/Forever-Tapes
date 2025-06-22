@@ -317,7 +317,7 @@ const LandingPage = () => {
         </div>
       </div>
 
-      {/* How It Works Section */}
+      {/* Features Section */}
       <div className="bg-white/60 backdrop-blur-sm py-20">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
