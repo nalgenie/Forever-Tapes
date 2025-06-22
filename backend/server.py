@@ -478,6 +478,242 @@ async def get_demo_audio():
         "is_public": True
     }
 
+# === TESTING & DEVELOPMENT ENDPOINTS ===
+
+@api_router.post("/dev/create-test-data")
+async def create_test_data():
+    """Create comprehensive test data for development"""
+    try:
+        # Clear existing test data first
+        await db.podcards.delete_many({"creator_id": "test-user"})
+        
+        test_memories = [
+            {
+                "id": "test-single-message",
+                "title": "Single Message Test",
+                "description": "Test memory with just one message",
+                "occasion": "testing",
+                "creator_id": "test-user",
+                "creator_name": "Test User",
+                "creator_email": "test@forever-tapes.com",
+                "audio_messages": [
+                    {
+                        "id": "test-msg-1",
+                        "contributor_name": "Alice",
+                        "contributor_email": "alice@test.com",
+                        "file_path": "/demo/mike-message.wav",  # Using demo audio
+                        "created_at": datetime.utcnow(),
+                        "duration": 25
+                    }
+                ],
+                "is_public": True,
+                "created_at": datetime.utcnow(),
+                "updated_at": datetime.utcnow()
+            },
+            {
+                "id": "test-multiple-messages",
+                "title": "Multiple Messages Test",
+                "description": "Test memory with several messages for audio player testing",
+                "occasion": "birthday",
+                "creator_id": "test-user",
+                "creator_name": "Test User", 
+                "creator_email": "test@forever-tapes.com",
+                "audio_messages": [
+                    {
+                        "id": "test-msg-2",
+                        "contributor_name": "Bob",
+                        "contributor_email": "bob@test.com",
+                        "file_path": "/demo/mike-message.wav",
+                        "created_at": datetime.utcnow(),
+                        "duration": 25
+                    },
+                    {
+                        "id": "test-msg-3",
+                        "contributor_name": "Carol",
+                        "contributor_email": "carol@test.com", 
+                        "file_path": "/demo/emma-message.wav",
+                        "created_at": datetime.utcnow(),
+                        "duration": 30
+                    },
+                    {
+                        "id": "test-msg-4",
+                        "contributor_name": "Dave",
+                        "contributor_email": "dave@test.com",
+                        "file_path": "/demo/david-message.wav",
+                        "created_at": datetime.utcnow(),
+                        "duration": 28
+                    },
+                    {
+                        "id": "test-msg-5",
+                        "contributor_name": "Eve",
+                        "contributor_email": "eve@test.com",
+                        "file_path": "/demo/mike-message.wav",
+                        "created_at": datetime.utcnow(),
+                        "duration": 22
+                    }
+                ],
+                "is_public": True,
+                "created_at": datetime.utcnow(),
+                "updated_at": datetime.utcnow()
+            },
+            {
+                "id": "test-empty-memory",
+                "title": "Empty Memory Test", 
+                "description": "Test memory with no messages to test empty state",
+                "occasion": "celebration",
+                "creator_id": "test-user",
+                "creator_name": "Test User",
+                "creator_email": "test@forever-tapes.com",
+                "audio_messages": [],
+                "is_public": True,
+                "created_at": datetime.utcnow(),
+                "updated_at": datetime.utcnow()
+            },
+            {
+                "id": "test-free-memory",
+                "title": "Free Memory Test",
+                "description": "Test memory created through free tier",
+                "occasion": "graduation",
+                "creator_id": "anonymous",
+                "creator_name": "Anonymous User",
+                "creator_email": "anonymous@forever-tapes.com",
+                "audio_messages": [
+                    {
+                        "id": "test-msg-6",
+                        "contributor_name": "Frank",
+                        "contributor_email": "frank@test.com",
+                        "file_path": "/demo/emma-message.wav",
+                        "created_at": datetime.utcnow(),
+                        "duration": 30
+                    },
+                    {
+                        "id": "test-msg-7", 
+                        "contributor_name": "Grace",
+                        "contributor_email": "grace@test.com",
+                        "file_path": "/demo/david-message.wav",
+                        "created_at": datetime.utcnow(),
+                        "duration": 28
+                    }
+                ],
+                "is_public": True,
+                "created_at": datetime.utcnow(),
+                "updated_at": datetime.utcnow()
+            }
+        ]
+        
+        # Insert all test memories
+        for memory in test_memories:
+            await db.podcards.insert_one(memory)
+        
+        return {
+            "message": "Test data created successfully",
+            "memories_created": len(test_memories),
+            "test_ids": [m["id"] for m in test_memories],
+            "instructions": {
+                "single_message": "Visit /listen/test-single-message",
+                "multiple_messages": "Visit /listen/test-multiple-messages", 
+                "empty_memory": "Visit /listen/test-empty-memory",
+                "free_memory": "Visit /listen/test-free-memory",
+                "contribute_test": "Visit /contribute/test-empty-memory to add messages"
+            }
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to create test data: {str(e)}")
+
+@api_router.delete("/dev/clear-test-data")
+async def clear_test_data():
+    """Clear all test data"""
+    try:
+        # Delete test memories
+        result = await db.podcards.delete_many({"creator_id": "test-user"})
+        anonymous_result = await db.podcards.delete_many({"creator_id": "anonymous"})
+        
+        # Clear test audio processing jobs
+        await db.audio_jobs.delete_many({"memory_id": {"$regex": "^test-"}})
+        await db.processed_memories.delete_many({"memory_id": {"$regex": "^test-"}})
+        
+        return {
+            "message": "Test data cleared successfully",
+            "deleted_memories": result.deleted_count + anonymous_result.deleted_count
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to clear test data: {str(e)}")
+
+@api_router.get("/dev/test-scenarios")
+async def get_test_scenarios():
+    """Get list of available test scenarios"""
+    return {
+        "scenarios": [
+            {
+                "name": "Single Message",
+                "id": "test-single-message",
+                "url": "/listen/test-single-message",
+                "description": "Test basic audio playback with one message"
+            },
+            {
+                "name": "Multiple Messages", 
+                "id": "test-multiple-messages",
+                "url": "/listen/test-multiple-messages",
+                "description": "Test skip controls, message list, and multi-track playback"
+            },
+            {
+                "name": "Empty Memory",
+                "id": "test-empty-memory", 
+                "url": "/listen/test-empty-memory",
+                "description": "Test empty state UI and contribution flow"
+            },
+            {
+                "name": "Free Memory",
+                "id": "test-free-memory",
+                "url": "/listen/test-free-memory", 
+                "description": "Test free tier memory functionality"
+            },
+            {
+                "name": "Contribute Test",
+                "url": "/contribute/test-empty-memory",
+                "description": "Test audio contribution to empty memory"
+            },
+            {
+                "name": "Demo Memory",
+                "id": "demo",
+                "url": "/listen/demo",
+                "description": "Original demo memory with sample data"
+            }
+        ],
+        "setup_instructions": [
+            "1. Call POST /api/dev/create-test-data to setup test memories",
+            "2. Visit any test scenario URL to test functionality", 
+            "3. Call DELETE /api/dev/clear-test-data to cleanup when done",
+            "4. Repeat as needed during development"
+        ],
+        "audio_processing_test": {
+            "instructions": "After creating test data, visit any multi-message memory and use POST /api/audio/process-memory to test audio processing",
+            "example_payload": {
+                "memory_id": "test-multiple-messages"
+            }
+        }
+    }
+
+@api_router.post("/dev/quick-reset")
+async def quick_reset():
+    """Quick reset - clear test data and recreate it"""
+    try:
+        # Clear existing test data
+        await clear_test_data()
+        
+        # Create fresh test data
+        result = await create_test_data()
+        
+        return {
+            "message": "Quick reset completed successfully",
+            "result": result
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Quick reset failed: {str(e)}")
+
 # === AUDIO PROCESSING ROUTES ===
 
 @api_router.post("/audio/process-memory")
