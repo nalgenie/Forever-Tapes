@@ -506,18 +506,17 @@ const ContributeAudio = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="email" className="text-gray-700 font-semibold">Email Address *</Label>
+                  <Label htmlFor="email" className="text-gray-700 font-semibold">Email Address (Optional)</Label>
                   <Input
                     id="email"
                     type="email"
-                    placeholder="Enter your email"
+                    placeholder="Enter your email (optional)"
                     value={contributorData.email}
                     onChange={(e) => setContributorData(prev => ({ ...prev, email: e.target.value }))}
                     className="mt-2 border-gray-200 focus:border-purple-300 focus:ring-purple-200"
-                    required
                   />
                   <p className="text-sm text-gray-500 mt-1">
-                    Used to notify you when the memory is complete
+                    Optional - used to notify you when the memory is complete
                   </p>
                 </div>
 
