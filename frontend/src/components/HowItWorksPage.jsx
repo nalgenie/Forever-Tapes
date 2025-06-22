@@ -267,7 +267,7 @@ const HowItWorksPage = () => {
               <p className="text-lg opacity-90 mb-6">
                 {activeFlow === 'organizer' && "Create your first memory collection and start gathering beautiful voice messages from the people who matter most."}
                 {activeFlow === 'contributor' && "Ask someone to create a memory and send you the link, or explore our demo to see how it works."}
-                {activeFlow === 'listener' && "Experience a sample memory collection to hear the magic of collective audio storytelling."}
+                {activeFlow === 'listener' && "Once you receive a memory collection as the intended recipient, you can create public sharing links for others to enjoy."}
               </p>
               <div className="flex flex-col sm:flex-row justify-center gap-4">
                 {activeFlow === 'organizer' && (
@@ -316,7 +316,7 @@ const HowItWorksPage = () => {
                       className="bg-white text-gray-900 hover:bg-gray-100 px-8 py-3 font-semibold"
                     >
                       <Play className="w-4 h-4 mr-2" />
-                      Listen to Demo
+                      Experience Demo Memory
                     </Button>
                     <Button
                       onClick={() => navigate('/')}
@@ -324,7 +324,7 @@ const HowItWorksPage = () => {
                       size="lg"
                       className="border-white text-white hover:bg-white/10 px-8 py-3 font-semibold"
                     >
-                      Create Your Own
+                      Organise Your Own
                     </Button>
                   </>
                 )}
