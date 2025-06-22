@@ -49,6 +49,12 @@ const ListenToPodCard = () => {
     fetchPodCard();
   }, [podCardId]);
 
+  useEffect(() => {
+    if (podCard && podCard.audio_messages && podCard.audio_messages.length > 1) {
+      checkExistingCollage();
+    }
+  }, [podCard]);
+
   const fetchPodCard = async () => {
     try {
       const backendUrl = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
