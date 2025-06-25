@@ -150,27 +150,23 @@ const TestingDashboard = () => {
         const persona = availablePersonas[i % availablePersonas.length] || voicePersonas[0];
         usedPersonaIds.push(persona.id);
 
-        // Generate message text
-        const messageData = mock_voice_generator.generate_message(
-          customMemory.occasion,
-          recipientName,
-          persona.id
-        );
+        // Generate message text based on occasion and recipient
+        const messageText = `This is a test message for ${recipientName} on the occasion of ${customMemory.occasion}. Generated with browser TTS using voice persona ${persona.name}.`;
 
         try {
           // Generate real audio
           const audioResult = await browserTTS.generateAndSaveVoiceMessage(
-            messageData.message,
+            messageText,
             persona.id,
             recipientName
           );
 
           messages.push({
             contributor_name: persona.name,
-            contributor_email: `${persona.name.toLowerCase().replace(' ', '.')}@${persona.email_domain}`,
+            contributor_email: `${persona.name.toLowerCase().replace(' ', '.')}@example.com`,
             file_path: audioResult.fileId,
             duration: audioResult.audioResult.duration,
-            text_content: messageData.message,
+            text_content: messageText,
             voice_used: audioResult.audioResult.voice
           });
 
@@ -184,10 +180,10 @@ const TestingDashboard = () => {
           // Fallback to mock voice
           messages.push({
             contributor_name: persona.name,
-            contributor_email: `${persona.name.toLowerCase().replace(' ', '.')}@${persona.email_domain}`,
-            file_path: persona.audio_file.split('.')[0], // Use demo file as fallback
+            contributor_email: `${persona.name.toLowerCase().replace(' ', '.')}@example.com`,
+            file_path: "demo-audio", // Use demo file as fallback
             duration: 25,
-            text_content: messageData.message,
+            text_content: messageText,
             voice_used: "Fallback Demo Audio"
           });
         }
