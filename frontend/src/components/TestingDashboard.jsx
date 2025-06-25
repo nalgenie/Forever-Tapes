@@ -595,7 +595,13 @@ const TestingDashboard = () => {
               <Settings className="w-6 h-6 mr-2" />
               Quick Test Templates
             </CardTitle>
-            <p className="text-gray-600">Create basic test memories instantly for different scenarios</p>
+            <p className="text-gray-600">Create basic test memories with manual demo recordings</p>
+            <div className="mt-2">
+              <Badge className="bg-orange-100 text-orange-700 border-orange-200">
+                <Mic className="w-3 h-3 mr-1" />
+                Uses Manual Demo Recordings
+              </Badge>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="grid md:grid-cols-3 gap-6 mb-6">
