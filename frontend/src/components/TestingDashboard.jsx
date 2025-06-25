@@ -42,7 +42,7 @@ const TestingDashboard = () => {
   const [recipientName, setRecipientName] = useState('Sarah');
   const [customMemory, setCustomMemory] = useState({
     title: '',
-    occasion: 'birthday',
+    occasion: '',  // Start with empty so placeholder shows
     numMessages: 5
   });
 
