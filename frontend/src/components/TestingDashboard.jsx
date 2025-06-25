@@ -201,7 +201,7 @@ const TestingDashboard = () => {
       formData.append('recipient_name', recipientName);
       formData.append('messages_data', JSON.stringify(messages));
       
-      const response = await fetch(url, {
+      const response = fetch(url, {
         method: 'POST',
         body: formData
       });
@@ -210,14 +210,14 @@ const TestingDashboard = () => {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
       
-      const result = await response.json();
+      const result = response.json();
       
       toast({
         title: "🎉 Real AI Memory Created!",
         description: `Generated ${messages.length} real AI voice messages!`,
       });
       
-      await loadTestMemories();
+      loadTestMemories();
       
     } catch (error) {
       console.error('Error creating real AI memory:', error);
@@ -230,6 +230,8 @@ const TestingDashboard = () => {
       setAiGenerating(false);
     }
   };
+
+  const createAiMemory = () => {
     if (!customMemory.title.trim()) {
       toast({
         title: "Title required",
@@ -248,7 +250,7 @@ const TestingDashboard = () => {
       formData.append('recipient_name', recipientName);
       formData.append('num_messages', customMemory.numMessages.toString());
       
-      const response = await fetch(url, {
+      const response = fetch(url, {
         method: 'POST',
         body: formData
       });
@@ -257,14 +259,14 @@ const TestingDashboard = () => {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
       
-      const result = await response.json();
+      const result = response.json();
       
       toast({
         title: "🎉 AI Memory Created!",
-        description: `Generated ${result.generated_messages} diverse voice messages with AI personas`,
+        description: `Generated diverse voice messages with AI personas`,
       });
       
-      await loadTestMemories();
+      loadTestMemories();
       
     } catch (error) {
       console.error('Error creating AI memory:', error);
