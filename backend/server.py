@@ -796,7 +796,7 @@ async def create_test_data():
                         "id": "test-msg-6",
                         "contributor_name": "Frank",
                         "contributor_email": "frank@test.com",
-                        "file_path": "/api/demo-audio/emma-message.wav",
+                        "file_path": "emma-message",
                         "created_at": datetime.utcnow(),
                         "duration": 30
                     },
@@ -804,7 +804,7 @@ async def create_test_data():
                         "id": "test-msg-7", 
                         "contributor_name": "Grace",
                         "contributor_email": "grace@test.com",
-                        "file_path": "/api/demo-audio/david-message.wav",
+                        "file_path": "david-message",
                         "created_at": datetime.utcnow(),
                         "duration": 28
                     }
