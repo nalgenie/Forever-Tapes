@@ -675,7 +675,19 @@ const TestingDashboard = () => {
                             {memory.creator_id?.includes('ai') && (
                               <Badge className="bg-purple-100 text-purple-700 border-purple-200">
                                 <Sparkles className="w-3 h-3 mr-1" />
-                                AI Generated
+                                AI Generated Content
+                              </Badge>
+                            )}
+                            {memory.creator_id?.includes('real-ai') && (
+                              <Badge className="bg-blue-100 text-blue-700 border-blue-200">
+                                <Volume2 className="w-3 h-3 mr-1" />
+                                Real AI Voices
+                              </Badge>
+                            )}
+                            {(memory.creator_id === 'test-user' || memory.creator_id === 'demo') && (
+                              <Badge className="bg-orange-100 text-orange-700 border-orange-200">
+                                <Mic className="w-3 h-3 mr-1" />
+                                Manual Recordings
                               </Badge>
                             )}
                           </div>
