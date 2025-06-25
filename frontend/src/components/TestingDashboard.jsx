@@ -595,14 +595,14 @@ const TestingDashboard = () => {
         {/* Instructions */}
         <Card className="mt-8 border-0 shadow-xl bg-blue-50">
           <CardContent className="p-8">
-            <h3 className="text-xl font-bold text-blue-900 mb-4">🚀 AI-Powered Testing Dashboard</h3>
+            <h3 className="text-xl font-bold text-blue-900 mb-4">🚀 Real AI Voice Testing Dashboard</h3>
             <ol className="text-blue-800 space-y-2 list-decimal list-inside">
-              <li><strong>AI Voice Generation</strong> - Create realistic test memories with diverse AI personas</li>
-              <li><strong>Bulk Scenarios</strong> - Generate complete test suites for all occasions instantly</li>
-              <li><strong>Custom Memories</strong> - Create specific test scenarios with chosen parameters</li>
-              <li><strong>Voice Personas</strong> - 8 diverse AI personas with different backgrounds and accents</li>
+              <li><strong>Real AI Voice Generation</strong> - Create actual speech using browser Text-to-Speech</li>
+              <li><strong>English Voices Only</strong> - Filter to English voices for simpler selection</li>
+              <li><strong>Test Voice Immediately</strong> - Hear voices before generating audio messages</li>
               <li><strong>Template Testing</strong> - Use quick templates for basic test scenarios</li>
               <li><strong>Audio Processing</strong> - Test audio collage functionality with multiple messages</li>
+              <li><strong>Clear Labeling</strong> - Manual recordings vs real AI voices are clearly marked</li>
             </ol>
           </CardContent>
         </Card>
