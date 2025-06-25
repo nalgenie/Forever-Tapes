@@ -18,30 +18,34 @@ import {
 import { useToast } from '../hooks/use-toast';
 import browserTTS from '../services/browserTTS';
 
-const AIVoiceGenerator = ({ onAudioGenerated, personas = [] }) => {
-  const [selectedPersona, setSelectedPersona] = useState('');
+const AIVoiceGenerator = ({ onAudioGenerated }) => {
+  const [selectedVoice, setSelectedVoice] = useState('');
   const [messageText, setMessageText] = useState('');
-  const [availableVoices, setAvailableVoices] = useState([]);
+  const [englishVoices, setEnglishVoices] = useState([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [generatedAudio, setGeneratedAudio] = useState(null);
   const { toast } = useToast();
 
   useEffect(() => {
-    // Load available voices
+    // Load English voices only
     if (browserTTS.isSupported) {
-      // Wait a bit for voices to load
       setTimeout(() => {
-        setAvailableVoices(browserTTS.getAvailableVoices());
+        const allVoices = browserTTS.getAvailableVoices();
+        // Filter to English voices only
+        const englishOnly = allVoices.filter(voice => 
+          voice.lang.startsWith('en-') || voice.lang === 'en'
+        );
+        setEnglishVoices(englishOnly);
       }, 500);
     }
   }, []);
 
   const handleGenerateVoice = async () => {
-    if (!messageText.trim() || !selectedPersona) {
+    if (!messageText.trim() || !selectedVoice) {
       toast({
         title: "Missing Information",
-        description: "Please select a persona and enter message text",
+        description: "Please select a voice and enter message text",
         variant: "destructive"
       });
       return;
@@ -59,25 +63,24 @@ const AIVoiceGenerator = ({ onAudioGenerated, personas = [] }) => {
     setIsGenerating(true);
 
     try {
-      const result = await browserTTS.generateSpeechSimple(messageText, selectedPersona);
+      // Use the selected voice name directly
+      const result = await browserTTS.generateSpeechSimple(messageText, selectedVoice);
       
       setGeneratedAudio({
-        persona: selectedPersona,
+        voice: selectedVoice,
         text: messageText,
-        voice: result.voice,
         duration: result.duration
       });
 
       toast({
         title: "🎉 Voice Generated!",
-        description: `Successfully generated speech using ${result.voice}`,
+        description: `Successfully generated speech using ${selectedVoice}`,
       });
 
       if (onAudioGenerated) {
         onAudioGenerated({
-          personaId: selectedPersona,
+          voice: selectedVoice,
           text: messageText,
-          voice: result.voice,
           duration: result.duration
         });
       }
@@ -95,10 +98,10 @@ const AIVoiceGenerator = ({ onAudioGenerated, personas = [] }) => {
   };
 
   const handleTestVoice = () => {
-    if (!messageText.trim() || !selectedPersona) {
+    if (!messageText.trim() || !selectedVoice) {
       toast({
         title: "Missing Information",
-        description: "Please select a persona and enter message text",
+        description: "Please select a voice and enter message text",
         variant: "destructive"
       });
       return;
@@ -107,13 +110,27 @@ const AIVoiceGenerator = ({ onAudioGenerated, personas = [] }) => {
     setIsPlaying(true);
     
     try {
-      browserTTS.testVoice(messageText, selectedPersona);
+      // Create utterance with selected voice
+      const utterance = new SpeechSynthesisUtterance(messageText);
+      const voice = speechSynthesis.getVoices().find(v => v.name === selectedVoice);
       
-      // Stop playing indicator after estimated duration
-      const estimatedDuration = browserTTS.estimateDuration(messageText) * 1000;
-      setTimeout(() => {
+      if (voice) {
+        utterance.voice = voice;
+      }
+      
+      utterance.rate = 0.9;
+      utterance.pitch = 1.0;
+      utterance.volume = 1.0;
+
+      utterance.onend = () => {
         setIsPlaying(false);
-      }, estimatedDuration);
+      };
+
+      utterance.onerror = () => {
+        setIsPlaying(false);
+      };
+
+      speechSynthesis.speak(utterance);
 
     } catch (error) {
       setIsPlaying(false);
@@ -129,8 +146,6 @@ const AIVoiceGenerator = ({ onAudioGenerated, personas = [] }) => {
     speechSynthesis.cancel();
     setIsPlaying(false);
   };
-
-  const selectedPersonaData = personas.find(p => p.id === selectedPersona);
 
   return (
     <Card className="border-0 shadow-xl bg-gradient-to-r from-blue-50 to-purple-50">
@@ -155,14 +170,14 @@ const AIVoiceGenerator = ({ onAudioGenerated, personas = [] }) => {
       </CardHeader>
       
       <CardContent className="space-y-6">
-        {/* Voice Browser Info */}
+        {/* Available English Voices */}
         <div className="bg-white rounded-lg p-4 border border-gray-200">
           <h3 className="text-sm font-semibold text-gray-700 mb-2 flex items-center">
             <Settings className="w-4 h-4 mr-1" />
-            Available Browser Voices ({availableVoices.length})
+            Available English Voices ({englishVoices.length})
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-xs">
-            {availableVoices.slice(0, 6).map((voice, index) => (
+            {englishVoices.slice(0, 6).map((voice, index) => (
               <div key={index} className="bg-gray-50 rounded p-2">
                 <div className="font-medium text-gray-800">{voice.name.split(' ')[0]}</div>
                 <div className="text-gray-500">{voice.lang}</div>
@@ -171,47 +186,38 @@ const AIVoiceGenerator = ({ onAudioGenerated, personas = [] }) => {
                 )}
               </div>
             ))}
-            {availableVoices.length > 6 && (
+            {englishVoices.length > 6 && (
               <div className="bg-gray-50 rounded p-2 text-center text-gray-500">
-                +{availableVoices.length - 6} more
+                +{englishVoices.length - 6} more
               </div>
             )}
           </div>
         </div>
 
-        {/* Persona Selection */}
+        {/* Voice Selection */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Select AI Persona
+            Select English Voice
           </label>
-          <Select value={selectedPersona} onValueChange={setSelectedPersona}>
+          <Select value={selectedVoice} onValueChange={setSelectedVoice}>
             <SelectTrigger className="border-gray-300">
-              <SelectValue placeholder="Choose a persona..." />
+              <SelectValue placeholder="Choose an English voice..." />
             </SelectTrigger>
             <SelectContent>
-              {personas.map((persona) => (
-                <SelectItem key={persona.id} value={persona.id}>
+              {englishVoices.map((voice) => (
+                <SelectItem key={voice.name} value={voice.name}>
                   <div className="flex items-center space-x-2">
-                    <User className="w-4 h-4" />
-                    <span>{persona.name}</span>
-                    <span className="text-xs text-gray-500">({persona.accent})</span>
+                    <Volume2 className="w-4 h-4" />
+                    <span>{voice.name}</span>
+                    <span className="text-xs text-gray-500">({voice.lang})</span>
+                    {voice.gender !== 'unknown' && (
+                      <Badge className="text-xs" variant="outline">{voice.gender}</Badge>
+                    )}
                   </div>
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
-          
-          {selectedPersonaData && (
-            <div className="mt-2 p-3 bg-purple-50 rounded-lg border border-purple-200">
-              <div className="text-sm">
-                <strong>{selectedPersonaData.name}</strong> - {selectedPersonaData.accent}
-              </div>
-              <div className="text-xs text-gray-600">{selectedPersonaData.personality}</div>
-              <div className="text-xs text-purple-600 mt-1">
-                {selectedPersonaData.age} years old, {selectedPersonaData.gender}
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Message Text */}
@@ -240,7 +246,7 @@ const AIVoiceGenerator = ({ onAudioGenerated, personas = [] }) => {
         <div className="flex flex-wrap gap-3">
           <Button
             onClick={handleTestVoice}
-            disabled={!browserTTS.isSupported || !messageText.trim() || !selectedPersona || isPlaying}
+            disabled={!browserTTS.isSupported || !messageText.trim() || !selectedVoice || isPlaying}
             variant="outline"
             className="border-blue-300 text-blue-700 hover:bg-blue-50"
           >
@@ -270,7 +276,7 @@ const AIVoiceGenerator = ({ onAudioGenerated, personas = [] }) => {
 
           <Button
             onClick={handleGenerateVoice}
-            disabled={!browserTTS.isSupported || !messageText.trim() || !selectedPersona || isGenerating}
+            disabled={!browserTTS.isSupported || !messageText.trim() || !selectedVoice || isGenerating}
             className="bg-purple-600 text-white hover:bg-purple-700"
           >
             {isGenerating ? (
@@ -292,7 +298,6 @@ const AIVoiceGenerator = ({ onAudioGenerated, personas = [] }) => {
           <div className="bg-green-50 border border-green-200 rounded-lg p-4">
             <h3 className="text-sm font-semibold text-green-800 mb-2">✅ Voice Generated Successfully</h3>
             <div className="text-sm text-green-700">
-              <div><strong>Persona:</strong> {personas.find(p => p.id === generatedAudio.persona)?.name}</div>
               <div><strong>Voice Used:</strong> {generatedAudio.voice}</div>
               <div><strong>Duration:</strong> ~{Math.ceil(generatedAudio.duration)}s</div>
               <div><strong>Text:</strong> "{generatedAudio.text}"</div>
@@ -304,7 +309,7 @@ const AIVoiceGenerator = ({ onAudioGenerated, personas = [] }) => {
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
           <strong>How it works:</strong>
           <ol className="list-decimal list-inside mt-2 space-y-1">
-            <li>Select an AI persona with unique voice characteristics</li>
+            <li>Select an English voice from your browser's available voices</li>
             <li>Enter your message text (up to 200 characters)</li>
             <li>Click "Test Voice" to hear it immediately</li>
             <li>Click "Generate AI Voice" to create the audio message</li>
