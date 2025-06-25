@@ -619,6 +619,288 @@ class ForeverTapesAPITest(unittest.TestCase):
         # Clean up
         os.remove(test_audio_path)
         print("✅ Single audio enhancement works correctly")
+        
+    def test_30_get_voice_personas(self):
+        """Test getting all available mock voice personas"""
+        print("\n🔍 Testing voice personas endpoint...")
+        
+        response = requests.get(f"{self.api_url}/voice/personas")
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        
+        # Verify we have the expected number of personas
+        self.assertIn("personas", data)
+        self.assertEqual(data["total_count"], 8)
+        self.assertEqual(len(data["personas"]), 8)
+        
+        # Verify persona diversity
+        personas = data["personas"]
+        
+        # Check for different genders
+        genders = set(p["gender"] for p in personas)
+        self.assertGreaterEqual(len(genders), 2, "Should have at least male and female genders")
+        
+        # Check for different ages
+        ages = set(p["age"] for p in personas)
+        self.assertGreaterEqual(len(ages), 3, "Should have diverse age ranges")
+        
+        # Check for different accents
+        accents = set(p["accent"] for p in personas)
+        self.assertGreaterEqual(len(accents), 5, "Should have diverse accents")
+        
+        # Check for different personalities
+        personalities = set(p["personality"] for p in personas)
+        self.assertGreaterEqual(len(personalities), 5, "Should have diverse personalities")
+        
+        # Check for specific personas
+        persona_names = [p["name"] for p in personas]
+        expected_names = ["Alice Johnson", "Marcus Chen", "Sofia Rodriguez", "David Thompson", 
+                          "Priya Patel", "James Murphy", "Emily Wang", "Carlos Santos"]
+        
+        for name in expected_names:
+            self.assertIn(name, persona_names, f"Expected persona {name} not found")
+        
+        # Check persona structure
+        for persona in personas:
+            self.assertIn("id", persona)
+            self.assertIn("name", persona)
+            self.assertIn("age", persona)
+            self.assertIn("gender", persona)
+            self.assertIn("accent", persona)
+            self.assertIn("personality", persona)
+            self.assertIn("audio_file", persona)
+            self.assertIn("email_domain", persona)
+            
+            # Verify audio file paths exist
+            self.assertTrue(persona["audio_file"].startswith("/app/backend/demo-audio/"))
+        
+        print(f"✅ Retrieved {len(personas)} diverse voice personas successfully")
+        
+    def test_31_generate_voice_message(self):
+        """Test generating a realistic voice message for different occasions"""
+        print("\n🔍 Testing voice message generation...")
+        
+        # Test for different occasions
+        occasions = ["birthday", "graduation", "wedding", "anniversary", "celebration"]
+        
+        for occasion in occasions:
+            print(f"  Testing message generation for occasion: {occasion}")
+            
+            # Test with random persona
+            data = {
+                'occasion': occasion,
+                'recipient_name': 'Sarah Johnson'
+            }
+            
+            response = requests.post(
+                f"{self.api_url}/voice/generate-message",
+                data=data
+            )
+            
+            self.assertEqual(response.status_code, 200)
+            result = response.json()
+            
+            # Verify response structure
+            self.assertTrue(result["success"])
+            self.assertIn("message_content", result)
+            self.assertIn("persona", result)
+            self.assertIn("generated_at", result)
+            self.assertIn("audio_file", result)
+            
+            # Verify message content is appropriate for the occasion
+            message = result["message_content"]
+            self.assertIn("Sarah", message, "Message should be personalized with recipient name")
+            
+            if occasion == "birthday":
+                self.assertTrue(any(term in message.lower() for term in ["birthday", "special day"]))
+            elif occasion == "graduation":
+                self.assertTrue(any(term in message.lower() for term in ["graduation", "proud", "accomplish"]))
+            elif occasion == "wedding":
+                self.assertTrue(any(term in message.lower() for term in ["wedding", "marriage", "love"]))
+            elif occasion == "anniversary":
+                self.assertTrue(any(term in message.lower() for term in ["anniversary", "journey", "love"]))
+            elif occasion == "celebration":
+                self.assertTrue(any(term in message.lower() for term in ["congratulations", "celebrate", "exciting"]))
+            
+            # Verify persona details are included
+            persona = result["persona"]
+            self.assertIn("name", persona)
+            self.assertIn("gender", persona)
+            self.assertIn("accent", persona)
+            self.assertIn("personality", persona)
+            
+            # Verify audio file path
+            self.assertTrue(result["audio_file"].startswith("/app/backend/demo-audio/"))
+            
+            # Test with specific persona
+            if occasion == "birthday":  # Only test specific persona once
+                print("  Testing message generation with specific persona")
+                
+                # Get a specific persona ID
+                personas_response = requests.get(f"{self.api_url}/voice/personas")
+                personas_data = personas_response.json()
+                specific_persona_id = personas_data["personas"][0]["id"]
+                
+                data = {
+                    'occasion': occasion,
+                    'recipient_name': 'Sarah Johnson',
+                    'persona_id': specific_persona_id
+                }
+                
+                response = requests.post(
+                    f"{self.api_url}/voice/generate-message",
+                    data=data
+                )
+                
+                self.assertEqual(response.status_code, 200)
+                result = response.json()
+                
+                # Verify the specific persona was used
+                self.assertEqual(result["persona"]["id"], specific_persona_id)
+        
+        print("✅ Voice message generation works correctly for all occasions")
+        
+    def test_32_create_ai_memory(self):
+        """Test creating a test memory with AI-generated voice messages"""
+        print("\n🔍 Testing AI memory creation...")
+        
+        # Test with different numbers of messages
+        for num_messages in [3, 5]:
+            print(f"  Testing memory creation with {num_messages} messages")
+            
+            data = {
+                'title': f"Test AI Memory with {num_messages} Messages",
+                'occasion': "birthday",
+                'recipient_name': "Michael Smith",
+                'num_messages': num_messages
+            }
+            
+            response = requests.post(
+                f"{self.api_url}/voice/create-ai-memory",
+                data=data
+            )
+            
+            self.assertEqual(response.status_code, 200)
+            result = response.json()
+            
+            # Verify response structure
+            self.assertTrue(result["success"])
+            self.assertIn("memory", result)
+            self.assertIn("generated_messages", result)
+            self.assertIn("personas_used", result)
+            self.assertIn("listen_url", result)
+            
+            # Verify the correct number of messages were generated
+            self.assertEqual(result["generated_messages"], num_messages)
+            self.assertEqual(len(result["personas_used"]), num_messages)
+            self.assertEqual(len(result["memory"]["audio_messages"]), num_messages)
+            
+            # Verify memory structure
+            memory = result["memory"]
+            self.assertEqual(memory["title"], data["title"])
+            self.assertEqual(memory["occasion"], data["occasion"])
+            self.assertTrue(memory["is_test_memory"])
+            self.assertTrue(memory["is_public"])
+            
+            # Verify audio messages
+            for message in memory["audio_messages"]:
+                self.assertIn("contributor_name", message)
+                self.assertIn("contributor_email", message)
+                self.assertIn("file_path", message)
+                self.assertTrue(message["file_path"].startswith("/app/backend/demo-audio/"))
+            
+            # Save memory ID for cleanup test
+            if num_messages == 5:  # Save the last one for cleanup test
+                self.ai_memory_id = memory["id"]
+                print(f"  Saved AI memory ID for cleanup test: {self.ai_memory_id}")
+        
+        print("✅ AI memory creation works correctly with different message counts")
+        
+    def test_33_bulk_generate_scenarios(self):
+        """Test generating a complete set of test scenarios with AI voices"""
+        print("\n🔍 Testing bulk scenario generation...")
+        
+        data = {
+            'recipient_name': "Jennifer Williams"
+        }
+        
+        response = requests.post(
+            f"{self.api_url}/voice/bulk-generate-scenarios",
+            data=data
+        )
+        
+        self.assertEqual(response.status_code, 200)
+        result = response.json()
+        
+        # Verify response structure
+        self.assertTrue(result["success"])
+        self.assertIn("scenarios_created", result)
+        self.assertIn("memories", result)
+        self.assertIn("recipient_name", result)
+        
+        # Verify the correct number of scenarios were created
+        self.assertEqual(result["scenarios_created"], 5)
+        self.assertEqual(len(result["memories"]), 5)
+        
+        # Verify all occasion types are covered
+        occasions = [memory["occasion"] for memory in result["memories"]]
+        expected_occasions = ["birthday", "graduation", "wedding", "anniversary", "celebration"]
+        for occasion in expected_occasions:
+            self.assertIn(occasion, occasions, f"Expected occasion {occasion} not found in bulk scenarios")
+        
+        # Verify each memory has the expected structure
+        for memory in result["memories"]:
+            self.assertIn("id", memory)
+            self.assertIn("title", memory)
+            self.assertIn("occasion", memory)
+            self.assertIn("messages", memory)
+            self.assertIn("url", memory)
+            
+            # Verify the memory has messages
+            self.assertGreater(memory["messages"], 0)
+            
+            # Verify the URL format
+            self.assertTrue(memory["url"].startswith("/listen/"))
+        
+        # Save the memory IDs for cleanup test
+        self.bulk_memory_ids = [memory["id"] for memory in result["memories"]]
+        print(f"  Created {len(self.bulk_memory_ids)} bulk scenarios successfully")
+        
+        print("✅ Bulk scenario generation works correctly")
+        
+    def test_34_clear_ai_memories(self):
+        """Test clearing all AI-generated test memories"""
+        print("\n🔍 Testing AI memory cleanup...")
+        
+        # Verify that the AI memories exist before cleaning
+        if hasattr(self, 'ai_memory_id'):
+            response = requests.get(f"{self.api_url}/podcards/{self.ai_memory_id}")
+            self.assertEqual(response.status_code, 200, "AI memory should exist before cleanup")
+        
+        if hasattr(self, 'bulk_memory_ids') and self.bulk_memory_ids:
+            response = requests.get(f"{self.api_url}/podcards/{self.bulk_memory_ids[0]}")
+            self.assertEqual(response.status_code, 200, "Bulk memory should exist before cleanup")
+        
+        # Clear AI memories
+        response = requests.delete(f"{self.api_url}/voice/clear-ai-memories")
+        self.assertEqual(response.status_code, 200)
+        result = response.json()
+        
+        # Verify response structure
+        self.assertTrue(result["success"])
+        self.assertIn("deleted_count", result)
+        self.assertGreaterEqual(result["deleted_count"], 1, "Should have deleted at least one memory")
+        
+        # Verify that the AI memories were deleted
+        if hasattr(self, 'ai_memory_id'):
+            response = requests.get(f"{self.api_url}/podcards/{self.ai_memory_id}")
+            self.assertEqual(response.status_code, 404, "AI memory should be deleted after cleanup")
+        
+        if hasattr(self, 'bulk_memory_ids') and self.bulk_memory_ids:
+            response = requests.get(f"{self.api_url}/podcards/{self.bulk_memory_ids[0]}")
+            self.assertEqual(response.status_code, 404, "Bulk memory should be deleted after cleanup")
+        
+        print(f"✅ Successfully cleared {result['deleted_count']} AI-generated memories")
 
 if __name__ == "__main__":
     # Create a single test instance to share state between tests
