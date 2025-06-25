@@ -678,13 +678,13 @@ class MockVoiceGenerator:
         persona = message_data["persona"]
         email = f"{persona['name'].lower().replace(' ', '.')}@{persona['email_domain']}"
         
-        # Use the demo-audio API endpoint for proper file serving
-        demo_file_path = f"/api/demo-audio/{persona['audio_file']}"
+        # Use the file ID format expected by the audio endpoint (without extension)
+        file_id = persona['audio_file'].split('.')[0]  # Remove extension for file ID
         
         return AudioMessage(
             contributor_name=persona["name"],
             contributor_email=email,
-            file_path=demo_file_path,
+            file_path=file_id,  # Store just the file ID
             duration=random.uniform(20, 35)  # Realistic message duration
         )
 
