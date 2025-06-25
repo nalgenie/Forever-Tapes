@@ -542,6 +542,9 @@ const TestingDashboard = () => {
                       </>
                     )}
                   </Button>
+                  <div className="text-xs text-gray-500 mt-1 text-center">
+                    Uses AI-generated text with manual demo recordings
+                  </div>
                   
                   <Button
                     onClick={createRealAiMemory}
@@ -551,6 +554,9 @@ const TestingDashboard = () => {
                     <Volume2 className="w-4 h-4 mr-2" />
                     Generate Real AI Memory (Beta)
                   </Button>
+                  <div className="text-xs text-blue-600 mt-1 text-center">
+                    Uses browser Text-to-Speech for real AI voices
+                  </div>
                 </CardContent>
               </Card>
 
