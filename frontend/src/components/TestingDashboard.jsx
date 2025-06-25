@@ -493,7 +493,7 @@ const TestingDashboard = () => {
                   
                   <Select value={customMemory.occasion} onValueChange={(value) => setCustomMemory({...customMemory, occasion: value})}>
                     <SelectTrigger className="border-gray-300">
-                      <SelectValue />
+                      <SelectValue placeholder="Select occasion..." />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="birthday">🎁 Birthday</SelectItem>
@@ -506,7 +506,7 @@ const TestingDashboard = () => {
                   
                   <Select value={customMemory.numMessages.toString()} onValueChange={(value) => setCustomMemory({...customMemory, numMessages: parseInt(value)})}>
                     <SelectTrigger className="border-gray-300">
-                      <SelectValue />
+                      <SelectValue placeholder="Number of messages..." />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="3">3 Messages</SelectItem>
