@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
+import { Input } from './ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { 
   TestTube, 
   Play, 
@@ -14,7 +16,15 @@ import {
   MessageSquare,
   Music,
   ExternalLink,
-  RefreshCw
+  RefreshCw,
+  Mic,
+  Sparkles,
+  User,
+  Gift,
+  GraduationCap,
+  Heart,
+  PartyPopper,
+  Crown
 } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 
@@ -22,38 +32,48 @@ const TestingDashboard = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [testMemories, setTestMemories] = useState([]);
+  const [voicePersonas, setVoicePersonas] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [aiGenerating, setAiGenerating] = useState(false);
+  
+  // AI Generation State
+  const [recipientName, setRecipientName] = useState('Sarah');
+  const [customMemory, setCustomMemory] = useState({
+    title: '',
+    occasion: 'birthday',
+    numMessages: 5
+  });
 
   const backendUrl = process.env.REACT_APP_BACKEND_URL || import.meta.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
     loadTestMemories();
+    loadVoicePersonas();
   }, []);
 
   const loadTestMemories = async () => {
     try {
       const url = backendUrl ? `${backendUrl}/api/testing/memories` : '/api/testing/memories';
-      console.log('Loading test memories from:', url);
-      
       const response = await fetch(url);
       if (response.ok) {
         const data = await response.json();
         setTestMemories(data.test_memories || []);
-      } else {
-        console.error('Failed to load test memories:', response.status, response.statusText);
-        toast({
-          title: "Error loading test memories",
-          description: `HTTP ${response.status}: ${response.statusText}`,
-          variant: "destructive"
-        });
       }
     } catch (error) {
       console.error('Error loading test memories:', error);
-      toast({
-        title: "Error loading test memories",
-        description: error.message,
-        variant: "destructive"
-      });
+    }
+  };
+
+  const loadVoicePersonas = async () => {
+    try {
+      const url = backendUrl ? `${backendUrl}/api/voice/personas` : '/api/voice/personas';
+      const response = await fetch(url);
+      if (response.ok) {
+        const data = await response.json();
+        setVoicePersonas(data.personas || []);
+      }
+    } catch (error) {
+      console.error('Error loading voice personas:', error);
     }
   };
 
@@ -80,7 +100,6 @@ const TestingDashboard = () => {
         description: result.message,
       });
       
-      // Reload the test memories
       await loadTestMemories();
       
     } catch (error) {
@@ -92,6 +111,92 @@ const TestingDashboard = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const createAiMemory = async () => {
+    if (!customMemory.title.trim()) {
+      toast({
+        title: "Title required",
+        description: "Please enter a title for your AI-generated memory",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setAiGenerating(true);
+    try {
+      const url = backendUrl ? `${backendUrl}/api/voice/create-ai-memory` : '/api/voice/create-ai-memory';
+      const formData = new FormData();
+      formData.append('title', customMemory.title);
+      formData.append('occasion', customMemory.occasion);
+      formData.append('recipient_name', recipientName);
+      formData.append('num_messages', customMemory.numMessages.toString());
+      
+      const response = await fetch(url, {
+        method: 'POST',
+        body: formData
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      const result = await response.json();
+      
+      toast({
+        title: "🎉 AI Memory Created!",
+        description: `Generated ${result.generated_messages} diverse voice messages with AI personas`,
+      });
+      
+      await loadTestMemories();
+      
+    } catch (error) {
+      console.error('Error creating AI memory:', error);
+      toast({
+        title: "Error",
+        description: "Failed to create AI memory: " + error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setAiGenerating(false);
+    }
+  };
+
+  const bulkGenerateScenarios = async () => {
+    setAiGenerating(true);
+    try {
+      const url = backendUrl ? `${backendUrl}/api/voice/bulk-generate-scenarios` : '/api/voice/bulk-generate-scenarios';
+      const formData = new FormData();
+      formData.append('recipient_name', recipientName);
+      
+      const response = await fetch(url, {
+        method: 'POST',
+        body: formData
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      const result = await response.json();
+      
+      toast({
+        title: "🚀 Bulk Scenarios Created!",
+        description: `Generated ${result.scenarios_created} complete test scenarios with ${result.total_messages} AI voice messages`,
+      });
+      
+      await loadTestMemories();
+      
+    } catch (error) {
+      console.error('Error bulk generating scenarios:', error);
+      toast({
+        title: "Error",
+        description: "Failed to bulk generate scenarios: " + error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setAiGenerating(false);
     }
   };
 
@@ -132,36 +237,6 @@ const TestingDashboard = () => {
     }
   };
 
-  const markAsTestMemory = async (memoryId, isTest) => {
-    try {
-      const formData = new FormData();
-      formData.append('is_test', isTest);
-      
-      const response = await fetch(`${backendUrl}/api/testing/mark-as-test/${memoryId}`, {
-        method: 'POST',
-        body: formData
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to update test memory status');
-      }
-      
-      toast({
-        title: isTest ? "Marked as test memory" : "Unmarked as test memory",
-        description: "Memory status updated successfully.",
-      });
-      
-      await loadTestMemories();
-      
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update memory status: " + error.message,
-        variant: "destructive"
-      });
-    }
-  };
-
   const testTemplates = [
     {
       type: 'empty',
@@ -185,6 +260,14 @@ const TestingDashboard = () => {
       color: 'bg-purple-100 text-purple-700 border-purple-200'
     }
   ];
+
+  const occasionIcons = {
+    birthday: <Gift className="w-4 h-4" />,
+    graduation: <GraduationCap className="w-4 h-4" />,
+    wedding: <Heart className="w-4 h-4" />,
+    anniversary: <Crown className="w-4 h-4" />,
+    celebration: <PartyPopper className="w-4 h-4" />
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
@@ -217,19 +300,167 @@ const TestingDashboard = () => {
               <span className="font-mono lowercase vintage-gradient-text vintage-font">testing</span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 font-light tracking-wide">
-              Your Development Testing Hub
+              Your Development Testing Hub with AI Voice Generation
             </p>
           </div>
         </div>
 
-        {/* Quick Actions */}
+        {/* AI Voice Generation Section */}
+        <Card className="mb-12 border-0 shadow-xl bg-gradient-to-r from-purple-50 to-pink-50 backdrop-blur-sm">
+          <CardHeader>
+            <CardTitle className="text-2xl font-bold text-gray-900 flex items-center">
+              <Sparkles className="w-6 h-6 mr-2 text-purple-600" />
+              AI Voice Generation System
+            </CardTitle>
+            <p className="text-gray-600">Create realistic test memories with diverse AI-generated voice personas</p>
+          </CardHeader>
+          <CardContent>
+            {/* Voice Personas Display */}
+            <div className="mb-8">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <User className="w-5 h-5 mr-2" />
+                Available Voice Personas ({voicePersonas.length})
+              </h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {voicePersonas.map((persona) => (
+                  <div key={persona.id} className="bg-white rounded-lg p-3 border border-gray-200 text-center">
+                    <div className="text-sm font-medium text-gray-900">{persona.name}</div>
+                    <div className="text-xs text-gray-500">{persona.accent}</div>
+                    <div className="text-xs text-purple-600">{persona.personality}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Global Settings */}
+            <div className="grid md:grid-cols-2 gap-6 mb-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Recipient Name
+                </label>
+                <Input
+                  value={recipientName}
+                  onChange={(e) => setRecipientName(e.target.value)}
+                  placeholder="Enter recipient name..."
+                  className="border-gray-300"
+                />
+              </div>
+            </div>
+
+            {/* AI Generation Options */}
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Custom Memory */}
+              <Card className="border border-purple-200">
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center">
+                    <Mic className="w-5 h-5 mr-2 text-purple-600" />
+                    Custom AI Memory
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <Input
+                    value={customMemory.title}
+                    onChange={(e) => setCustomMemory({...customMemory, title: e.target.value})}
+                    placeholder="Memory title..."
+                    className="border-gray-300"
+                  />
+                  
+                  <Select value={customMemory.occasion} onValueChange={(value) => setCustomMemory({...customMemory, occasion: value})}>
+                    <SelectTrigger className="border-gray-300">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="birthday">🎁 Birthday</SelectItem>
+                      <SelectItem value="graduation">🎓 Graduation</SelectItem>
+                      <SelectItem value="wedding">💒 Wedding</SelectItem>
+                      <SelectItem value="anniversary">👑 Anniversary</SelectItem>
+                      <SelectItem value="celebration">🎉 Celebration</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  
+                  <Select value={customMemory.numMessages.toString()} onValueChange={(value) => setCustomMemory({...customMemory, numMessages: parseInt(value)})}>
+                    <SelectTrigger className="border-gray-300">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="3">3 Messages</SelectItem>
+                      <SelectItem value="5">5 Messages</SelectItem>
+                      <SelectItem value="7">7 Messages</SelectItem>
+                      <SelectItem value="10">10 Messages</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  
+                  <Button
+                    onClick={createAiMemory}
+                    disabled={aiGenerating || !customMemory.title.trim()}
+                    className="w-full bg-purple-600 text-white hover:bg-purple-700"
+                  >
+                    {aiGenerating ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                        Generating...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-4 h-4 mr-2" />
+                        Generate AI Memory
+                      </>
+                    )}
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Bulk Generation */}
+              <Card className="border border-blue-200">
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center">
+                    <PartyPopper className="w-5 h-5 mr-2 text-blue-600" />
+                    Bulk Test Scenarios
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="text-sm text-gray-600">
+                    Create complete test suite with 5 different scenarios:
+                  </div>
+                  <ul className="text-sm text-gray-700 space-y-1">
+                    <li>🎁 Birthday (6 messages)</li>
+                    <li>🎓 Graduation (4 messages)</li>
+                    <li>💒 Wedding (8 messages)</li>
+                    <li>👑 Anniversary (3 messages)</li>
+                    <li>🎉 Celebration (5 messages)</li>
+                  </ul>
+                  
+                  <Button
+                    onClick={bulkGenerateScenarios}
+                    disabled={aiGenerating}
+                    className="w-full bg-blue-600 text-white hover:bg-blue-700"
+                  >
+                    {aiGenerating ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                        Generating...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-4 h-4 mr-2" />
+                        Generate All Scenarios
+                      </>
+                    )}
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Quick Templates */}
         <Card className="mb-12 border-0 shadow-xl bg-white/80 backdrop-blur-sm">
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-gray-900 flex items-center">
               <Settings className="w-6 h-6 mr-2" />
               Quick Test Templates
             </CardTitle>
-            <p className="text-gray-600">Create test memories instantly for different scenarios</p>
+            <p className="text-gray-600">Create basic test memories instantly for different scenarios</p>
           </CardHeader>
           <CardContent>
             <div className="grid md:grid-cols-3 gap-6 mb-6">
@@ -244,7 +475,7 @@ const TestingDashboard = () => {
                     <Button
                       size="sm"
                       disabled={loading}
-                      className="bg-purple-600 text-white hover:bg-purple-700"
+                      className="bg-gray-600 text-white hover:bg-gray-700"
                     >
                       <Plus className="w-3 h-3 mr-1" />
                       Create
@@ -292,7 +523,7 @@ const TestingDashboard = () => {
                   <TestTube className="w-12 h-12 text-gray-400" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-700 mb-2">No Test Memories Yet</h3>
-                <p className="text-gray-500 mb-6">Create test templates above to get started with testing</p>
+                <p className="text-gray-500 mb-6">Create AI-generated memories or basic templates above to get started</p>
               </div>
             ) : (
               <div className="grid gap-6">
@@ -306,6 +537,12 @@ const TestingDashboard = () => {
                             <Badge className="bg-green-100 text-green-700 border-green-200">
                               Test Memory
                             </Badge>
+                            {memory.creator_id?.includes('ai') && (
+                              <Badge className="bg-purple-100 text-purple-700 border-purple-200">
+                                <Sparkles className="w-3 h-3 mr-1" />
+                                AI Generated
+                              </Badge>
+                            )}
                           </div>
                           <p className="text-gray-600 mb-3">{memory.description}</p>
                           <div className="flex items-center gap-4 text-sm text-gray-500">
@@ -314,7 +551,7 @@ const TestingDashboard = () => {
                               {memory.audio_messages?.length || 0} messages
                             </div>
                             <div className="flex items-center gap-1">
-                              <Music className="w-3 h-3" />
+                              {occasionIcons[memory.occasion] || <Music className="w-3 h-3" />}
                               {memory.occasion}
                             </div>
                             <div>
@@ -351,14 +588,6 @@ const TestingDashboard = () => {
                           <ExternalLink className="w-3 h-3 mr-1" />
                           Open in New Tab
                         </Button>
-                        <Button
-                          onClick={() => markAsTestMemory(memory.id, false)}
-                          size="sm"
-                          variant="outline"
-                          className="border-orange-300 text-orange-700 hover:bg-orange-50"
-                        >
-                          Unmark Test
-                        </Button>
                       </div>
                     </CardContent>
                   </Card>
@@ -371,14 +600,14 @@ const TestingDashboard = () => {
         {/* Instructions */}
         <Card className="mt-8 border-0 shadow-xl bg-blue-50">
           <CardContent className="p-8">
-            <h3 className="text-xl font-bold text-blue-900 mb-4">📋 How to Use Testing Dashboard</h3>
+            <h3 className="text-xl font-bold text-blue-900 mb-4">🚀 AI-Powered Testing Dashboard</h3>
             <ol className="text-blue-800 space-y-2 list-decimal list-inside">
-              <li><strong>Create Templates</strong> - Use quick templates for common test scenarios</li>
-              <li><strong>Test Features</strong> - Click Listen/Contribute to test different flows</li>
-              <li><strong>Mark Memories</strong> - Any memory can be marked as a test memory</li>
-              <li><strong>Persistent Storage</strong> - Test memories are saved between sessions</li>
-              <li><strong>Easy Cleanup</strong> - Clear all test data when you're done</li>
-              <li><strong>Open in New Tab</strong> - Test multiple memories simultaneously</li>
+              <li><strong>AI Voice Generation</strong> - Create realistic test memories with diverse AI personas</li>
+              <li><strong>Bulk Scenarios</strong> - Generate complete test suites for all occasions instantly</li>
+              <li><strong>Custom Memories</strong> - Create specific test scenarios with chosen parameters</li>
+              <li><strong>Voice Personas</strong> - 8 diverse AI personas with different backgrounds and accents</li>
+              <li><strong>Template Testing</strong> - Use quick templates for basic test scenarios</li>
+              <li><strong>Audio Processing</strong> - Test audio collage functionality with multiple messages</li>
             </ol>
           </CardContent>
         </Card>
