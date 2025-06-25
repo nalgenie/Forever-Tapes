@@ -488,6 +488,188 @@ async def get_demo_audio():
         "is_public": True
     }
 
+# === MOCK VOICE GENERATION SYSTEM ===
+
+import random
+
+class MockVoiceGenerator:
+    """Mock AI Voice Generation System for Testing"""
+    
+    def __init__(self):
+        self.personas = [
+            {
+                "id": "alice_johnson",
+                "name": "Alice Johnson",
+                "age": 28,
+                "gender": "female",
+                "accent": "American Midwest",
+                "personality": "warm, enthusiastic",
+                "audio_file": "/app/backend/demo-audio/emma-message.wav",
+                "email_domain": "gmail.com"
+            },
+            {
+                "id": "marcus_chen",
+                "name": "Marcus Chen",
+                "age": 35,
+                "gender": "male",
+                "accent": "Canadian",
+                "personality": "thoughtful, sincere",
+                "audio_file": "/app/backend/demo-audio/mike-message.wav",
+                "email_domain": "outlook.com"
+            },
+            {
+                "id": "sofia_rodriguez",
+                "name": "Sofia Rodriguez",
+                "age": 24,
+                "gender": "female",
+                "accent": "Spanish-American",
+                "personality": "energetic, caring",
+                "audio_file": "/app/backend/demo-audio/emma-message.wav",
+                "email_domain": "yahoo.com"
+            },
+            {
+                "id": "david_thompson",
+                "name": "David Thompson",
+                "age": 42,
+                "gender": "male",
+                "accent": "British",
+                "personality": "wise, humorous",
+                "audio_file": "/app/backend/demo-audio/david-message.wav",
+                "email_domain": "gmail.com"
+            },
+            {
+                "id": "priya_patel",
+                "name": "Priya Patel",
+                "age": 31,
+                "gender": "female",
+                "accent": "Indian-British",
+                "personality": "inspiring, genuine",
+                "audio_file": "/app/backend/demo-audio/emma-message.wav",
+                "email_domain": "gmail.com"
+            },
+            {
+                "id": "james_murphy",
+                "name": "James Murphy",
+                "age": 26,
+                "gender": "male",
+                "accent": "Irish",
+                "personality": "funny, loyal",
+                "audio_file": "/app/backend/demo-audio/mike-message.wav",
+                "email_domain": "icloud.com"
+            },
+            {
+                "id": "emily_wang",
+                "name": "Emily Wang",
+                "age": 29,
+                "gender": "female",
+                "accent": "Australian",
+                "personality": "adventurous, supportive",
+                "audio_file": "/app/backend/demo-audio/emma-message.wav",
+                "email_domain": "gmail.com"
+            },
+            {
+                "id": "carlos_santos",
+                "name": "Carlos Santos",
+                "age": 38,
+                "gender": "male",
+                "accent": "Brazilian-Portuguese",
+                "personality": "passionate, family-oriented",
+                "audio_file": "/app/backend/demo-audio/david-message.wav",
+                "email_domain": "hotmail.com"
+            }
+        ]
+        
+        self.message_templates = {
+            "birthday": [
+                "Happy birthday, {name}! 🎉 Hope your special day is filled with joy, laughter, and all your favorite things. You deserve the absolute best!",
+                "Wishing you the happiest of birthdays, {name}! 🎂 May this new year of life bring you incredible adventures and beautiful memories.",
+                "Happy birthday to an amazing person! {name}, you bring so much light into everyone's life. Have a wonderful celebration! 🎈",
+                "It's your special day, {name}! 🎁 Hope you're surrounded by love, good food, and all the people who care about you most.",
+                "Happy birthday, {name}! 🌟 Another year of being awesome! May all your birthday wishes come true this year."
+            ],
+            "graduation": [
+                "Congratulations on your graduation, {name}! 🎓 Your hard work and dedication have truly paid off. So proud of everything you've accomplished!",
+                "What an incredible achievement, {name}! 🎓 Graduation is just the beginning of all the amazing things you'll do. The future is so bright for you!",
+                "Way to go, graduate! {name}, you've shown such determination and resilience. This is your moment to shine! 🌟",
+                "Congratulations, {name}! 🎓 Watching you reach this milestone fills my heart with pride. You're going to do incredible things!",
+                "So proud of you, {name}! 🎓 Your graduation is a testament to your strength and perseverance. Here's to your bright future!"
+            ],
+            "anniversary": [
+                "Happy anniversary, {name}! 💕 What a beautiful journey you've been on together. Here's to many more years of love and happiness!",
+                "Congratulations on your anniversary, {name}! 💖 Your love story continues to inspire everyone around you. Wishing you endless joy together!",
+                "Happy anniversary! {name}, seeing the love you share is truly heartwarming. May your bond grow stronger with each passing year! 💕",
+                "What a special milestone, {name}! 💖 Your anniversary is a celebration of the beautiful love you've built together. Cheers to you both!",
+                "Happy anniversary, {name}! 💕 Your relationship is such a beautiful example of true love. Wishing you continued happiness together!"
+            ],
+            "celebration": [
+                "Congratulations, {name}! 🎉 This is such exciting news! You've worked so hard for this moment and it's wonderful to see it pay off!",
+                "Way to go, {name}! 🌟 Your success is so well-deserved. I'm thrilled to celebrate this special achievement with you!",
+                "Amazing news, {name}! 🎊 Your dedication and talent have led to this incredible moment. So happy to share in your joy!",
+                "Congratulations on this fantastic achievement, {name}! 🎈 You should be so proud of yourself. This is just the beginning!",
+                "What wonderful news, {name}! 🎉 Your hard work and positive spirit have brought you to this exciting moment. Celebrate big!"
+            ],
+            "wedding": [
+                "Congratulations on your wedding, {name}! 💒 Wishing you a lifetime filled with love, laughter, and beautiful moments together!",
+                "What a beautiful wedding day, {name}! 💕 May your marriage be blessed with endless love, joy, and wonderful adventures together!",
+                "Happy wedding day, {name}! 💖 Today marks the beginning of your greatest adventure together. Wishing you both all the happiness in the world!",
+                "Congratulations, {name}! 💒 Your wedding day is just the start of a beautiful love story. May every day be filled with love and laughter!",
+                "Best wishes on your wedding, {name}! 💕 May your marriage be everything you've dreamed of and more. So happy for you both!"
+            ]
+        }
+    
+    def get_random_persona(self, exclude_ids=None):
+        """Get a random persona, optionally excluding certain IDs"""
+        available_personas = self.personas
+        if exclude_ids:
+            available_personas = [p for p in self.personas if p["id"] not in exclude_ids]
+        return random.choice(available_personas)
+    
+    def generate_message(self, occasion: str, recipient_name: str, persona_id: str = None):
+        """Generate a realistic message for the given occasion"""
+        if persona_id:
+            persona = next((p for p in self.personas if p["id"] == persona_id), None)
+        else:
+            persona = self.get_random_persona()
+        
+        if not persona:
+            persona = self.get_random_persona()
+        
+        templates = self.message_templates.get(occasion, self.message_templates["celebration"])
+        message_template = random.choice(templates)
+        
+        # Add personality-based modifications
+        message = message_template.format(name=recipient_name)
+        
+        if persona["personality"] == "funny, loyal":
+            message += " Can't wait to celebrate with you properly! 😄"
+        elif persona["personality"] == "wise, humorous":
+            message += " Remember, age is just a number... a really big number in your case! 😉"
+        elif persona["personality"] == "energetic, caring":
+            message += " Sending you the biggest virtual hug! 🤗"
+        elif persona["personality"] == "passionate, family-oriented":
+            message += " Family celebrations are the best celebrations! ❤️"
+        
+        return {
+            "message": message,
+            "persona": persona,
+            "generated_at": datetime.utcnow().isoformat()
+        }
+    
+    def create_test_audio_message(self, message_data: dict, recipient_name: str):
+        """Create an AudioMessage object from generated message data"""
+        persona = message_data["persona"]
+        email = f"{persona['name'].lower().replace(' ', '.')}@{persona['email_domain']}"
+        
+        return AudioMessage(
+            contributor_name=persona["name"],
+            contributor_email=email,
+            file_path=persona["audio_file"],
+            duration=random.uniform(20, 35)  # Realistic message duration
+        )
+
+# Initialize the mock voice generator
+mock_voice_generator = MockVoiceGenerator()
+
 # === TESTING & DEVELOPMENT ENDPOINTS ===
 
 @api_router.post("/dev/create-test-data")
