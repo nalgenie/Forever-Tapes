@@ -439,11 +439,28 @@ async def upload_audio_message(
 @api_router.get("/audio/{file_id}")
 async def get_audio_file(file_id: str):
     """Serve audio file"""
-    # Find file in uploads directory
+    # Check uploads directory first
     for file_path in UPLOADS_DIR.glob(f"{file_id}.*"):
         return FileResponse(file_path)
     
+    # Check demo-audio directory for demo files
+    demo_audio_dir = ROOT_DIR / "demo-audio"
+    if demo_audio_dir.exists():
+        for file_path in demo_audio_dir.glob(f"{file_id}.*"):
+            return FileResponse(file_path)
+    
     raise HTTPException(status_code=404, detail="Audio file not found")
+
+@api_router.get("/demo-audio/{filename}")
+async def get_demo_audio_file(filename: str):
+    """Serve demo audio files directly by filename"""
+    demo_audio_dir = ROOT_DIR / "demo-audio"
+    file_path = demo_audio_dir / filename
+    
+    if file_path.exists() and file_path.is_file():
+        return FileResponse(file_path)
+    
+    raise HTTPException(status_code=404, detail="Demo audio file not found")
 
 # === DEMO ROUTE ===
 
