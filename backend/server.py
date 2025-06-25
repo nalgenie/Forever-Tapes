@@ -715,7 +715,7 @@ async def create_test_data():
                         "id": "test-msg-1",
                         "contributor_name": "Alice",
                         "contributor_email": "alice@test.com",
-                        "file_path": "/api/demo-audio/mike-message.wav",
+                        "file_path": "mike-message",
                         "created_at": datetime.utcnow(),
                         "duration": 25
                     }
