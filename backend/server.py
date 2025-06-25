@@ -452,6 +452,7 @@ async def get_audio_file(file_id: str):
     raise HTTPException(status_code=404, detail="Audio file not found")
 
 @api_router.get("/demo-audio/{filename}")
+@api_router.head("/demo-audio/{filename}")
 async def get_demo_audio_file(filename: str):
     """Serve demo audio files directly by filename"""
     demo_audio_dir = ROOT_DIR / "demo-audio"
