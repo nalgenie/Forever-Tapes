@@ -7,7 +7,7 @@ import { Badge } from './ui/badge';
 import { 
   Mic, 
   Play, 
-  Stop, 
+  Square as Stop, 
   Download, 
   Volume2, 
   Settings,
