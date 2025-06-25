@@ -519,7 +519,7 @@ const TestingDashboard = () => {
                   </Select>
                   
                   <Button
-                    onClick={createAiMemory}
+                    onClick={createRealAiMemory}
                     disabled={aiGenerating || !customMemory.title.trim()}
                     className="w-full bg-purple-600 text-white hover:bg-purple-700"
                   >
