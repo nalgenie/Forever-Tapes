@@ -937,6 +937,11 @@ if __name__ == "__main__":
     test_suite.addTest(unittest.FunctionTestCase(test_instance.test_27_get_processed_audio_invalid_memory))
     test_suite.addTest(unittest.FunctionTestCase(test_instance.test_28_anonymous_access_to_processed_audio))
     test_suite.addTest(unittest.FunctionTestCase(test_instance.test_29_enhance_single_audio))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_30_get_voice_personas))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_31_generate_voice_message))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_32_create_ai_memory))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_33_bulk_generate_scenarios))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_34_clear_ai_memories))
     
     runner = unittest.TextTestRunner(verbosity=2)
     runner.run(test_suite)
