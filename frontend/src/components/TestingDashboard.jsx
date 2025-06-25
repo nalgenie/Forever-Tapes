@@ -436,9 +436,18 @@ const TestingDashboard = () => {
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-gray-900 flex items-center">
               <Sparkles className="w-6 h-6 mr-2 text-purple-600" />
-              AI Voice Generation System
+              Mock AI Voice Generation System
             </CardTitle>
-            <p className="text-gray-600">Create realistic test memories with diverse AI-generated voice personas</p>
+            <p className="text-gray-600">Create test memories with AI-generated text content and diverse personas</p>
+            <div className="mt-2 flex gap-2">
+              <Badge className="bg-purple-100 text-purple-700 border-purple-200">
+                <Sparkles className="w-3 h-3 mr-1" />
+                AI Generated Text + Manual Demo Audio
+              </Badge>
+              <Badge className="bg-gray-100 text-gray-700 border-gray-200">
+                8 Diverse Personas
+              </Badge>
+            </div>
           </CardHeader>
           <CardContent>
             {/* Voice Personas Display */}
