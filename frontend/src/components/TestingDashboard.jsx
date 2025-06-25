@@ -24,9 +24,11 @@ import {
   GraduationCap,
   Heart,
   PartyPopper,
-  Crown
+  Crown,
+  Volume2
 } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
+import AIVoiceGenerator from './AIVoiceGenerator';
 
 const TestingDashboard = () => {
   const navigate = useNavigate();
