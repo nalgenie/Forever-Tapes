@@ -364,7 +364,7 @@ metadata:
 test_plan:
   current_focus:
     - "Audio Collage Functionality"
-    - "How It Works Page"
+    - "Mock AI Voice Generation System"
 
   stuck_tasks:
     - "Audio Collage Functionality"
