@@ -139,7 +139,13 @@ const AIVoiceGenerator = ({ onAudioGenerated, personas = [] }) => {
           <Volume2 className="w-5 h-5 mr-2 text-blue-600" />
           Real AI Voice Generator
         </CardTitle>
-        <p className="text-gray-600">Generate actual speech using browser Text-to-Speech</p>
+        <p className="text-gray-600">Generate actual speech using browser Text-to-Speech API</p>
+        <div className="mt-2">
+          <Badge className="bg-blue-100 text-blue-700 border-blue-200">
+            <Volume2 className="w-3 h-3 mr-1" />
+            Real AI Voices - Browser TTS
+          </Badge>
+        </div>
         
         {!browserTTS.isSupported && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-red-700">
