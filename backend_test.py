@@ -946,42 +946,4 @@ if __name__ == "__main__":
     runner = unittest.TextTestRunner(verbosity=2)
     runner.run(test_suite)
 
-if __name__ == "__main__":
-    # Create a single test instance to share state between tests
-    test_instance = ForeverTapesAPITest()
-    
-    # Run the tests in order
-    test_suite = unittest.TestSuite()
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_01_health_check))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_02_request_magic_link))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_03_register_user))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_04_get_current_user))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_05_create_podcard_authenticated))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_06_get_my_podcards))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_07_get_podcards))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_08_get_podcard_by_id))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_09_upload_audio))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_10_get_audio_file))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_11_verify_podcard_updated))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_12_get_demo_audio))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_13_unauthorized_access))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_14_invalid_podcard_id))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_15_invalid_audio_id))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_16_create_free_podcard))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_17_get_free_podcard))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_18_contribute_to_free_podcard))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_19_verify_free_podcard_updated))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_20_get_free_audio_file))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_21_verify_free_podcard_in_list))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_22_audio_worker_status))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_23_process_memory_audio))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_24_check_processing_status))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_25_get_processed_audio))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_26_process_memory_invalid_id))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_27_check_status_invalid_task))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_28_get_processed_audio_invalid_memory))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_29_anonymous_access_to_processed_audio))
-    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_30_enhance_single_audio))
-    
-    runner = unittest.TextTestRunner(verbosity=2)
-    runner.run(test_suite)
+
