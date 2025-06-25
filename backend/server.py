@@ -888,6 +888,205 @@ async def get_test_scenarios():
         }
     }
 
+# === MOCK AI VOICE GENERATION ENDPOINTS ===
+
+@api_router.get("/voice/personas")
+async def get_voice_personas():
+    """Get all available mock voice personas"""
+    return {
+        "personas": mock_voice_generator.personas,
+        "total_count": len(mock_voice_generator.personas),
+        "message": "Mock AI Voice Generation System - Free testing personas"
+    }
+
+@api_router.post("/voice/generate-message")
+async def generate_voice_message(
+    occasion: str = Form(...),
+    recipient_name: str = Form(...),
+    persona_id: str = Form(None)
+):
+    """Generate a realistic voice message for testing"""
+    try:
+        message_data = mock_voice_generator.generate_message(
+            occasion=occasion,
+            recipient_name=recipient_name,
+            persona_id=persona_id
+        )
+        
+        return {
+            "success": True,
+            "message_content": message_data["message"],
+            "persona": message_data["persona"],
+            "generated_at": message_data["generated_at"],
+            "audio_file": message_data["persona"]["audio_file"]
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to generate message: {str(e)}")
+
+@api_router.post("/voice/create-ai-memory")
+async def create_ai_generated_memory(
+    title: str = Form(...),
+    occasion: str = Form(...),
+    recipient_name: str = Form(...),
+    num_messages: int = Form(default=5),
+    user: User = Depends(get_current_user_optional)
+):
+    """Create a test memory with AI-generated voice messages"""
+    try:
+        # Validate num_messages
+        if num_messages < 1 or num_messages > 10:
+            raise HTTPException(status_code=400, detail="Number of messages must be between 1 and 10")
+        
+        # Create the base memory
+        description = f"AI-generated test memory with {num_messages} diverse voice messages for {occasion}"
+        podcard_obj = PodCard(
+            title=title,
+            description=description,
+            occasion=occasion,
+            creator_id=user.id if user else "ai-test-user",
+            creator_name=user.name if user else "AI Test User",
+            creator_email=user.email if user else "ai-test@forever-tapes.com",
+            audio_messages=[],
+            is_public=True,
+            is_test_memory=True
+        )
+        
+        # Generate diverse voice messages
+        used_persona_ids = []
+        for i in range(num_messages):
+            # Get a unique persona for variety
+            persona = mock_voice_generator.get_random_persona(exclude_ids=used_persona_ids)
+            used_persona_ids.append(persona["id"])
+            
+            # Generate message content
+            message_data = mock_voice_generator.generate_message(
+                occasion=occasion,
+                recipient_name=recipient_name,
+                persona_id=persona["id"]
+            )
+            
+            # Create audio message
+            audio_message = mock_voice_generator.create_test_audio_message(
+                message_data, recipient_name
+            )
+            
+            podcard_obj.audio_messages.append(audio_message)
+        
+        # Save to database
+        await db.podcards.insert_one(podcard_obj.dict())
+        
+        return {
+            "success": True,
+            "memory": podcard_obj.dict(),
+            "generated_messages": len(podcard_obj.audio_messages),
+            "personas_used": [msg.contributor_name for msg in podcard_obj.audio_messages],
+            "listen_url": f"/listen/{podcard_obj.id}",
+            "message": f"Created AI-generated test memory with {num_messages} diverse voice messages"
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to create AI memory: {str(e)}")
+
+@api_router.post("/voice/bulk-generate-scenarios")
+async def bulk_generate_test_scenarios(
+    recipient_name: str = Form(default="Sarah"),
+    user: User = Depends(get_current_user_optional)
+):
+    """Generate a complete set of test scenarios with AI voices"""
+    try:
+        scenarios = [
+            {"title": f"{recipient_name}'s Birthday Celebration", "occasion": "birthday", "messages": 6},
+            {"title": f"{recipient_name}'s Graduation Party", "occasion": "graduation", "messages": 4},
+            {"title": f"{recipient_name}'s Wedding Wishes", "occasion": "wedding", "messages": 8},
+            {"title": f"{recipient_name}'s Anniversary", "occasion": "anniversary", "messages": 3},
+            {"title": f"Celebrating {recipient_name}", "occasion": "celebration", "messages": 5}
+        ]
+        
+        created_memories = []
+        
+        for scenario in scenarios:
+            # Create memory with AI-generated messages
+            description = f"AI-generated test scenario: {scenario['messages']} diverse voice messages"
+            podcard_obj = PodCard(
+                title=scenario["title"],
+                description=description,
+                occasion=scenario["occasion"],
+                creator_id=user.id if user else "ai-bulk-test",
+                creator_name=user.name if user else "AI Bulk Test",
+                creator_email=user.email if user else "ai-bulk@forever-tapes.com",
+                audio_messages=[],
+                is_public=True,
+                is_test_memory=True
+            )
+            
+            # Generate diverse messages
+            used_persona_ids = []
+            for i in range(scenario["messages"]):
+                persona = mock_voice_generator.get_random_persona(exclude_ids=used_persona_ids)
+                used_persona_ids.append(persona["id"])
+                
+                message_data = mock_voice_generator.generate_message(
+                    occasion=scenario["occasion"],
+                    recipient_name=recipient_name,
+                    persona_id=persona["id"]
+                )
+                
+                audio_message = mock_voice_generator.create_test_audio_message(
+                    message_data, recipient_name
+                )
+                
+                podcard_obj.audio_messages.append(audio_message)
+            
+            # Save to database
+            await db.podcards.insert_one(podcard_obj.dict())
+            created_memories.append({
+                "id": podcard_obj.id,
+                "title": podcard_obj.title,
+                "occasion": podcard_obj.occasion,
+                "messages": len(podcard_obj.audio_messages),
+                "url": f"/listen/{podcard_obj.id}"
+            })
+        
+        return {
+            "success": True,
+            "scenarios_created": len(created_memories),
+            "recipient_name": recipient_name,
+            "memories": created_memories,
+            "message": f"Created {len(created_memories)} AI-generated test scenarios for {recipient_name}",
+            "total_messages": sum(len(memory["messages"]) for memory in created_memories)
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to bulk generate scenarios: {str(e)}")
+
+@api_router.delete("/voice/clear-ai-memories")
+async def clear_ai_generated_memories(user: User = Depends(get_current_user_optional)):
+    """Clear all AI-generated test memories"""
+    try:
+        # Delete AI-generated memories
+        ai_creators = ["ai-test-user", "ai-bulk-test"]
+        if user:
+            query = {
+                "$or": [
+                    {"creator_id": {"$in": ai_creators}},
+                    {"creator_id": user.id, "is_test_memory": True}
+                ]
+            }
+        else:
+            query = {"creator_id": {"$in": ai_creators}}
+        
+        result = await db.podcards.delete_many(query)
+        
+        return {
+            "success": True,
+            "deleted_count": result.deleted_count,
+            "message": f"Cleared {result.deleted_count} AI-generated test memories"
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to clear AI memories: {str(e)}")
+
 @api_router.post("/dev/quick-reset")
 async def quick_reset():
     """Quick reset - clear test data and recreate it"""
