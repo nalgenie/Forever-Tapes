@@ -1180,7 +1180,7 @@ async def create_test_template(
                         "id": str(uuid.uuid4()),
                         "contributor_name": "Test Contributor",
                         "contributor_email": "test@example.com",
-                        "file_path": "/demo-audio/mike-message.mp3",
+                        "file_path": "/api/demo-audio/mike-message.wav",
                         "duration": 25,
                         "created_at": datetime.utcnow()
                     }
@@ -1195,7 +1195,7 @@ async def create_test_template(
                         "id": str(uuid.uuid4()),
                         "contributor_name": "Alice",
                         "contributor_email": "alice@example.com",
-                        "file_path": "/demo-audio/mike-message.mp3",
+                        "file_path": "/api/demo-audio/mike-message.wav",
                         "duration": 25,
                         "created_at": datetime.utcnow()
                     },
@@ -1203,7 +1203,7 @@ async def create_test_template(
                         "id": str(uuid.uuid4()),
                         "contributor_name": "Bob",
                         "contributor_email": "bob@example.com",
-                        "file_path": "/demo-audio/emma-message.mp3",
+                        "file_path": "/api/demo-audio/emma-message.wav",
                         "duration": 30,
                         "created_at": datetime.utcnow()
                     },
@@ -1211,7 +1211,7 @@ async def create_test_template(
                         "id": str(uuid.uuid4()),
                         "contributor_name": "Carol",
                         "contributor_email": "carol@example.com",
-                        "file_path": "/demo-audio/david-message.mp3",
+                        "file_path": "/api/demo-audio/david-message.wav",
                         "duration": 28,
                         "created_at": datetime.utcnow()
                     }
