@@ -677,10 +677,13 @@ class MockVoiceGenerator:
         persona = message_data["persona"]
         email = f"{persona['name'].lower().replace(' ', '.')}@{persona['email_domain']}"
         
+        # Use the demo-audio API endpoint for proper file serving
+        demo_file_path = f"/api/demo-audio/{persona['audio_file']}"
+        
         return AudioMessage(
             contributor_name=persona["name"],
             contributor_email=email,
-            file_path=persona["audio_file"],
+            file_path=demo_file_path,
             duration=random.uniform(20, 35)  # Realistic message duration
         )
 
