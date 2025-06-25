@@ -307,6 +307,19 @@ const TestingDashboard = () => {
           </div>
         </div>
 
+        {/* Real AI Voice Generation Section */}
+        <div className="mb-12">
+          <AIVoiceGenerator 
+            personas={voicePersonas}
+            onAudioGenerated={(audioData) => {
+              toast({
+                title: "🎙️ Real AI Voice Generated!",
+                description: `Created voice message using ${audioData.voice}`,
+              });
+            }}
+          />
+        </div>
+
         {/* AI Voice Generation Section */}
         <Card className="mb-12 border-0 shadow-xl bg-gradient-to-r from-purple-50 to-pink-50 backdrop-blur-sm">
           <CardHeader>
