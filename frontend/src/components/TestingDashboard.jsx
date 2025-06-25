@@ -413,7 +413,7 @@ const TestingDashboard = () => {
               <span className="font-mono lowercase vintage-gradient-text vintage-font">testing</span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 font-light tracking-wide">
-              Your Development Testing Hub with AI Voice Generation
+              Your Development Testing Hub with Real AI Voice Generation
             </p>
           </div>
         </div>
