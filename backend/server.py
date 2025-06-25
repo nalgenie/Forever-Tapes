@@ -437,6 +437,7 @@ async def upload_audio_message(
     }
 
 @api_router.get("/audio/{file_id}")
+@api_router.head("/audio/{file_id}")
 async def get_audio_file(file_id: str):
     """Serve audio file"""
     # Check uploads directory first
