@@ -517,7 +517,7 @@ const TestingDashboard = () => {
                   </Select>
                   
                   <Button
-                    onClick={createRealAiMemory}
+                    onClick={createAiMemory}
                     disabled={aiGenerating || !customMemory.title.trim()}
                     className="w-full bg-purple-600 text-white hover:bg-purple-700 mb-3"
                   >
@@ -535,12 +535,7 @@ const TestingDashboard = () => {
                   </Button>
                   
                   <Button
-                    onClick={() => {
-                      toast({
-                        title: "Real AI Voice Coming Soon!",
-                        description: "Browser TTS integration is ready. Click the Real AI Voice Generator above to test individual voices!",
-                      });
-                    }}
+                    onClick={createRealAiMemory}
                     disabled={aiGenerating}
                     className="w-full bg-blue-600 text-white hover:bg-blue-700"
                   >
