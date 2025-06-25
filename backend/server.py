@@ -1082,6 +1082,145 @@ async def bulk_generate_test_scenarios(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to bulk generate scenarios: {str(e)}")
 
+@api_router.post("/voice/generate-real-audio")
+async def generate_real_audio_message(
+    text: str = Form(...),
+    persona_id: str = Form(...),
+    voice_name: str = Form(default="Default"),
+    user: User = Depends(get_current_user_optional)
+):
+    """Receive real TTS audio data from browser and save as audio message"""
+    try:
+        # Generate message content with persona context
+        persona = next((p for p in mock_voice_generator.personas if p["id"] == persona_id), None)
+        if not persona:
+            raise HTTPException(status_code=400, detail="Invalid persona ID")
+        
+        # Create a temporary audio message entry
+        file_id = str(uuid.uuid4())
+        
+        # For now, we'll create a placeholder that represents the browser-generated audio
+        # In a real implementation, the frontend would upload the generated audio blob
+        audio_message_data = {
+            "id": file_id,
+            "contributor_name": persona["name"],
+            "contributor_email": f"{persona['name'].lower().replace(' ', '.')}@{persona['email_domain']}",
+            "file_path": f"browser-tts-{file_id}",  # Special identifier for browser TTS
+            "text_content": text,
+            "voice_used": voice_name,
+            "persona_id": persona_id,
+            "duration": mock_voice_generator.estimateDuration(text),
+            "generated_at": datetime.utcnow().isoformat(),
+            "generation_method": "browser_tts"
+        }
+        
+        return {
+            "success": True,
+            "message": "Real AI voice message prepared",
+            "audio_message": audio_message_data,
+            "instructions": "Frontend should now generate the actual audio using the browser TTS API"
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to prepare real audio generation: {str(e)}")
+
+@api_router.post("/voice/upload-browser-audio")
+async def upload_browser_generated_audio(
+    audio_file: UploadFile = File(...),
+    message_id: str = Form(...),
+    text: str = Form(...),
+    persona_id: str = Form(...),
+    voice_name: str = Form(...)
+):
+    """Upload browser-generated TTS audio file"""
+    try:
+        # Validate file type
+        if not audio_file.content_type.startswith('audio/'):
+            raise HTTPException(status_code=400, detail="File must be an audio file")
+        
+        # Save file with unique name
+        file_extension = 'wav'  # Browser TTS usually generates WAV
+        file_path = UPLOADS_DIR / f"browser-tts-{message_id}.{file_extension}"
+        
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(audio_file.file, buffer)
+        
+        # Get persona info
+        persona = next((p for p in mock_voice_generator.personas if p["id"] == persona_id), None)
+        if not persona:
+            raise HTTPException(status_code=400, detail="Invalid persona ID")
+        
+        # Create the audio message
+        audio_message = AudioMessage(
+            id=message_id,
+            contributor_name=persona["name"],
+            contributor_email=f"{persona['name'].lower().replace(' ', '.')}@{persona['email_domain']}",
+            file_path=f"browser-tts-{message_id}",  # File ID for serving
+            duration=len(audio_file.file.read()) / 44100 / 2  # Rough estimation
+        )
+        
+        return {
+            "success": True,
+            "message": "Browser-generated audio uploaded successfully",
+            "audio_message": audio_message.dict(),
+            "file_path": str(file_path),
+            "voice_used": voice_name
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to upload browser audio: {str(e)}")
+
+@api_router.post("/voice/create-real-ai-memory")
+async def create_real_ai_memory(
+    title: str = Form(...),
+    occasion: str = Form(...),
+    recipient_name: str = Form(...),
+    messages_data: str = Form(...),  # JSON string of message data
+    user: User = Depends(get_current_user_optional)
+):
+    """Create a memory with real browser-generated TTS messages"""
+    try:
+        import json
+        messages = json.loads(messages_data)
+        
+        # Create the base memory
+        description = f"Real AI-generated memory with {len(messages)} browser TTS voice messages"
+        podcard_obj = PodCard(
+            title=title,
+            description=description,
+            occasion=occasion,
+            creator_id=user.id if user else "real-ai-user",
+            creator_name=user.name if user else "Real AI User",
+            creator_email=user.email if user else "real-ai@forever-tapes.com",
+            audio_messages=[],
+            is_public=True,
+            is_test_memory=True
+        )
+        
+        # Add audio messages
+        for message_data in messages:
+            audio_message = AudioMessage(
+                contributor_name=message_data["contributor_name"],
+                contributor_email=message_data["contributor_email"],
+                file_path=message_data["file_path"],
+                duration=message_data.get("duration", 10)
+            )
+            podcard_obj.audio_messages.append(audio_message)
+        
+        # Save to database
+        await db.podcards.insert_one(podcard_obj.dict())
+        
+        return {
+            "success": True,
+            "memory": podcard_obj.dict(),
+            "generated_messages": len(podcard_obj.audio_messages),
+            "listen_url": f"/listen/{podcard_obj.id}",
+            "message": f"Created real AI memory with {len(messages)} browser TTS voice messages"
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to create real AI memory: {str(e)}")
+
 @api_router.delete("/voice/clear-ai-memories")
 async def clear_ai_generated_memories(user: User = Depends(get_current_user_optional)):
     """Clear all AI-generated test memories"""
