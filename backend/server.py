@@ -521,7 +521,7 @@ class MockVoiceGenerator:
                 "gender": "female",
                 "accent": "American Midwest",
                 "personality": "warm, enthusiastic",
-                "audio_file": "/app/backend/demo-audio/emma-message.wav",
+                "audio_file": "emma-message.wav",
                 "email_domain": "gmail.com"
             },
             {
@@ -531,7 +531,7 @@ class MockVoiceGenerator:
                 "gender": "male",
                 "accent": "Canadian",
                 "personality": "thoughtful, sincere",
-                "audio_file": "/app/backend/demo-audio/mike-message.wav",
+                "audio_file": "mike-message.wav",
                 "email_domain": "outlook.com"
             },
             {
@@ -541,7 +541,7 @@ class MockVoiceGenerator:
                 "gender": "female",
                 "accent": "Spanish-American",
                 "personality": "energetic, caring",
-                "audio_file": "/app/backend/demo-audio/emma-message.wav",
+                "audio_file": "emma-message.mp3",
                 "email_domain": "yahoo.com"
             },
             {
@@ -551,7 +551,7 @@ class MockVoiceGenerator:
                 "gender": "male",
                 "accent": "British",
                 "personality": "wise, humorous",
-                "audio_file": "/app/backend/demo-audio/david-message.wav",
+                "audio_file": "david-message.wav",
                 "email_domain": "gmail.com"
             },
             {
@@ -561,7 +561,7 @@ class MockVoiceGenerator:
                 "gender": "female",
                 "accent": "Indian-British",
                 "personality": "inspiring, genuine",
-                "audio_file": "/app/backend/demo-audio/emma-message.wav",
+                "audio_file": "emma-message.wav",
                 "email_domain": "gmail.com"
             },
             {
@@ -571,7 +571,7 @@ class MockVoiceGenerator:
                 "gender": "male",
                 "accent": "Irish",
                 "personality": "funny, loyal",
-                "audio_file": "/app/backend/demo-audio/mike-message.wav",
+                "audio_file": "mike-message.wav",
                 "email_domain": "icloud.com"
             },
             {
@@ -581,7 +581,7 @@ class MockVoiceGenerator:
                 "gender": "female",
                 "accent": "Australian",
                 "personality": "adventurous, supportive",
-                "audio_file": "/app/backend/demo-audio/emma-message.wav",
+                "audio_file": "emma-message.mp3",
                 "email_domain": "gmail.com"
             },
             {
@@ -591,7 +591,7 @@ class MockVoiceGenerator:
                 "gender": "male",
                 "accent": "Brazilian-Portuguese",
                 "personality": "passionate, family-oriented",
-                "audio_file": "/app/backend/demo-audio/david-message.wav",
+                "audio_file": "david-message.mp3",
                 "email_domain": "hotmail.com"
             }
         ]
