@@ -735,7 +735,7 @@ async def create_test_data():
                         "id": "test-msg-2",
                         "contributor_name": "Bob",
                         "contributor_email": "bob@test.com",
-                        "file_path": "/app/backend/demo-audio/mike-message.wav",
+                        "file_path": "/api/demo-audio/mike-message.wav",
                         "created_at": datetime.utcnow(),
                         "duration": 25
                     },
@@ -743,7 +743,7 @@ async def create_test_data():
                         "id": "test-msg-3",
                         "contributor_name": "Carol",
                         "contributor_email": "carol@test.com", 
-                        "file_path": "/app/backend/demo-audio/emma-message.wav",
+                        "file_path": "/api/demo-audio/emma-message.wav",
                         "created_at": datetime.utcnow(),
                         "duration": 30
                     },
@@ -751,7 +751,7 @@ async def create_test_data():
                         "id": "test-msg-4",
                         "contributor_name": "Dave",
                         "contributor_email": "dave@test.com",
-                        "file_path": "/app/backend/demo-audio/david-message.wav",
+                        "file_path": "/api/demo-audio/david-message.wav",
                         "created_at": datetime.utcnow(),
                         "duration": 28
                     },
@@ -759,7 +759,7 @@ async def create_test_data():
                         "id": "test-msg-5",
                         "contributor_name": "Eve",
                         "contributor_email": "eve@test.com",
-                        "file_path": "/app/backend/demo-audio/mike-message.wav",
+                        "file_path": "/api/demo-audio/mike-message.wav",
                         "created_at": datetime.utcnow(),
                         "duration": 22
                     }
