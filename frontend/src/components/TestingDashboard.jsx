@@ -116,7 +116,120 @@ const TestingDashboard = () => {
     }
   };
 
-  const createAiMemory = async () => {
+  const createRealAiMemory = async () => {
+    if (!customMemory.title.trim()) {
+      toast({
+        title: "Title required",
+        description: "Please enter a title for your real AI memory",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setAiGenerating(true);
+    try {
+      // Import browserTTS
+      const { default: browserTTS } = await import('../services/browserTTS');
+      
+      if (!browserTTS.isSupported) {
+        throw new Error('Browser speech synthesis not supported');
+      }
+
+      // Generate multiple messages with real TTS
+      const messages = [];
+      const usedPersonaIds = [];
+      
+      toast({
+        title: "🎙️ Generating Real AI Voices...",
+        description: "Creating audio messages with browser TTS",
+      });
+
+      for (let i = 0; i < customMemory.numMessages; i++) {
+        // Get a unique persona
+        const availablePersonas = voicePersonas.filter(p => !usedPersonaIds.includes(p.id));
+        const persona = availablePersonas[i % availablePersonas.length] || voicePersonas[0];
+        usedPersonaIds.push(persona.id);
+
+        // Generate message text
+        const messageData = mock_voice_generator.generate_message(
+          customMemory.occasion,
+          recipientName,
+          persona.id
+        );
+
+        try {
+          // Generate real audio
+          const audioResult = await browserTTS.generateAndSaveVoiceMessage(
+            messageData.message,
+            persona.id,
+            recipientName
+          );
+
+          messages.push({
+            contributor_name: persona.name,
+            contributor_email: `${persona.name.toLowerCase().replace(' ', '.')}@${persona.email_domain}`,
+            file_path: audioResult.fileId,
+            duration: audioResult.audioResult.duration,
+            text_content: messageData.message,
+            voice_used: audioResult.audioResult.voice
+          });
+
+          toast({
+            title: `Voice ${i + 1}/${customMemory.numMessages} Generated`,
+            description: `Created ${persona.name}'s voice using ${audioResult.audioResult.voice}`,
+          });
+
+        } catch (error) {
+          console.error(`Failed to generate voice for ${persona.name}:`, error);
+          // Fallback to mock voice
+          messages.push({
+            contributor_name: persona.name,
+            contributor_email: `${persona.name.toLowerCase().replace(' ', '.')}@${persona.email_domain}`,
+            file_path: persona.audio_file.split('.')[0], // Use demo file as fallback
+            duration: 25,
+            text_content: messageData.message,
+            voice_used: "Fallback Demo Audio"
+          });
+        }
+      }
+
+      // Create memory with real AI voices
+      const url = backendUrl ? `${backendUrl}/api/voice/create-real-ai-memory` : '/api/voice/create-real-ai-memory';
+      const formData = new FormData();
+      formData.append('title', customMemory.title);
+      formData.append('occasion', customMemory.occasion);
+      formData.append('recipient_name', recipientName);
+      formData.append('messages_data', JSON.stringify(messages));
+      
+      const response = await fetch(url, {
+        method: 'POST',
+        body: formData
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      const result = await response.json();
+      
+      toast({
+        title: "🎉 Real AI Memory Created!",
+        description: `Generated ${messages.length} real AI voice messages!`,
+      });
+      
+      await loadTestMemories();
+      
+    } catch (error) {
+      console.error('Error creating real AI memory:', error);
+      toast({
+        title: "Error",
+        description: "Failed to create real AI memory: " + error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setAiGenerating(false);
+    }
+  };
     if (!customMemory.title.trim()) {
       toast({
         title: "Title required",
