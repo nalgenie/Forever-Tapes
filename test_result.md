@@ -380,7 +380,6 @@ test_plan:
   current_focus:
     - "Audio Collage Functionality"
     - "Mock AI Voice Generation System"
-    - "Browser Text-to-Speech AI Voice Generation"
 
   stuck_tasks:
     - "Audio Collage Functionality"
