@@ -359,28 +359,16 @@ frontend:
         comment: "The 'How It Works' page is fully implemented and working correctly. The page is accessible from the main navigation via the 'How It Works' button. The page features three flow selector buttons (Memory Organizer, Voice Contributor, Memory Listener) that correctly change the displayed content when clicked. Each flow displays appropriate illustrations, 4 steps with detailed explanations, and relevant call-to-action buttons. The 'Back to Home' button works correctly, returning users to the landing page. Cross-flow navigation buttons at the bottom of each flow work as expected. The page is responsive, with all elements displaying and functioning correctly on desktop, tablet, and mobile viewports. The content clearly explains the three different user roles and flows with logical steps and appropriate illustrations."
 
   - task: "Browser Text-to-Speech AI Voice Generation"
-    implemented: true
-    working: true
-    file: "TestingDashboard.jsx, AIVoiceGenerator.jsx, browserTTS.js"
+    implemented: false
+    working: false
+    file: "REMOVED"
     stuck_count: 0
-    priority: "high"
+    priority: "removed"
     needs_retesting: false
     status_history:
-      - working: true
-        agent: "testing"
-        comment: "The Browser Text-to-Speech AI Voice Generation functionality is implemented and working correctly. The testing dashboard includes a 'Real AI Voice Generator' section that uses the browser's Web Speech API to generate actual speech. The component shows available browser voices and persona mapping with 8 diverse personas. The message input field has a 200 character limit with a live counter. The 'Test Voice' button speaks the message immediately using browser TTS, and the 'Stop' button works to stop playback. The 'Generate AI Voice' button generates speech and shows a success message with details. Different personas have different voice characteristics. The UI is responsive and works well on desktop, tablet, and mobile sizes. The 'Generate Real AI Memory (Beta)' button in the AI Voice Generation section is properly connected to the real TTS functionality. Fixed a syntax error in TestingDashboard.jsx related to async/await usage and a missing import in AIVoiceGenerator.jsx where 'Stop' was not found in lucide-react (replaced with Square as Stop)."
-      - working: true
-        agent: "testing"
-        comment: "Tested the dropdown and input field fixes for the AI Voice Generation interface. The placeholders for the dropdowns are now correctly displayed: 'Select occasion...' in the occasion dropdown, 'Number of messages...' in the messages dropdown, and 'Choose a persona...' in the persona selection dropdown. All input fields are working properly, including the Memory title input and Recipient Name input. The character counter for the message text input is functioning correctly. The content labeling is clear with proper badges for 'AI Generated Text + Manual Demo Audio', 'Real AI Voices - Browser TTS', and 'Uses Manual Demo Recordings'. The Test Voice and Generate AI Voice buttons are present and properly labeled. There are no error messages on the page. The interface is now fully functional and user-friendly."
-      - working: true
-        agent: "testing"
-        comment: "Tested the simplified Real AI Voice Generator interface with English voices only. The interface has been successfully simplified by removing the complex persona system and focusing on direct voice selection. The UI is properly labeled as 'Real AI Voice Generator' and the instructions clearly mention English voices only. The 'Available English Voices' section shows the filtered count (0 in the testing environment). The voice selection dropdown is present with the proper placeholder 'Choose an English voice...' but no voices are loaded in the testing environment (likely due to browser limitations in the testing environment). The message input field works correctly with a 200 character limit and live counter. The Test Voice and Generate AI Voice buttons are present and properly disabled when no voice is selected (as expected). There is a hydration error in the console related to the select element, but this doesn't affect the core functionality. The interface is clean, straightforward, and focused on English voices only as requested."
-      - working: true
-        agent: "testing"
-        comment: "Attempted to test the voice dropdown loading fixes but encountered limitations in the testing environment. The Web Speech API requires audio capabilities which are not available in headless browser environments. Code review of browserTTS.js confirms the implementation of all required improvements: 1) Proper async/await support with fallbacks and timeout handling in initializeVoices(), 2) English voice filtering with getEnglishVoices() method that correctly filters to English voices only, 3) Better error handling with try/catch blocks throughout the code, 4) Enhanced timing with proper async initialization using Promise-based approach, and 5) Console logging to track voice loading progress. The code is well-structured and should work correctly in a browser environment with Web Speech API support."
-      - working: true
-        agent: "testing"
-        comment: "Tested the AI voice generation dropdown functionality on the testing dashboard. The interface is correctly implemented with the 'Real AI Voice Generator' section present and properly labeled. The 'Available English Voices' counter shows (0) voices, indicating no voices are loaded in the testing environment. The voice dropdown is present with the placeholder 'Choose an English voice...' but contains no options. Console logs confirm that the browser's Web Speech API is being accessed correctly with logs showing '🎙️ Loading English voices...' and '🎙️ Fallback voices: []', indicating the code is attempting to load voices but none are available in the headless testing environment. There is a hydration error in the console related to the select element, but this is a React-specific issue and doesn't affect the core functionality. The message input field and action buttons (Test Voice and Generate AI Voice) are present and properly disabled when no voice is selected. The browserTTS.js implementation is correct with proper async initialization, English voice filtering, and error handling. The voice loading issue is specific to the testing environment and would likely work correctly in a real browser with Web Speech API support."
+      - working: false
+        agent: "main"
+        comment: "Feature removed by user decision. The Web Speech API implementation was causing testing difficulties due to environment limitations and development overhead. User chose to scrap this feature entirely to focus on the core audio collage functionality. Removed AIVoiceGenerator.jsx, browserTTS.js, and cleaned up TestingDashboard.jsx to remove Real AI Voice Generator sections. The Mock AI Voice Generation system with demo audio remains for testing purposes."
 
 metadata:
   created_by: "main_agent"
