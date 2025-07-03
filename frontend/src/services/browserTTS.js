@@ -8,236 +8,126 @@ class BrowserTTSService {
     this.isSupported = 'speechSynthesis' in window;
     this.voices = [];
     this.voicesLoaded = false;
+    this.voiceLoadPromise = null;
     
     if (this.isSupported) {
-      this.loadVoices();
-      // Voices might load asynchronously
-      speechSynthesis.onvoiceschanged = () => {
-        this.loadVoices();
-      };
+      this.initializeVoices();
     }
   }
 
-  loadVoices() {
-    this.voices = speechSynthesis.getVoices();
-    this.voicesLoaded = this.voices.length > 0;
-    console.log('Available voices:', this.voices.map(v => `${v.name} (${v.lang})`));
-  }
-
-  // Persona to voice mapping with fallbacks
-  getPersonaVoiceSettings() {
-    return {
-      alice_johnson: {
-        preferences: ['Samantha', 'Google US English', 'Microsoft Zira'],
-        rate: 0.9,
-        pitch: 1.1,
-        gender: 'female',
-        accent: 'en-US'
-      },
-      marcus_chen: {
-        preferences: ['Google US English', 'Microsoft David', 'Alex'],
-        rate: 0.8,
-        pitch: 0.9,
-        gender: 'male',
-        accent: 'en-US'
-      },
-      sofia_rodriguez: {
-        preferences: ['Google español', 'Microsoft Helena', 'Monica'],
-        rate: 1.0,
-        pitch: 1.2,
-        gender: 'female',
-        accent: 'es-ES'
-      },
-      david_thompson: {
-        preferences: ['Google UK English', 'Microsoft George', 'Daniel'],
-        rate: 0.7,
-        pitch: 0.8,
-        gender: 'male',
-        accent: 'en-GB'
-      },
-      priya_patel: {
-        preferences: ['Google हिन्दी', 'Microsoft Ravi', 'Veena'],
-        rate: 0.9,
-        pitch: 1.0,
-        gender: 'female',
-        accent: 'hi-IN'
-      },
-      james_murphy: {
-        preferences: ['Google UK English', 'Microsoft Sean', 'Moira'],
-        rate: 1.1,
-        pitch: 0.9,
-        gender: 'male',
-        accent: 'en-IE'
-      },
-      emily_wang: {
-        preferences: ['Google Australian English', 'Microsoft Catherine', 'Karen'],
-        rate: 1.0,
-        pitch: 1.1,
-        gender: 'female',
-        accent: 'en-AU'
-      },
-      carlos_santos: {
-        preferences: ['Google português do Brasil', 'Microsoft Daniel', 'Luciana'],
-        rate: 0.9,
-        pitch: 0.9,
-        gender: 'male',
-        accent: 'pt-BR'
-      }
-    };
-  }
-
-  findBestVoice(personaId) {
-    if (!this.voicesLoaded) {
-      this.loadVoices();
-    }
-
-    const settings = this.getPersonaVoiceSettings()[personaId];
-    if (!settings) {
-      return this.voices[0]; // Fallback to first available voice
-    }
-
-    // Try to find preferred voices
-    for (const preference of settings.preferences) {
-      const voice = this.voices.find(v => 
-        v.name.toLowerCase().includes(preference.toLowerCase()) ||
-        v.lang.includes(settings.accent)
-      );
-      if (voice) return voice;
-    }
-
-    // Fallback to gender-based selection
-    const genderVoices = this.voices.filter(v => {
-      const name = v.name.toLowerCase();
-      if (settings.gender === 'female') {
-        return name.includes('female') || name.includes('woman') || 
-               ['samantha', 'zira', 'helena', 'monica', 'catherine', 'karen'].some(n => name.includes(n));
-      } else {
-        return name.includes('male') || name.includes('man') || 
-               ['david', 'alex', 'george', 'daniel', 'sean', 'ravi'].some(n => name.includes(n));
-      }
-    });
-
-    if (genderVoices.length > 0) {
-      return genderVoices[0];
-    }
-
-    // Final fallback
-    return this.voices[0] || null;
-  }
-
-  async generateSpeech(text, personaId) {
-    if (!this.isSupported) {
-      throw new Error('Speech synthesis not supported in this browser');
-    }
-
-    if (!this.voicesLoaded) {
-      // Wait a bit for voices to load
-      await new Promise(resolve => {
-        const checkVoices = () => {
-          if (speechSynthesis.getVoices().length > 0) {
-            this.loadVoices();
-            resolve();
-          } else {
-            setTimeout(checkVoices, 100);
-          }
-        };
-        checkVoices();
-      });
-    }
-
-    const voice = this.findBestVoice(personaId);
-    const settings = this.getPersonaVoiceSettings()[personaId] || {
-      rate: 1.0,
-      pitch: 1.0
-    };
-
-    return new Promise((resolve, reject) => {
-      const utterance = new SpeechSynthesisUtterance(text);
-      
-      if (voice) {
-        utterance.voice = voice;
-      }
-      
-      utterance.rate = settings.rate;
-      utterance.pitch = settings.pitch;
-      utterance.volume = 1.0;
-
-      // Capture audio using MediaRecorder
-      this.captureAudio(utterance, voice, resolve, reject);
-    });
-  }
-
-  captureAudio(utterance, voice, resolve, reject) {
-    // Create a MediaRecorder to capture the speech
-    navigator.mediaDevices.getUserMedia({ audio: true })
-      .then(stream => {
-        const mediaRecorder = new MediaRecorder(stream);
-        const audioChunks = [];
-
-        mediaRecorder.ondataavailable = (event) => {
-          audioChunks.push(event.data);
-        };
-
-        mediaRecorder.onstop = () => {
-          const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+  async initializeVoices() {
+    // Some browsers need a delay or user interaction before voices load
+    const loadVoices = () => {
+      return new Promise((resolve) => {
+        const voices = speechSynthesis.getVoices();
+        if (voices.length > 0) {
+          this.voices = voices;
+          this.voicesLoaded = true;
+          console.log('🎙️ Loaded voices:', voices.map(v => `${v.name} (${v.lang})`));
+          resolve(voices);
+        } else {
+          // Voices not loaded yet, set up listener
+          speechSynthesis.onvoiceschanged = () => {
+            const newVoices = speechSynthesis.getVoices();
+            if (newVoices.length > 0) {
+              this.voices = newVoices;
+              this.voicesLoaded = true;
+              console.log('🎙️ Loaded voices (async):', newVoices.map(v => `${v.name} (${v.lang})`));
+              resolve(newVoices);
+            }
+          };
           
-          // Stop the microphone
-          stream.getTracks().forEach(track => track.stop());
-          
-          resolve({
-            audioBlob,
-            voice: voice ? voice.name : 'Default',
-            duration: this.estimateDuration(utterance.text)
-          });
-        };
-
-        utterance.onstart = () => {
-          mediaRecorder.start();
-        };
-
-        utterance.onend = () => {
+          // Fallback timeout
           setTimeout(() => {
-            mediaRecorder.stop();
-          }, 500); // Give a bit of buffer time
-        };
-
-        utterance.onerror = (error) => {
-          mediaRecorder.stop();
-          stream.getTracks().forEach(track => track.stop());
-          reject(error);
-        };
-
-        speechSynthesis.speak(utterance);
-      })
-      .catch(reject);
-  }
-
-  // Alternative method without microphone capture - simpler but no actual audio file
-  async generateSpeechSimple(text, personaId) {
-    if (!this.isSupported) {
-      throw new Error('Speech synthesis not supported in this browser');
-    }
-
-    if (!this.voicesLoaded) {
-      await new Promise(resolve => {
-        const checkVoices = () => {
-          if (speechSynthesis.getVoices().length > 0) {
-            this.loadVoices();
-            resolve();
-          } else {
-            setTimeout(checkVoices, 100);
-          }
-        };
-        checkVoices();
+            const fallbackVoices = speechSynthesis.getVoices();
+            this.voices = fallbackVoices;
+            this.voicesLoaded = fallbackVoices.length > 0;
+            console.log('🎙️ Fallback voices:', fallbackVoices.map(v => `${v.name} (${v.lang})`));
+            resolve(fallbackVoices);
+          }, 2000);
+        }
       });
-    }
-
-    const voice = this.findBestVoice(personaId);
-    const settings = this.getPersonaVoiceSettings()[personaId] || {
-      rate: 1.0,
-      pitch: 1.0
     };
 
+    this.voiceLoadPromise = loadVoices();
+    return this.voiceLoadPromise;
+  }
+
+  async ensureVoicesLoaded() {
+    if (this.voicesLoaded) {
+      return this.voices;
+    }
+    
+    if (this.voiceLoadPromise) {
+      return await this.voiceLoadPromise;
+    }
+    
+    return await this.initializeVoices();
+  }
+
+  async getEnglishVoices() {
+    await this.ensureVoicesLoaded();
+    
+    const englishVoices = this.voices.filter(voice => {
+      const lang = voice.lang.toLowerCase();
+      return lang.startsWith('en-') || lang === 'en';
+    });
+
+    console.log('🇬🇧 English voices found:', englishVoices.length);
+    
+    return englishVoices.map(voice => ({
+      name: voice.name,
+      lang: voice.lang,
+      gender: this.guessGender(voice.name),
+      localService: voice.localService,
+      voiceURI: voice.voiceURI
+    }));
+  }
+
+  guessGender(voiceName) {
+    const name = voiceName.toLowerCase();
+    const femaleIndicators = ['female', 'woman', 'samantha', 'zira', 'helena', 'monica', 'catherine', 'karen', 'siri', 'susan', 'victoria', 'allison'];
+    const maleIndicators = ['male', 'man', 'david', 'alex', 'george', 'daniel', 'sean', 'ravi', 'tom', 'thomas', 'james'];
+    
+    if (femaleIndicators.some(indicator => name.includes(indicator))) return 'female';
+    if (maleIndicators.some(indicator => name.includes(indicator))) return 'male';
+    return 'unknown';
+  }
+
+  async testVoice(text, voiceName) {
+    if (!this.isSupported) {
+      throw new Error('Speech synthesis not supported');
+    }
+
+    await this.ensureVoicesLoaded();
+    
+    const voice = this.voices.find(v => v.name === voiceName);
+    const utterance = new SpeechSynthesisUtterance(text);
+    
+    if (voice) {
+      utterance.voice = voice;
+    }
+    
+    utterance.rate = 0.9;
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
+
+    return new Promise((resolve, reject) => {
+      utterance.onend = resolve;
+      utterance.onerror = reject;
+      speechSynthesis.speak(utterance);
+    });
+  }
+
+  async generateSpeechSimple(text, voiceName) {
+    if (!this.isSupported) {
+      throw new Error('Speech synthesis not supported');
+    }
+
+    await this.ensureVoicesLoaded();
+    
+    const voice = this.voices.find(v => v.name === voiceName);
+    
     return new Promise((resolve, reject) => {
       const utterance = new SpeechSynthesisUtterance(text);
       
@@ -245,8 +135,8 @@ class BrowserTTSService {
         utterance.voice = voice;
       }
       
-      utterance.rate = settings.rate;
-      utterance.pitch = settings.pitch;
+      utterance.rate = 0.9;
+      utterance.pitch = 1.0;
       utterance.volume = 1.0;
 
       utterance.onend = () => {
@@ -259,7 +149,6 @@ class BrowserTTSService {
       };
 
       utterance.onerror = reject;
-
       speechSynthesis.speak(utterance);
     });
   }
@@ -271,6 +160,7 @@ class BrowserTTSService {
     return Math.max(minutes * 60, 2); // Minimum 2 seconds
   }
 
+  // Legacy method for compatibility
   getAvailableVoices() {
     return this.voices.map(voice => ({
       name: voice.name,
@@ -279,16 +169,7 @@ class BrowserTTSService {
       localService: voice.localService
     }));
   }
-
-  guessGender(voiceName) {
-    const name = voiceName.toLowerCase();
-    const femaleIndicators = ['female', 'woman', 'samantha', 'zira', 'helena', 'monica', 'catherine', 'karen', 'siri'];
-    const maleIndicators = ['male', 'man', 'david', 'alex', 'george', 'daniel', 'sean', 'ravi'];
-    
-    if (femaleIndicators.some(indicator => name.includes(indicator))) return 'female';
-    if (maleIndicators.some(indicator => name.includes(indicator))) return 'male';
-    return 'unknown';
-  }
+}
 
   // Enhanced method that generates actual audio blob
   async generateAudioBlob(text, personaId) {
