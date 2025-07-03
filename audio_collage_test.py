@@ -114,10 +114,13 @@ class AudioCollageTest(unittest.TestCase):
             if status in ["success", "completed"]:
                 completed = True
                 final_status = data
+                print(f"  Result: {json.dumps(data.get('result', {}), indent=2)}")
                 break
                 
             if status == "failure" or status == "failed":
-                print(f"⚠️ Processing failed: {data.get('error', 'Unknown error')}")
+                error = data.get('error', 'Unknown error')
+                print(f"⚠️ Processing failed: {error}")
+                self.fail(f"Audio processing failed: {error}")
                 break
                 
             # Wait before checking again
@@ -125,9 +128,10 @@ class AudioCollageTest(unittest.TestCase):
         
         if completed:
             print(f"✅ Audio processing completed successfully")
-            print(f"  Output file: {final_status.get('result', {}).get('output_path', 'Unknown')}")
-            print(f"  Duration: {final_status.get('result', {}).get('duration', 'Unknown')} seconds")
-            print(f"  Processed messages: {final_status.get('result', {}).get('processed_messages', 'Unknown')}")
+            result = final_status.get('result', {})
+            print(f"  Output file: {result.get('output_path', 'Unknown')}")
+            print(f"  Duration: {result.get('duration', 'Unknown')} seconds")
+            print(f"  Processed messages: {result.get('processed_messages', 'Unknown')}")
         else:
             self.fail("Audio processing did not complete within the expected time")
         
