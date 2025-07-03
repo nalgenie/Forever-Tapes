@@ -123,12 +123,6 @@ const LandingPage = () => {
                   >
                     How It Works
                   </button>
-                  <button 
-                    onClick={() => navigate('/testing')}
-                    className="text-blue-600 hover:text-blue-800 font-medium transition-colors px-4 py-2 rounded-lg hover:bg-blue-50 text-sm"
-                  >
-                    🧪 Testing Dashboard
-                  </button>
                 </>
               )}
             </div>
