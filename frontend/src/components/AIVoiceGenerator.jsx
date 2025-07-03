@@ -29,16 +29,20 @@ const AIVoiceGenerator = ({ onAudioGenerated }) => {
 
   useEffect(() => {
     // Load English voices only
-    if (browserTTS.isSupported) {
-      setTimeout(() => {
-        const allVoices = browserTTS.getAvailableVoices();
-        // Filter to English voices only
-        const englishOnly = allVoices.filter(voice => 
-          voice.lang.startsWith('en-') || voice.lang === 'en'
-        );
-        setEnglishVoices(englishOnly);
-      }, 500);
-    }
+    const loadEnglishVoices = async () => {
+      if (browserTTS.isSupported) {
+        try {
+          console.log('🎙️ Loading English voices...');
+          const voices = await browserTTS.getEnglishVoices();
+          console.log('🎙️ Loaded English voices:', voices.length);
+          setEnglishVoices(voices);
+        } catch (error) {
+          console.error('Failed to load voices:', error);
+        }
+      }
+    };
+
+    loadEnglishVoices();
   }, []);
 
   const handleGenerateVoice = async () => {
