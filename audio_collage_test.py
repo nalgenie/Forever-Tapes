@@ -65,6 +65,16 @@ class AudioCollageTest(unittest.TestCase):
             
         print(f"\n🔍 Testing audio processing for memory ID: {self.test_memory_id}...")
         
+        # First, get the memory details to verify it has audio messages
+        memory_response = requests.get(f"{self.api_url}/podcards/{self.test_memory_id}")
+        self.assertEqual(memory_response.status_code, 200)
+        memory_data = memory_response.json()
+        
+        print(f"  Memory title: {memory_data['title']}")
+        print(f"  Audio messages: {len(memory_data['audio_messages'])}")
+        for i, msg in enumerate(memory_data['audio_messages']):
+            print(f"    Message {i+1}: {msg['contributor_name']} - {msg['file_path']}")
+        
         # Process the memory audio
         response = requests.post(
             f"{self.api_url}/audio/process-memory",
