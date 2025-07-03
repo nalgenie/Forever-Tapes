@@ -154,8 +154,21 @@ class AudioCollageTest(unittest.TestCase):
         # Try to get the processed audio
         response = requests.get(f"{self.api_url}/audio/processed/{self.test_memory_id}")
         
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue(response.headers['Content-Type'].startswith('audio/'))
+        print(f"  Response status code: {response.status_code}")
+        
+        if response.status_code == 404:
+            print("⚠️ Processed audio not found yet, processing may still be ongoing")
+            print("  Waiting a bit longer and trying again...")
+            
+            # Wait a bit longer and try again
+            time.sleep(10)
+            response = requests.get(f"{self.api_url}/audio/processed/{self.test_memory_id}")
+            print(f"  Second attempt status code: {response.status_code}")
+        
+        self.assertEqual(response.status_code, 200, "Should be able to retrieve processed audio")
+        self.assertTrue(response.headers['Content-Type'].startswith('audio/'), 
+                       f"Content-Type should be audio, got {response.headers['Content-Type']}")
+        
         content_length = int(response.headers.get('Content-Length', 0))
         self.assertGreater(content_length, 1000, "Processed audio file should have significant size")
         
