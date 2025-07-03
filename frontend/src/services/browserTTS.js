@@ -171,6 +171,9 @@ class BrowserTTSService {
   }
 }
 
+export default new BrowserTTSService();
+}
+
   // Enhanced method that generates actual audio blob
   async generateAudioBlob(text, personaId) {
     if (!this.isSupported) {
