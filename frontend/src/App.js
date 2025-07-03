@@ -19,7 +19,6 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import IllustrationShowcase from "./components/IllustrationShowcase";
 import AboutPage from "./components/AboutPage";
 import HowItWorksPage from "./components/HowItWorksPage";
-import TestingDashboard from "./components/TestingDashboard";
 
 function App() {
   return (
@@ -38,9 +37,6 @@ function App() {
             {/* Free Memory Routes */}
             <Route path="/create-free" element={<CreateFreeMemory />} />
             <Route path="/free-memory-created/:memoryId" element={<FreeMemoryCreated />} />
-            
-            {/* Testing Dashboard */}
-            <Route path="/testing" element={<TestingDashboard />} />
             
             {/* Temporary route to view illustration variations */}
             <Route path="/illustrations" element={<IllustrationShowcase />} />
