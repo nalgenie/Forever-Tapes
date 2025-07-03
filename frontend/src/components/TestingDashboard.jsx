@@ -28,7 +28,6 @@ import {
   Volume2
 } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
-import AIVoiceGenerator from './AIVoiceGenerator';
 
 const TestingDashboard = () => {
   const navigate = useNavigate();
@@ -116,118 +115,7 @@ const TestingDashboard = () => {
     }
   };
 
-  const createRealAiMemory = async () => {
-    if (!customMemory.title.trim()) {
-      toast({
-        title: "Title required",
-        description: "Please enter a title for your real AI memory",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setAiGenerating(true);
-    try {
-      // Import browserTTS
-      const { default: browserTTS } = await import('../services/browserTTS');
-      
-      if (!browserTTS.isSupported) {
-        throw new Error('Browser speech synthesis not supported');
-      }
-
-      // Generate multiple messages with real TTS
-      const messages = [];
-      const usedPersonaIds = [];
-      
-      toast({
-        title: "🎙️ Generating Real AI Voices...",
-        description: "Creating audio messages with browser TTS",
-      });
-
-      for (let i = 0; i < customMemory.numMessages; i++) {
-        // Get a unique persona
-        const availablePersonas = voicePersonas.filter(p => !usedPersonaIds.includes(p.id));
-        const persona = availablePersonas[i % availablePersonas.length] || voicePersonas[0];
-        usedPersonaIds.push(persona.id);
-
-        // Generate message text based on occasion and recipient
-        const messageText = `This is a test message for ${recipientName} on the occasion of ${customMemory.occasion}. Generated with browser TTS using voice persona ${persona.name}.`;
-
-        try {
-          // Generate real audio
-          const audioResult = await browserTTS.generateAndSaveVoiceMessage(
-            messageText,
-            persona.id,
-            recipientName
-          );
-
-          messages.push({
-            contributor_name: persona.name,
-            contributor_email: `${persona.name.toLowerCase().replace(' ', '.')}@example.com`,
-            file_path: audioResult.fileId,
-            duration: audioResult.audioResult.duration,
-            text_content: messageText,
-            voice_used: audioResult.audioResult.voice
-          });
-
-          toast({
-            title: `Voice ${i + 1}/${customMemory.numMessages} Generated`,
-            description: `Created ${persona.name}'s voice using ${audioResult.audioResult.voice}`,
-          });
-
-        } catch (error) {
-          console.error(`Failed to generate voice for ${persona.name}:`, error);
-          // Fallback to mock voice
-          messages.push({
-            contributor_name: persona.name,
-            contributor_email: `${persona.name.toLowerCase().replace(' ', '.')}@example.com`,
-            file_path: "demo-audio", // Use demo file as fallback
-            duration: 25,
-            text_content: messageText,
-            voice_used: "Fallback Demo Audio"
-          });
-        }
-      }
-
-      // Create memory with real AI voices
-      const url = backendUrl ? `${backendUrl}/api/voice/create-real-ai-memory` : '/api/voice/create-real-ai-memory';
-      const formData = new FormData();
-      formData.append('title', customMemory.title);
-      formData.append('occasion', customMemory.occasion);
-      formData.append('recipient_name', recipientName);
-      formData.append('messages_data', JSON.stringify(messages));
-      
-      const response = fetch(url, {
-        method: 'POST',
-        body: formData
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-      
-      const result = response.json();
-      
-      toast({
-        title: "🎉 Real AI Memory Created!",
-        description: `Generated ${messages.length} real AI voice messages!`,
-      });
-      
-      loadTestMemories();
-      
-    } catch (error) {
-      console.error('Error creating real AI memory:', error);
-      toast({
-        title: "Error",
-        description: "Failed to create real AI memory: " + error.message,
-        variant: "destructive"
-      });
-    } finally {
-      setAiGenerating(false);
-    }
-  };
-
-  const createAiMemory = () => {
+  const createAiMemory = async () => {
     if (!customMemory.title.trim()) {
       toast({
         title: "Title required",
@@ -246,7 +134,7 @@ const TestingDashboard = () => {
       formData.append('recipient_name', recipientName);
       formData.append('num_messages', customMemory.numMessages.toString());
       
-      const response = fetch(url, {
+      const response = await fetch(url, {
         method: 'POST',
         body: formData
       });
@@ -255,14 +143,14 @@ const TestingDashboard = () => {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
       
-      const result = response.json();
+      const result = await response.json();
       
       toast({
         title: "🎉 AI Memory Created!",
         description: `Generated diverse voice messages with AI personas`,
       });
       
-      loadTestMemories();
+      await loadTestMemories();
       
     } catch (error) {
       console.error('Error creating AI memory:', error);
@@ -413,22 +301,136 @@ const TestingDashboard = () => {
               <span className="font-mono lowercase vintage-gradient-text vintage-font">testing</span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 font-light tracking-wide">
-              Your Development Testing Hub with Real AI Voice Generation
+              Your Development Testing Hub
             </p>
           </div>
         </div>
 
-        {/* Real AI Voice Generation Section */}
-        <div className="mb-12">
-          <AIVoiceGenerator 
-            onAudioGenerated={(audioData) => {
-              toast({
-                title: "🎙️ Real AI Voice Generated!",
-                description: `Created voice message using ${audioData.voice}`,
-              });
-            }}
-          />
-        </div>
+        {/* Mock AI Voice Generation Section */}
+        <Card className="mb-12 border-0 shadow-xl bg-gradient-to-r from-purple-50 to-pink-50">
+          <CardHeader>
+            <CardTitle className="text-xl font-bold text-gray-900 flex items-center">
+              <Sparkles className="w-5 h-5 mr-2 text-purple-600" />
+              AI Voice Generation
+            </CardTitle>
+            <p className="text-gray-600">Generate test memories with AI personas and demo audio</p>
+            <div className="mt-2">
+              <Badge className="bg-purple-100 text-purple-700 border-purple-200">
+                <Sparkles className="w-3 h-3 mr-1" />
+                AI Generated Text + Manual Demo Audio
+              </Badge>
+            </div>
+          </CardHeader>
+          
+          <CardContent className="space-y-6">
+            {/* Custom Memory Form */}
+            <div className="bg-white rounded-lg p-6 border border-gray-200 space-y-4">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">Create Custom AI Memory</h3>
+              
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Memory Title
+                  </label>
+                  <Input
+                    value={customMemory.title}
+                    onChange={(e) => setCustomMemory({...customMemory, title: e.target.value})}
+                    placeholder="Enter memory title..."
+                    className="border-gray-300"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Recipient Name
+                  </label>
+                  <Input
+                    value={recipientName}
+                    onChange={(e) => setRecipientName(e.target.value)}
+                    placeholder="Enter recipient name..."
+                    className="border-gray-300"
+                  />
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Occasion
+                  </label>
+                  <Select value={customMemory.occasion} onValueChange={(value) => setCustomMemory({...customMemory, occasion: value})}>
+                    <SelectTrigger className="border-gray-300">
+                      <SelectValue placeholder="Select occasion..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="birthday">🎂 Birthday</SelectItem>
+                      <SelectItem value="graduation">🎓 Graduation</SelectItem>
+                      <SelectItem value="wedding">💒 Wedding</SelectItem>
+                      <SelectItem value="anniversary">💍 Anniversary</SelectItem>
+                      <SelectItem value="celebration">🎉 Celebration</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Number of Messages
+                  </label>
+                  <Select value={customMemory.numMessages.toString()} onValueChange={(value) => setCustomMemory({...customMemory, numMessages: parseInt(value)})}>
+                    <SelectTrigger className="border-gray-300">
+                      <SelectValue placeholder="Number of messages..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="3">3 Messages</SelectItem>
+                      <SelectItem value="5">5 Messages</SelectItem>
+                      <SelectItem value="8">8 Messages</SelectItem>
+                      <SelectItem value="10">10 Messages</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-3">
+                <Button
+                  onClick={createAiMemory}
+                  disabled={aiGenerating || !customMemory.title.trim() || !customMemory.occasion}
+                  className="bg-purple-600 text-white hover:bg-purple-700"
+                >
+                  {aiGenerating ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                      Creating...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      Generate AI Memory
+                    </>
+                  )}
+                </Button>
+                
+                <Button
+                  onClick={bulkGenerateScenarios}
+                  disabled={aiGenerating}
+                  variant="outline"
+                  className="border-purple-300 text-purple-700 hover:bg-purple-50"
+                >
+                  {aiGenerating ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                      Bulk Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Settings className="w-4 h-4 mr-2" />
+                      Bulk Generate Scenarios
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Quick Templates */}
         <Card className="mb-12 border-0 shadow-xl bg-white/80 backdrop-blur-sm">
@@ -526,12 +528,6 @@ const TestingDashboard = () => {
                                 AI Generated Content
                               </Badge>
                             )}
-                            {memory.creator_id?.includes('real-ai') && (
-                              <Badge className="bg-blue-100 text-blue-700 border-blue-200">
-                                <Volume2 className="w-3 h-3 mr-1" />
-                                Real AI Voices
-                              </Badge>
-                            )}
                             {(memory.creator_id === 'test-user' || memory.creator_id === 'demo') && (
                               <Badge className="bg-orange-100 text-orange-700 border-orange-200">
                                 <Mic className="w-3 h-3 mr-1" />
@@ -595,14 +591,13 @@ const TestingDashboard = () => {
         {/* Instructions */}
         <Card className="mt-8 border-0 shadow-xl bg-blue-50">
           <CardContent className="p-8">
-            <h3 className="text-xl font-bold text-blue-900 mb-4">🚀 Real AI Voice Testing Dashboard</h3>
+            <h3 className="text-xl font-bold text-blue-900 mb-4">🚀 Testing Dashboard</h3>
             <ol className="text-blue-800 space-y-2 list-decimal list-inside">
-              <li><strong>Real AI Voice Generation</strong> - Create actual speech using browser Text-to-Speech</li>
-              <li><strong>English Voices Only</strong> - Filter to English voices for simpler selection</li>
-              <li><strong>Test Voice Immediately</strong> - Hear voices before generating audio messages</li>
+              <li><strong>AI Voice Generation</strong> - Create test memories with AI personas and demo audio</li>
               <li><strong>Template Testing</strong> - Use quick templates for basic test scenarios</li>
               <li><strong>Audio Processing</strong> - Test audio collage functionality with multiple messages</li>
-              <li><strong>Clear Labeling</strong> - Manual recordings vs real AI voices are clearly marked</li>
+              <li><strong>Clear Labeling</strong> - Manual recordings vs AI-generated content are clearly marked</li>
+              <li><strong>Bulk Generation</strong> - Create multiple test scenarios quickly</li>
             </ol>
           </CardContent>
         </Card>
