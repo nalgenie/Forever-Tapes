@@ -81,6 +81,9 @@ class AudioCollageTest(unittest.TestCase):
             data={'memory_id': self.test_memory_id}
         )
         
+        print(f"  Process memory response: {response.status_code}")
+        print(f"  Response body: {response.text}")
+        
         self.assertEqual(response.status_code, 200)
         data = response.json()
         self.assertIn("task_id", data)
@@ -89,6 +92,9 @@ class AudioCollageTest(unittest.TestCase):
         # Save the task ID for the next test
         self.task_id = data["task_id"]
         print(f"✅ Audio processing started with task ID: {self.task_id}")
+        
+        # Wait a moment to ensure the task is registered
+        time.sleep(2)
         
     def test_04_check_processing_status(self):
         """Test checking the status of an audio processing task"""
