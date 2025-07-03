@@ -101,7 +101,7 @@ const AIVoiceGenerator = ({ onAudioGenerated }) => {
     }
   };
 
-  const handleTestVoice = () => {
+  const handleTestVoice = async () => {
     if (!messageText.trim() || !selectedVoice) {
       toast({
         title: "Missing Information",
@@ -114,27 +114,8 @@ const AIVoiceGenerator = ({ onAudioGenerated }) => {
     setIsPlaying(true);
     
     try {
-      // Create utterance with selected voice
-      const utterance = new SpeechSynthesisUtterance(messageText);
-      const voice = speechSynthesis.getVoices().find(v => v.name === selectedVoice);
-      
-      if (voice) {
-        utterance.voice = voice;
-      }
-      
-      utterance.rate = 0.9;
-      utterance.pitch = 1.0;
-      utterance.volume = 1.0;
-
-      utterance.onend = () => {
-        setIsPlaying(false);
-      };
-
-      utterance.onerror = () => {
-        setIsPlaying(false);
-      };
-
-      speechSynthesis.speak(utterance);
+      await browserTTS.testVoice(messageText, selectedVoice);
+      setIsPlaying(false);
 
     } catch (error) {
       setIsPlaying(false);
