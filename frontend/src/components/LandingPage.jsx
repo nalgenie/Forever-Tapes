@@ -78,6 +78,14 @@ const LandingPage = () => {
                   >
                     How It Works
                   </button>
+                  {process.env.NODE_ENV === 'development' && (
+                    <button 
+                      onClick={() => navigate('/test/audio')}
+                      className="text-purple-600 hover:text-purple-800 font-medium transition-colors px-4 py-2 rounded-lg hover:bg-purple-50 text-sm"
+                    >
+                      🧪 Test Audio
+                    </button>
+                  )}
                   <div className="flex items-center space-x-3 ml-4">
                     <span className="text-sm text-gray-600">
                       {user?.name}
