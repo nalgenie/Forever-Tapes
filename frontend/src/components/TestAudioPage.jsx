@@ -70,6 +70,23 @@ const TestAudioPage = () => {
     };
   }, [isDevelopment, navigate]);
 
+  // Cleanup effect
+  useEffect(() => {
+    return () => {
+      // Cleanup WaveSurfer instances on unmount
+      [recordingWaveSurfer, uploadWaveSurfer, collageWaveSurfer].forEach(ref => {
+        if (ref.current) {
+          try {
+            ref.current.destroy();
+          } catch (error) {
+            console.warn('Error destroying waveform on cleanup:', error);
+          }
+          ref.current = null;
+        }
+      });
+    };
+  }, []);
+
   const initializeTestMemory = async () => {
     try {
       const response = await fetch(`${backendUrl}/api/dev/latest-test-memory`);
