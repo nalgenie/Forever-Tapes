@@ -1272,10 +1272,10 @@ async def quick_reset():
 async def create_developer_test_memory():
     """Create a test memory for developer testing (development only)"""
     try:
-        # Create a test memory with no authentication required
+        # Create a clean test memory with no authentication required
         test_memory = PodCard(
-            title="🧪 Developer Test Memory",
-            description="Auto-created test memory for audio recording, collaging, and playback testing",
+            title="🧪 Clean Test Memory",
+            description="Clean testing environment for audio recording, collaging, and playback",
             occasion="testing",
             creator_id="dev-test",
             creator_name="Developer Test Mode",
