@@ -11,7 +11,7 @@ import {
   Pause,
   Download, 
   RefreshCw,
-  Waveform,
+  AudioWaveform,
   Volume2,
   ArrowLeft,
   TestTube,
