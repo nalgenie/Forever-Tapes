@@ -406,10 +406,19 @@ const TestAudioPage = () => {
 
   const playWaveform = (waveSurferRef) => {
     if (waveSurferRef.current) {
-      if (waveSurferRef.current.isPlaying()) {
-        waveSurferRef.current.pause();
-      } else {
-        waveSurferRef.current.play();
+      try {
+        if (waveSurferRef.current.isPlaying()) {
+          waveSurferRef.current.pause();
+        } else {
+          waveSurferRef.current.play();
+        }
+      } catch (error) {
+        console.error('Waveform playback error:', error);
+        toast({
+          title: "Playback Error",
+          description: "Unable to play audio. Please try uploading again.",
+          variant: "destructive"
+        });
       }
     }
   };
