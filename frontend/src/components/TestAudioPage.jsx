@@ -564,7 +564,7 @@ const TestAudioPage = () => {
               <div className="bg-gray-50 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center">
-                    <Waveform className="w-4 h-4 mr-2 text-green-600" />
+                    <AudioWaveform className="w-4 h-4 mr-2 text-green-600" />
                     <span className="text-sm font-medium">Recording Waveform</span>
                   </div>
                   {recordedBlob && (
