@@ -19,6 +19,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import IllustrationShowcase from "./components/IllustrationShowcase";
 import AboutPage from "./components/AboutPage";
 import HowItWorksPage from "./components/HowItWorksPage";
+import TestAudioPage from "./components/TestAudioPage";
 
 function App() {
   return (
@@ -37,6 +38,11 @@ function App() {
             {/* Free Memory Routes */}
             <Route path="/create-free" element={<CreateFreeMemory />} />
             <Route path="/free-memory-created/:memoryId" element={<FreeMemoryCreated />} />
+            
+            {/* Developer Testing Route - Development Only */}
+            {process.env.NODE_ENV === 'development' && (
+              <Route path="/test/audio" element={<TestAudioPage />} />
+            )}
             
             {/* Temporary route to view illustration variations */}
             <Route path="/illustrations" element={<IllustrationShowcase />} />
