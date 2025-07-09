@@ -518,10 +518,19 @@ const TestAudioPage = () => {
       setTaskId(null);
       setProcessingStatus('');
       
-      // Clear waveforms
-      if (recordingWaveSurfer.current) recordingWaveSurfer.current.empty();
-      if (uploadWaveSurfer.current) uploadWaveSurfer.current.empty();
-      if (collageWaveSurfer.current) collageWaveSurfer.current.empty();
+      // Clear waveforms safely
+      safeClearWaveform(recordingWaveSurfer, recordingWaveformRef, {
+        waveColor: '#10b981',
+        progressColor: '#059669'
+      });
+      safeClearWaveform(uploadWaveSurfer, uploadWaveformRef, {
+        waveColor: '#f59e0b',
+        progressColor: '#d97706'
+      });
+      safeClearWaveform(collageWaveSurfer, collageWaveformRef, {
+        waveColor: '#dc2626',
+        progressColor: '#b91c1c'
+      });
       
       // Reset file input
       const fileInput = document.querySelector('input[type="file"]');
