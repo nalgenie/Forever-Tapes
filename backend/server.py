@@ -1266,6 +1266,76 @@ async def quick_reset():
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Quick reset failed: {str(e)}")
 
+# === DEVELOPER TESTING ROUTES ===
+
+@api_router.post("/dev/create-test-memory")
+async def create_developer_test_memory():
+    """Create a test memory for developer testing (development only)"""
+    try:
+        # Create a test memory with no authentication required
+        test_memory = PodCard(
+            title="🧪 Developer Test Memory",
+            description="Auto-created test memory for audio recording, collaging, and playback testing",
+            occasion="testing",
+            creator_id="dev-test",
+            creator_name="Developer Test Mode",
+            creator_email="dev@forever-tapes.com",
+            audio_messages=[],
+            is_public=True,
+            is_test_memory=True
+        )
+        
+        await db.podcards.insert_one(test_memory.dict())
+        
+        return {
+            "success": True,
+            "memory": test_memory.dict(),
+            "message": "Developer test memory created successfully",
+            "memory_id": test_memory.id
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to create test memory: {str(e)}")
+
+@api_router.get("/dev/latest-test-memory")
+async def get_latest_test_memory():
+    """Get the latest developer test memory"""
+    try:
+        # Find the most recent test memory created by dev-test
+        test_memory = await db.podcards.find_one(
+            {"creator_id": "dev-test"},
+            sort=[("created_at", -1)]
+        )
+        
+        if not test_memory:
+            # Create one if none exists
+            create_result = await create_developer_test_memory()
+            return create_result
+        
+        return {
+            "success": True,
+            "memory": test_memory,
+            "memory_id": test_memory["id"]
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get test memory: {str(e)}")
+
+@api_router.delete("/dev/clear-test-memories")
+async def clear_developer_test_memories():
+    """Clear all developer test memories"""
+    try:
+        result = await db.podcards.delete_many({"creator_id": "dev-test"})
+        
+        return {
+            "success": True,
+            "deleted_count": result.deleted_count,
+            "message": f"Cleared {result.deleted_count} developer test memories"
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to clear test memories: {str(e)}")
+
 # === AUDIO PROCESSING ROUTES ===
 
 @api_router.post("/audio/process-memory")
