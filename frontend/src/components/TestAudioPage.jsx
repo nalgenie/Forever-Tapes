@@ -147,6 +147,33 @@ const TestAudioPage = () => {
     }
   };
 
+  // Helper function to safely clear a WaveSurfer instance
+  const safeClearWaveform = (waveSurferRef, containerRef, defaultOptions = {}) => {
+    if (waveSurferRef.current && containerRef.current) {
+      try {
+        waveSurferRef.current.destroy();
+        waveSurferRef.current = null;
+        
+        // Recreate a clean instance
+        waveSurferRef.current = WaveSurfer.create({
+          container: containerRef.current,
+          waveColor: '#8b5cf6',
+          progressColor: '#6d28d9',
+          barWidth: 2,
+          barGap: 1,
+          responsive: true,
+          height: 80,
+          normalize: true,
+          backend: 'WebAudio',
+          ...defaultOptions
+        });
+      } catch (error) {
+        console.warn('Error clearing waveform:', error);
+        waveSurferRef.current = null;
+      }
+    }
+  };
+
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ 
