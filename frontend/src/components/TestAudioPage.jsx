@@ -250,8 +250,15 @@ const TestAudioPage = () => {
       await uploadAudioToMemory(recordedBlob, 'recorded-audio.webm', contributorName);
       setRecordedBlob(null);
       
-      if (recordingWaveSurfer.current) {
-        recordingWaveSurfer.current.empty();
+      // Safely clear the waveform
+      if (recordingWaveSurfer.current && recordingWaveformRef.current) {
+        try {
+          recordingWaveSurfer.current.empty();
+        } catch (waveformError) {
+          console.warn('Waveform cleanup error:', waveformError);
+          // Recreate the waveform instance if needed
+          recordingWaveSurfer.current = null;
+        }
       }
       
       toast({
