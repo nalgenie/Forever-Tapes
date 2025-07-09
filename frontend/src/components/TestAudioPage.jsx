@@ -306,13 +306,26 @@ const TestAudioPage = () => {
       await uploadAudioToMemory(recordedBlob, 'recorded-audio.webm', contributorName);
       setRecordedBlob(null);
       
-      // Safely clear the waveform
+      // Safely clear the waveform by destroying and recreating it
       if (recordingWaveSurfer.current && recordingWaveformRef.current) {
         try {
-          recordingWaveSurfer.current.empty();
+          recordingWaveSurfer.current.destroy();
+          recordingWaveSurfer.current = null;
+          
+          // Recreate a clean instance
+          recordingWaveSurfer.current = WaveSurfer.create({
+            container: recordingWaveformRef.current,
+            waveColor: '#10b981',
+            progressColor: '#059669',
+            barWidth: 2,
+            barGap: 1,
+            responsive: true,
+            height: 80,
+            normalize: true,
+            backend: 'WebAudio'
+          });
         } catch (waveformError) {
           console.warn('Waveform cleanup error:', waveformError);
-          // Recreate the waveform instance if needed
           recordingWaveSurfer.current = null;
         }
       }
