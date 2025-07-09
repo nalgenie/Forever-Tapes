@@ -1312,10 +1312,13 @@ async def get_latest_test_memory():
             create_result = await create_developer_test_memory()
             return create_result
         
+        # Convert to PodCard object to handle serialization
+        podcard = PodCard(**test_memory)
+        
         return {
             "success": True,
-            "memory": test_memory,
-            "memory_id": test_memory["id"]
+            "memory": podcard.dict(),
+            "memory_id": podcard.id
         }
         
     except Exception as e:
