@@ -404,7 +404,18 @@ const TestAudioPage = () => {
               progressColor: '#b91c1c'
             });
             
-            wavesurfer.load(`${backendUrl}/api/audio/processed/${testMemory.id}`);
+            if (wavesurfer) {
+              try {
+                wavesurfer.load(`${backendUrl}/api/audio/processed/${testMemory.id}`);
+              } catch (error) {
+                console.error('Error loading collage to waveform:', error);
+                toast({
+                  title: "Collage Waveform Error",
+                  description: "Collage completed but waveform visualization failed",
+                  variant: "destructive"
+                });
+              }
+            }
           }
           
           toast({
