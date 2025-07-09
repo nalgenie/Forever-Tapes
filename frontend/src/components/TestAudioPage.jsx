@@ -17,7 +17,9 @@ import {
   TestTube,
   Zap,
   FileAudio,
-  Activity
+  Activity,
+  Trash2,
+  Plus
 } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
@@ -35,6 +37,7 @@ const TestAudioPage = () => {
   const [taskId, setTaskId] = useState(null);
   const [processingStatus, setProcessingStatus] = useState('');
   const [collageReady, setCollageReady] = useState(false);
+  const [contributorName, setContributorName] = useState('Test User');
   
   // Refs for waveform visualizations
   const recordingWaveformRef = useRef(null);
@@ -75,8 +78,8 @@ const TestAudioPage = () => {
       if (data.success) {
         setTestMemory(data.memory);
         toast({
-          title: "🧪 Test Memory Ready",
-          description: "Developer test memory initialized",
+          title: "🧪 Clean Test Environment Ready",
+          description: "Fresh test memory initialized for audio testing",
         });
       }
     } catch (error) {
@@ -101,7 +104,7 @@ const TestAudioPage = () => {
       barWidth: 2,
       barGap: 1,
       responsive: true,
-      height: 60,
+      height: 80,
       normalize: true,
       backend: 'WebAudio',
       ...options
@@ -116,7 +119,8 @@ const TestAudioPage = () => {
         audio: {
           echoCancellation: true,
           noiseSuppression: true,
-          autoGainControl: true
+          autoGainControl: true,
+          sampleRate: 44100
         } 
       });
       
@@ -177,8 +181,8 @@ const TestAudioPage = () => {
       setMediaRecorder(null);
       
       toast({
-        title: "🎤 Recording Stopped",
-        description: "Audio recorded successfully with waveform",
+        title: "🎤 Recording Complete",
+        description: "Audio recorded with waveform visualization",
       });
     }
   };
@@ -200,8 +204,8 @@ const TestAudioPage = () => {
       }
       
       toast({
-        title: "📁 File Uploaded",
-        description: `${file.name} loaded with waveform visualization`,
+        title: "📁 File Loaded",
+        description: `${file.name} ready with waveform visualization`,
       });
     }
   };
@@ -212,7 +216,7 @@ const TestAudioPage = () => {
     const formData = new FormData();
     formData.append('audio_file', audioBlob, filename);
     formData.append('contributor_name', contributorName);
-    formData.append('contributor_email', 'dev-test@forever-tapes.com');
+    formData.append('contributor_email', 'test@forever-tapes.com');
 
     try {
       const response = await fetch(
@@ -240,15 +244,19 @@ const TestAudioPage = () => {
   };
 
   const uploadRecordedAudio = async () => {
-    if (!recordedBlob) return;
+    if (!recordedBlob || !contributorName.trim()) return;
 
     try {
-      await uploadAudioToMemory(recordedBlob, 'recorded-audio.webm', 'Test Recorder');
+      await uploadAudioToMemory(recordedBlob, 'recorded-audio.webm', contributorName);
       setRecordedBlob(null);
       
+      if (recordingWaveSurfer.current) {
+        recordingWaveSurfer.current.empty();
+      }
+      
       toast({
-        title: "✅ Recorded Audio Uploaded",
-        description: "Your recording has been added to the test memory",
+        title: "✅ Recording Added",
+        description: `${contributorName}'s recording added to test memory`,
       });
     } catch (error) {
       toast({
@@ -260,15 +268,23 @@ const TestAudioPage = () => {
   };
 
   const uploadSelectedFile = async () => {
-    if (!uploadedFile) return;
+    if (!uploadedFile || !contributorName.trim()) return;
 
     try {
-      await uploadAudioToMemory(uploadedFile, uploadedFile.name, 'Test Uploader');
+      await uploadAudioToMemory(uploadedFile, uploadedFile.name, contributorName);
       setUploadedFile(null);
       
+      if (uploadWaveSurfer.current) {
+        uploadWaveSurfer.current.empty();
+      }
+      
+      // Reset file input
+      const fileInput = document.querySelector('input[type="file"]');
+      if (fileInput) fileInput.value = '';
+      
       toast({
-        title: "✅ File Uploaded",
-        description: "Your file has been added to the test memory",
+        title: "✅ File Added",
+        description: `${contributorName}'s file added to test memory`,
       });
     } catch (error) {
       toast({
@@ -290,7 +306,8 @@ const TestAudioPage = () => {
     }
 
     setIsProcessing(true);
-    setProcessingStatus('Starting collage generation...');
+    setProcessingStatus('Initializing audio collage generation...');
+    setCollageReady(false);
 
     try {
       // Start processing
@@ -345,8 +362,8 @@ const TestAudioPage = () => {
           }
           
           toast({
-            title: "🎉 Collage Ready!",
-            description: "Audio collage generated successfully with waveform",
+            title: "🎉 Collage Complete!",
+            description: "Professional audio collage generated successfully",
           });
         } else if (status.status === 'failed' || status.status === 'failure') {
           clearInterval(interval);
@@ -392,22 +409,27 @@ const TestAudioPage = () => {
       setUploadedFile(null);
       setCollageReady(false);
       setTaskId(null);
+      setProcessingStatus('');
       
       // Clear waveforms
       if (recordingWaveSurfer.current) recordingWaveSurfer.current.empty();
       if (uploadWaveSurfer.current) uploadWaveSurfer.current.empty();
       if (collageWaveSurfer.current) collageWaveSurfer.current.empty();
       
+      // Reset file input
+      const fileInput = document.querySelector('input[type="file"]');
+      if (fileInput) fileInput.value = '';
+      
       await initializeTestMemory();
       
       toast({
-        title: "🧹 Test Data Cleared",
-        description: "All test data cleared, fresh memory created",
+        title: "🧹 Environment Reset",
+        description: "Clean test environment ready for new testing",
       });
     } catch (error) {
       toast({
-        title: "Clear Failed",
-        description: "Could not clear test data",
+        title: "Reset Failed",
+        description: "Could not reset test environment",
         variant: "destructive"
       });
     }
@@ -432,9 +454,9 @@ const TestAudioPage = () => {
               Back to Home
             </Button>
             
-            <Badge className="bg-red-100 text-red-800 border-red-200">
+            <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200">
               <TestTube className="w-3 h-3 mr-1" />
-              Developer Mode Only
+              Clean Test Environment
             </Badge>
           </div>
         </div>
@@ -444,58 +466,89 @@ const TestAudioPage = () => {
         {/* Title */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-6xl font-light mb-4 tracking-tight text-gray-900">
-            <span className="font-mono lowercase text-purple-600">test/audio</span>
+            <span className="font-mono lowercase text-emerald-600">test/audio</span>
           </h1>
           <p className="text-xl text-gray-600">
-            Developer Testing Mode with Waveform Visualization
+            Clean Audio Testing Environment
+          </p>
+          <p className="text-sm text-gray-500 mt-2">
+            Record → Upload → Collage → Test
           </p>
         </div>
 
         {/* Test Memory Info */}
         {testMemory && (
-          <Card className="mb-8 border-0 shadow-xl bg-white/80">
+          <Card className="mb-8 border-0 shadow-lg bg-white">
             <CardHeader>
-              <CardTitle className="flex items-center">
-                <Activity className="w-5 h-5 mr-2 text-blue-600" />
-                Active Test Memory
+              <CardTitle className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <Activity className="w-5 h-5 mr-2 text-emerald-600" />
+                  Test Memory
+                </div>
+                <Button
+                  onClick={clearTestData}
+                  variant="outline"
+                  size="sm"
+                  className="border-gray-300 text-gray-600 hover:bg-gray-50"
+                >
+                  <Trash2 className="w-4 h-4 mr-1" />
+                  Reset Environment
+                </Button>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className="grid md:grid-cols-3 gap-4 text-sm">
                 <div>
-                  <p><strong>Title:</strong> {testMemory.title}</p>
-                  <p><strong>Description:</strong> {testMemory.description}</p>
-                  <p><strong>Audio Messages:</strong> {testMemory.audio_messages?.length || 0}</p>
+                  <span className="font-medium">Title:</span> {testMemory.title}
                 </div>
-                <div className="flex gap-2">
-                  <Button
-                    onClick={clearTestData}
-                    variant="outline"
-                    size="sm"
-                    className="border-red-300 text-red-700 hover:bg-red-50"
-                  >
-                    <RefreshCw className="w-4 h-4 mr-1" />
-                    Clear & Reset
-                  </Button>
+                <div>
+                  <span className="font-medium">Audio Messages:</span> {testMemory.audio_messages?.length || 0}
+                </div>
+                <div>
+                  <span className="font-medium">Status:</span> 
+                  <Badge className="ml-2" variant="outline">
+                    Ready for Testing
+                  </Badge>
                 </div>
               </div>
             </CardContent>
           </Card>
         )}
 
-        <div className="grid lg:grid-cols-2 gap-8">
+        {/* Contributor Name Input */}
+        <Card className="mb-8 border-0 shadow-lg bg-white">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-4">
+              <label className="text-sm font-medium text-gray-700 min-w-fit">
+                Contributor Name:
+              </label>
+              <Input
+                value={contributorName}
+                onChange={(e) => setContributorName(e.target.value)}
+                placeholder="Enter contributor name..."
+                className="max-w-xs"
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        <div className="grid lg:grid-cols-2 gap-8 mb-8">
           {/* Recording Section */}
-          <Card className="border-0 shadow-xl bg-white/80">
+          <Card className="border-0 shadow-lg bg-white">
             <CardHeader>
               <CardTitle className="flex items-center">
                 <Mic className="w-5 h-5 mr-2 text-green-600" />
-                Audio Recording with Waveform
+                Audio Recording
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-4">
               <div className="flex gap-3">
                 {!isRecording ? (
-                  <Button onClick={startRecording} className="bg-green-600 hover:bg-green-700">
+                  <Button 
+                    onClick={startRecording} 
+                    className="bg-green-600 hover:bg-green-700"
+                    disabled={!contributorName.trim()}
+                  >
                     <Mic className="w-4 h-4 mr-2" />
                     Start Recording
                   </Button>
@@ -509,13 +562,20 @@ const TestAudioPage = () => {
 
               {/* Recording Waveform */}
               <div className="bg-gray-50 rounded-lg p-4">
-                <div className="flex items-center mb-2">
-                  <Waveform className="w-4 h-4 mr-2 text-green-600" />
-                  <span className="text-sm font-medium">Recording Waveform</span>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center">
+                    <Waveform className="w-4 h-4 mr-2 text-green-600" />
+                    <span className="text-sm font-medium">Recording Waveform</span>
+                  </div>
+                  {recordedBlob && (
+                    <Badge className="bg-green-100 text-green-700">
+                      Ready to Upload
+                    </Badge>
+                  )}
                 </div>
                 <div 
                   ref={recordingWaveformRef} 
-                  className="w-full h-16 bg-white rounded border"
+                  className="w-full h-20 bg-white rounded border-2 border-dashed border-gray-300"
                 ></div>
                 {recordedBlob && (
                   <div className="flex gap-2 mt-3">
@@ -525,11 +585,15 @@ const TestAudioPage = () => {
                       variant="outline"
                     >
                       <Play className="w-3 h-3 mr-1" />
-                      Play/Pause
+                      Preview
                     </Button>
-                    <Button onClick={uploadRecordedAudio} size="sm">
-                      <Upload className="w-3 h-3 mr-1" />
-                      Upload to Memory
+                    <Button 
+                      onClick={uploadRecordedAudio} 
+                      size="sm"
+                      className="bg-green-600 hover:bg-green-700"
+                    >
+                      <Plus className="w-3 h-3 mr-1" />
+                      Add to Memory
                     </Button>
                   </div>
                 )}
@@ -538,32 +602,40 @@ const TestAudioPage = () => {
           </Card>
 
           {/* File Upload Section */}
-          <Card className="border-0 shadow-xl bg-white/80">
+          <Card className="border-0 shadow-lg bg-white">
             <CardHeader>
               <CardTitle className="flex items-center">
                 <FileAudio className="w-5 h-5 mr-2 text-orange-600" />
-                File Upload with Waveform
+                File Upload
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-4">
               <div>
                 <Input
                   type="file"
                   accept="audio/*"
                   onChange={handleFileUpload}
                   className="border-gray-300"
+                  disabled={!contributorName.trim()}
                 />
               </div>
 
               {/* Upload Waveform */}
               <div className="bg-gray-50 rounded-lg p-4">
-                <div className="flex items-center mb-2">
-                  <Waveform className="w-4 h-4 mr-2 text-orange-600" />
-                  <span className="text-sm font-medium">Upload Waveform</span>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center">
+                    <Waveform className="w-4 h-4 mr-2 text-orange-600" />
+                    <span className="text-sm font-medium">File Waveform</span>
+                  </div>
+                  {uploadedFile && (
+                    <Badge className="bg-orange-100 text-orange-700">
+                      {uploadedFile.name}
+                    </Badge>
+                  )}
                 </div>
                 <div 
                   ref={uploadWaveformRef} 
-                  className="w-full h-16 bg-white rounded border"
+                  className="w-full h-20 bg-white rounded border-2 border-dashed border-gray-300"
                 ></div>
                 {uploadedFile && (
                   <div className="flex gap-2 mt-3">
@@ -573,11 +645,15 @@ const TestAudioPage = () => {
                       variant="outline"
                     >
                       <Play className="w-3 h-3 mr-1" />
-                      Play/Pause
+                      Preview
                     </Button>
-                    <Button onClick={uploadSelectedFile} size="sm">
-                      <Upload className="w-3 h-3 mr-1" />
-                      Upload to Memory
+                    <Button 
+                      onClick={uploadSelectedFile} 
+                      size="sm"
+                      className="bg-orange-600 hover:bg-orange-700"
+                    >
+                      <Plus className="w-3 h-3 mr-1" />
+                      Add to Memory
                     </Button>
                   </div>
                 )}
@@ -587,7 +663,7 @@ const TestAudioPage = () => {
         </div>
 
         {/* Collage Generation Section */}
-        <Card className="mt-8 border-0 shadow-xl bg-gradient-to-r from-purple-50 to-pink-50">
+        <Card className="border-0 shadow-lg bg-gradient-to-r from-purple-50 to-pink-50">
           <CardHeader>
             <CardTitle className="flex items-center">
               <Zap className="w-5 h-5 mr-2 text-purple-600" />
@@ -609,7 +685,7 @@ const TestAudioPage = () => {
                 ) : (
                   <>
                     <Zap className="w-4 h-4 mr-2" />
-                    Generate Collage
+                    Generate Professional Collage
                   </>
                 )}
               </Button>
@@ -617,20 +693,28 @@ const TestAudioPage = () => {
 
             {isProcessing && (
               <div className="bg-blue-50 rounded-lg p-4">
-                <p className="text-blue-800">{processingStatus}</p>
+                <p className="text-blue-800 text-sm">{processingStatus}</p>
+                <div className="w-full bg-blue-200 rounded-full h-2 mt-2">
+                  <div className="bg-blue-600 h-2 rounded-full animate-pulse"></div>
+                </div>
               </div>
             )}
 
             {/* Collage Waveform */}
             {collageReady && (
               <div className="bg-gray-50 rounded-lg p-4">
-                <div className="flex items-center mb-2">
-                  <Volume2 className="w-4 h-4 mr-2 text-red-600" />
-                  <span className="text-sm font-medium">Final Collage Waveform</span>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center">
+                    <Volume2 className="w-4 h-4 mr-2 text-red-600" />
+                    <span className="text-sm font-medium">Final Collage</span>
+                  </div>
+                  <Badge className="bg-green-100 text-green-700">
+                    Ready for Download
+                  </Badge>
                 </div>
                 <div 
                   ref={collageWaveformRef} 
-                  className="w-full h-16 bg-white rounded border"
+                  className="w-full h-20 bg-white rounded border-2 border-red-300"
                 ></div>
                 <div className="flex gap-2 mt-3">
                   <Button 
@@ -639,9 +723,13 @@ const TestAudioPage = () => {
                     variant="outline"
                   >
                     <Play className="w-3 h-3 mr-1" />
-                    Play/Pause Collage
+                    Play Collage
                   </Button>
-                  <Button onClick={downloadCollage} size="sm">
+                  <Button 
+                    onClick={downloadCollage} 
+                    size="sm"
+                    className="bg-red-600 hover:bg-red-700"
+                  >
                     <Download className="w-3 h-3 mr-1" />
                     Download MP3
                   </Button>
@@ -652,22 +740,33 @@ const TestAudioPage = () => {
         </Card>
 
         {/* Instructions */}
-        <Card className="mt-8 border-0 shadow-xl bg-blue-50">
-          <CardContent className="p-8">
-            <h3 className="text-xl font-bold text-blue-900 mb-4">🧪 Developer Testing Workflow</h3>
-            <ol className="text-blue-800 space-y-2 list-decimal list-inside">
-              <li><strong>Record Audio:</strong> Use microphone to record with real-time waveform</li>
-              <li><strong>Upload Files:</strong> Select audio files with instant waveform visualization</li>
-              <li><strong>Add to Memory:</strong> Upload recordings/files to the test memory</li>
-              <li><strong>Generate Collage:</strong> Process multiple audio messages into professional collage</li>
-              <li><strong>Play & Download:</strong> Test final output with waveform controls</li>
-              <li><strong>Reset:</strong> Clear all test data and start fresh</li>
-            </ol>
-            <div className="mt-4 p-3 bg-blue-100 rounded-lg">
-              <p className="text-sm text-blue-700">
-                <strong>Note:</strong> This page is only available in development mode. 
-                Waveforms provide real-time audio visualization for debugging quality and silence detection.
-              </p>
+        <Card className="mt-8 border-0 shadow-lg bg-emerald-50">
+          <CardContent className="p-6">
+            <h3 className="text-lg font-bold text-emerald-900 mb-4">
+              🧪 Clean Testing Workflow
+            </h3>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="font-semibold text-emerald-800 mb-2">Testing Steps:</h4>
+                <ol className="text-emerald-700 text-sm space-y-1 list-decimal list-inside">
+                  <li>Enter contributor name</li>
+                  <li>Record or upload audio files</li>
+                  <li>Preview with waveform visualization</li>
+                  <li>Add multiple messages to memory</li>
+                  <li>Generate professional audio collage</li>
+                  <li>Test final playback and download</li>
+                </ol>
+              </div>
+              <div>
+                <h4 className="font-semibold text-emerald-800 mb-2">Features:</h4>
+                <ul className="text-emerald-700 text-sm space-y-1 list-disc list-inside">
+                  <li>Real-time waveform visualization</li>
+                  <li>High-quality audio processing</li>
+                  <li>Professional collage generation</li>
+                  <li>Clean, focused testing environment</li>
+                  <li>Development-only access</li>
+                </ul>
+              </div>
             </div>
           </CardContent>
         </Card>
