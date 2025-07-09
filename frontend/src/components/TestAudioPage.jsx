@@ -359,9 +359,11 @@ const TestAudioPage = () => {
       await uploadAudioToMemory(uploadedFile, uploadedFile.name, contributorName);
       setUploadedFile(null);
       
-      if (uploadWaveSurfer.current) {
-        uploadWaveSurfer.current.empty();
-      }
+      // Safely clear the upload waveform
+      safeClearWaveform(uploadWaveSurfer, uploadWaveformRef, {
+        waveColor: '#f59e0b',
+        progressColor: '#d97706'
+      });
       
       // Reset file input
       const fileInput = document.querySelector('input[type="file"]');
