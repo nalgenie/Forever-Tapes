@@ -902,6 +902,211 @@ class ForeverTapesAPITest(unittest.TestCase):
         
         print(f"✅ Successfully cleared {result['deleted_count']} AI-generated memories")
 
+    def test_35_create_developer_test_memory(self):
+        """Test creating a developer test memory"""
+        print("\n🔍 Testing developer test memory creation...")
+        
+        response = requests.post(f"{self.api_url}/dev/create-test-memory")
+        self.assertEqual(response.status_code, 200)
+        result = response.json()
+        
+        # Verify response structure
+        self.assertTrue(result["success"])
+        self.assertIn("memory", result)
+        self.assertIn("memory_id", result)
+        
+        # Verify memory structure
+        memory = result["memory"]
+        self.assertEqual(memory["title"], "🧪 Clean Test Memory")
+        self.assertEqual(memory["creator_id"], "dev-test")
+        self.assertEqual(memory["creator_email"], "dev@forever-tapes.com")
+        self.assertTrue(memory["is_test_memory"])
+        self.assertTrue(memory["is_public"])
+        
+        # Save memory ID for later tests
+        self.dev_test_memory_id = memory["id"]
+        print(f"✅ Developer test memory created successfully with ID: {self.dev_test_memory_id}")
+        
+    def test_36_get_latest_test_memory(self):
+        """Test getting the latest developer test memory"""
+        if not hasattr(self, 'dev_test_memory_id'):
+            self.skipTest("No developer test memory ID available from previous test")
+            
+        print("\n🔍 Testing get latest developer test memory...")
+        
+        response = requests.get(f"{self.api_url}/dev/latest-test-memory")
+        self.assertEqual(response.status_code, 200)
+        result = response.json()
+        
+        # Verify response structure
+        self.assertTrue(result["success"])
+        self.assertIn("memory", result)
+        self.assertIn("memory_id", result)
+        
+        # Verify memory structure
+        memory = result["memory"]
+        self.assertEqual(memory["creator_id"], "dev-test")
+        self.assertTrue(memory["is_test_memory"])
+        
+        print(f"✅ Retrieved latest developer test memory successfully with ID: {result['memory_id']}")
+        
+    def test_37_upload_audio_to_test_memory(self):
+        """Test uploading audio to a developer test memory"""
+        if not hasattr(self, 'dev_test_memory_id'):
+            self.skipTest("No developer test memory ID available from previous test")
+            
+        print(f"\n🔍 Testing audio upload to developer test memory ID: {self.dev_test_memory_id}...")
+        
+        # Create a simple test audio file
+        test_audio_path = "/tmp/test_dev_audio.wav"
+        with open(test_audio_path, "wb") as f:
+            # Write a simple WAV header and some data
+            f.write(b"RIFF\x24WAVEfmt \x10\x01\x01\x44\xac\x88\x58\x01\x02\x10data")
+        
+        files = {'audio_file': ('test_dev_audio.wav', open(test_audio_path, 'rb'), 'audio/wav')}
+        data = {
+            'contributor_name': 'Dev Test Contributor',
+            'contributor_email': 'dev_contributor@example.com'
+        }
+        
+        response = requests.post(
+            f"{self.api_url}/podcards/{self.dev_test_memory_id}/audio",
+            files=files,
+            data=data
+        )
+        
+        self.assertEqual(response.status_code, 200)
+        result = response.json()
+        self.assertEqual(result["message"], "Audio message uploaded successfully")
+        self.assertEqual(result["podcard_id"], self.dev_test_memory_id)
+        
+        # Save the audio file ID for later tests
+        audio_file_path = result["audio_message"]["file_path"]
+        self.dev_audio_id = audio_file_path.split('/')[-1].split('.')[0]
+        print(f"✅ Audio uploaded to developer test memory successfully with ID: {self.dev_audio_id}")
+        
+        # Clean up
+        os.remove(test_audio_path)
+        
+    def test_38_get_dev_audio_file(self):
+        """Test retrieving the audio file from a developer test memory"""
+        if not hasattr(self, 'dev_audio_id'):
+            self.skipTest("No developer audio ID available from previous test")
+            
+        print(f"\n🔍 Testing get audio file from developer test memory with ID: {self.dev_audio_id}...")
+        response = requests.get(f"{self.api_url}/audio/{self.dev_audio_id}")
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.headers['Content-Type'].startswith('audio/'))
+        
+        # Test HEAD request
+        head_response = requests.head(f"{self.api_url}/audio/{self.dev_audio_id}")
+        self.assertEqual(head_response.status_code, 200)
+        self.assertTrue(head_response.headers['Content-Type'].startswith('audio/'))
+        
+        print("✅ Retrieved audio file from developer test memory successfully")
+        
+    def test_39_process_dev_memory_audio(self):
+        """Test processing memory audio for a developer test memory"""
+        if not hasattr(self, 'dev_test_memory_id'):
+            self.skipTest("No developer test memory ID available from previous test")
+            
+        print(f"\n🔍 Testing audio processing for developer test memory ID: {self.dev_test_memory_id}...")
+        
+        # Process the memory audio
+        response = requests.post(
+            f"{self.api_url}/audio/process-memory",
+            data={'memory_id': self.dev_test_memory_id}
+        )
+        
+        # Check if audio processing is available
+        if response.status_code == 503:
+            print("⚠️ Audio processing service not available, skipping test")
+            self.skipTest("Audio processing service not available")
+        
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertIn("task_id", data)
+        self.assertEqual(data["status"], "started")
+        
+        # Save the task ID for the next test
+        self.dev_audio_task_id = data["task_id"]
+        print(f"✅ Audio processing started for developer test memory with task ID: {self.dev_audio_task_id}")
+        
+    def test_40_check_dev_processing_status(self):
+        """Test checking the status of an audio processing task for developer test memory"""
+        if not hasattr(self, 'dev_audio_task_id'):
+            self.skipTest("No developer audio task ID available from previous test")
+            
+        print(f"\n🔍 Testing audio processing status for developer test memory task ID: {self.dev_audio_task_id}...")
+        
+        # Check status (may still be processing)
+        response = requests.get(f"{self.api_url}/audio/status/{self.dev_audio_task_id}")
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertEqual(data["task_id"], self.dev_audio_task_id)
+        
+        # Wait for a short time to allow processing to progress
+        print("Waiting for processing to progress...")
+        max_attempts = 5
+        for attempt in range(max_attempts):
+            response = requests.get(f"{self.api_url}/audio/status/{self.dev_audio_task_id}")
+            self.assertEqual(response.status_code, 200)
+            data = response.json()
+            status = data.get("status", "unknown")
+            
+            print(f"  Attempt {attempt+1}/{max_attempts}: Status = {status}, Stage = {data.get('stage')}")
+            
+            if status in ["success", "completed"]:
+                break
+                
+            if status == "failure" or status == "failed":
+                print(f"⚠️ Processing failed: {data.get('error', 'Unknown error')}")
+                break
+                
+            # Wait before checking again
+            time.sleep(2)
+        
+        print(f"✅ Audio processing status checked for developer test memory: {status}")
+        
+    def test_41_get_dev_processed_audio(self):
+        """Test retrieving processed audio for a developer test memory"""
+        if not hasattr(self, 'dev_test_memory_id'):
+            self.skipTest("No developer test memory ID available from previous test")
+            
+        print(f"\n🔍 Testing retrieval of processed audio for developer test memory ID: {self.dev_test_memory_id}...")
+        
+        # Try to get the processed audio
+        response = requests.get(f"{self.api_url}/audio/processed/{self.dev_test_memory_id}")
+        
+        # If processing is still ongoing or failed, this might return 404
+        if response.status_code == 404:
+            print("⚠️ Processed audio not found yet, processing may still be ongoing")
+            self.skipTest("Processed audio not available yet")
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.headers['Content-Type'].startswith('audio/'))
+        print("✅ Retrieved processed audio for developer test memory successfully")
+        
+    def test_42_clear_developer_test_memories(self):
+        """Test clearing all developer test memories"""
+        print("\n🔍 Testing clearing developer test memories...")
+        
+        response = requests.delete(f"{self.api_url}/dev/clear-test-memories")
+        self.assertEqual(response.status_code, 200)
+        result = response.json()
+        
+        # Verify response structure
+        self.assertTrue(result["success"])
+        self.assertIn("deleted_count", result)
+        self.assertGreaterEqual(result["deleted_count"], 1, "Should have deleted at least one memory")
+        
+        # Verify the memory was deleted
+        if hasattr(self, 'dev_test_memory_id'):
+            response = requests.get(f"{self.api_url}/podcards/{self.dev_test_memory_id}")
+            self.assertEqual(response.status_code, 404, "Developer test memory should be deleted after cleanup")
+        
+        print(f"✅ Successfully cleared {result['deleted_count']} developer test memories")
+
 if __name__ == "__main__":
     # Create a single test instance to share state between tests
     test_instance = ForeverTapesAPITest()
@@ -942,6 +1147,16 @@ if __name__ == "__main__":
     test_suite.addTest(unittest.FunctionTestCase(test_instance.test_32_create_ai_memory))
     test_suite.addTest(unittest.FunctionTestCase(test_instance.test_33_bulk_generate_scenarios))
     test_suite.addTest(unittest.FunctionTestCase(test_instance.test_34_clear_ai_memories))
+    
+    # Add new tests for developer test memory endpoints
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_35_create_developer_test_memory))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_36_get_latest_test_memory))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_37_upload_audio_to_test_memory))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_38_get_dev_audio_file))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_39_process_dev_memory_audio))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_40_check_dev_processing_status))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_41_get_dev_processed_audio))
+    test_suite.addTest(unittest.FunctionTestCase(test_instance.test_42_clear_developer_test_memories))
     
     runner = unittest.TextTestRunner(verbosity=2)
     runner.run(test_suite)
