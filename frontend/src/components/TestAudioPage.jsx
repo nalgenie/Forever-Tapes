@@ -93,24 +93,41 @@ const TestAudioPage = () => {
   };
 
   const initializeWaveform = (containerRef, waveSurferRef, options = {}) => {
-    if (waveSurferRef.current) {
-      waveSurferRef.current.destroy();
+    // Ensure container exists
+    if (!containerRef.current) {
+      console.warn('Waveform container not found');
+      return null;
     }
 
-    waveSurferRef.current = WaveSurfer.create({
-      container: containerRef.current,
-      waveColor: '#8b5cf6',
-      progressColor: '#6d28d9',
-      barWidth: 2,
-      barGap: 1,
-      responsive: true,
-      height: 80,
-      normalize: true,
-      backend: 'WebAudio',
-      ...options
-    });
+    // Safely destroy existing instance
+    if (waveSurferRef.current) {
+      try {
+        waveSurferRef.current.destroy();
+      } catch (error) {
+        console.warn('Error destroying existing waveform:', error);
+      }
+      waveSurferRef.current = null;
+    }
 
-    return waveSurferRef.current;
+    try {
+      waveSurferRef.current = WaveSurfer.create({
+        container: containerRef.current,
+        waveColor: '#8b5cf6',
+        progressColor: '#6d28d9',
+        barWidth: 2,
+        barGap: 1,
+        responsive: true,
+        height: 80,
+        normalize: true,
+        backend: 'WebAudio',
+        ...options
+      });
+
+      return waveSurferRef.current;
+    } catch (error) {
+      console.error('Error creating WaveSurfer instance:', error);
+      return null;
+    }
   };
 
   const startRecording = async () => {
