@@ -219,7 +219,7 @@ backend:
     file: "server.py, audio_processor/tasks.py"
     stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: false
         agent: "testing"
@@ -230,6 +230,9 @@ backend:
       - working: true
         agent: "main"
         comment: "Fixed the Redis/Celery infrastructure issue that was preventing audio collage functionality. The root problem was that Redis was not installed on the system. Installed Redis server (apt install redis-server), started it as a daemon (redis-server --daemonize yes), verified connectivity (redis-cli ping returns PONG), and started the Celery worker with proper queue configuration (/app/backend/start_celery.sh). The Celery worker is now connected to Redis and listening on the correct queues (audio_processing, audio_enhancement). All audio processing dependencies (librosa, soundfile, pydub) are available. The audio collage functionality should now work correctly and needs retesting to confirm the complete workflow."
+      - working: true
+        agent: "testing"
+        comment: "Comprehensive testing of the audio collage functionality confirms it is now working correctly. The developer test memory endpoints (/api/dev/create-test-memory and /api/dev/latest-test-memory) are functioning properly, allowing for easy creation and retrieval of test memories. Audio upload to these test memories works correctly via the /api/podcards/{memory_id}/audio endpoint. The audio files are properly stored and can be accessed via the /api/audio/{file_id} endpoint, which now correctly supports both GET and HEAD requests. The audio processing endpoints (/api/audio/process-memory, /api/audio/status/{task_id}, and /api/audio/processed/{memory_id}) are all functioning as expected. The complete workflow from creating a test memory to uploading audio, processing it, and retrieving the processed audio works without errors. The WaveSurfer.js 'removeAttribute' error has been resolved."
 
   - task: "Mock AI Voice Generation System"
     implemented: true
