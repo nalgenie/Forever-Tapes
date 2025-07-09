@@ -164,8 +164,19 @@ const TestAudioPage = () => {
             progressColor: '#059669'
           });
           
-          const url = URL.createObjectURL(blob);
-          wavesurfer.load(url);
+          if (wavesurfer) {
+            try {
+              const url = URL.createObjectURL(blob);
+              wavesurfer.load(url);
+            } catch (error) {
+              console.error('Error loading audio to waveform:', error);
+              toast({
+                title: "Waveform Error",
+                description: "Recording saved but waveform visualization failed",
+                variant: "destructive"
+              });
+            }
+          }
         }
         
         // Stop all tracks
