@@ -227,8 +227,19 @@ const TestAudioPage = () => {
           progressColor: '#d97706'
         });
         
-        const url = URL.createObjectURL(file);
-        wavesurfer.load(url);
+        if (wavesurfer) {
+          try {
+            const url = URL.createObjectURL(file);
+            wavesurfer.load(url);
+          } catch (error) {
+            console.error('Error loading file to waveform:', error);
+            toast({
+              title: "Waveform Error",
+              description: "File uploaded but waveform visualization failed",
+              variant: "destructive"
+            });
+          }
+        }
       }
       
       toast({
